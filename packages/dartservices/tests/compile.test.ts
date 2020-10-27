@@ -148,13 +148,14 @@ class _SunflowerState extends State<Sunflower> {
 `
 
 async function test() {
-    try {
-        const js = await compileDDC(EX_DART_SOURCE)
-        console.log(js)
+  try {
+    const js = await compileDDC(EX_DART_SOURCE)
+    console.log(js.result)
+    console.log(js.modulesBaseUrl)
 
-    } catch (e) {
-        console.error(e)
-    }
+  } catch (e) {
+    console.error(e.response)
+  }
 }
 
 test()

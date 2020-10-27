@@ -4,8 +4,16 @@
  */
 
 
-interface CompileResult {
+interface CompileResponse {
     result: string
+    sourceMap: string
+    error: ErrorMessage
+}
+
+interface CompileDDCResponse {
+    result: string
+    modulesBaseUrl: string
+    error: ErrorMessage
 }
 
 interface CompileRequest {
@@ -43,5 +51,6 @@ interface AnalysisIssue {
 
 export {
     CompileRequest,
-    CompileResult
+    CompileDDCResponse,
+    CompileResponse
 }
