@@ -1,0 +1,15 @@
+{
+    "name": "dartservices",
+    "version": "0.0.1",
+    "private": false,
+    "repository": {
+        "url": "https://github.com/bridgedxyz/services"
+    },
+    "dependencies": {
+        "axios": "^0.21.0"
+    },
+    "devDependencies": {
+        "@types/node": "^14.14.5",
+        "typescript": "^4.0.5"
+    }
+}
