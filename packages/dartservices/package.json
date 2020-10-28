@@ -2,6 +2,7 @@
     "name": "dartservices",
     "version": "0.0.1",
     "private": false,
+    "main": "dist/index.js",
     "repository": {
         "url": "https://github.com/bridgedxyz/services"
     },

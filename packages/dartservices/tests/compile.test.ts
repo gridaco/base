@@ -1,9 +1,8 @@
-import { compileDDC, decorateJavascript } from "../lib";
+import { compileComplete } from "../lib";
 
 
 
 // from dart-pad
-
 const EX_DART_SOURCE = `
 // Copyright 2019 the Dart project authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license
@@ -149,12 +148,8 @@ class _SunflowerState extends State<Sunflower> {
 
 async function test() {
   try {
-    const js = await compileDDC(EX_DART_SOURCE)
-
-
-    const final = decorateJavascript(js.result, { modulesBaseUrl: js.modulesBaseUrl })
-    console.log(final)
-
+    const js = await compileComplete(EX_DART_SOURCE)
+    console.log(js)
   } catch (e) {
     console.error(e.response)
   }
