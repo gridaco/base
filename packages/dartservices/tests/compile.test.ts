@@ -1,4 +1,4 @@
-import { compileDDC } from "../lib";
+import { compileDDC, decorateJavascript } from "../lib";
 
 
 
@@ -150,8 +150,10 @@ class _SunflowerState extends State<Sunflower> {
 async function test() {
   try {
     const js = await compileDDC(EX_DART_SOURCE)
-    console.log(js.result)
-    console.log(js.modulesBaseUrl)
+
+
+    const final = decorateJavascript(js.result, { modulesBaseUrl: js.modulesBaseUrl })
+    console.log(final)
 
   } catch (e) {
     console.error(e.response)
