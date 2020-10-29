@@ -1,4 +1,4 @@
-import { compileComplete } from "../lib";
+import { compileComplete } from "../dist";
 
 
 
@@ -147,11 +147,12 @@ class _SunflowerState extends State<Sunflower> {
 `
 
 async function test() {
+  console.log('start testing')
   try {
     const js = await compileComplete(EX_DART_SOURCE)
     console.log(js)
   } catch (e) {
-    console.error(e.response)
+    console.error(e)
   }
 }
 
