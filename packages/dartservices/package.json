@@ -1,6 +1,6 @@
 {
     "name": "dart-services",
-    "version": "0.1.8",
+    "version": "0.1.9",
     "private": false,
     "license": "MIT",
     "author": "bridged.xyz softmarshmallow",
@@ -22,6 +22,7 @@
     "files": [
         "dist",
         "README.md",
+        "package.json",
         "LICENSE"
     ]
 }
