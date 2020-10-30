@@ -1,6 +1,6 @@
 {
     "name": "dart-services",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "private": false,
     "license": "MIT",
     "author": "bridged.xyz softmarshmallow",
@@ -9,7 +9,6 @@
         "url": "https://github.com/bridgedxyz/services"
     },
     "scripts": {
-        "postinstall": "tsc",
         "prepublish": "tsc"
     },
     "dependencies": {
