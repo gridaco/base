@@ -1,4 +1,4 @@
-import axios from "axios"
+import Axios from "axios"
 import { CompileDDCResponse, CompileRequest, CompileResponse, } from "./types"
 import { decorateJavascript } from "./utils/deocrate-js"
 
@@ -8,19 +8,23 @@ const BASE_URLS = [
 ]
 const API_PATH = "api/dartservices/v2"
 
-axios.defaults.baseURL = DEFAULT_BASE_URL + API_PATH;
+const axios = Axios.create({
+    baseURL: DEFAULT_BASE_URL + API_PATH
+})
 
 /**
  * use this for flutter code compile
  * @param source 
  */
 export async function compileDDC(source: string): Promise<CompileDDCResponse> {
-    const axios = require('axios');
-    axios.defaults.baseURL = DEFAULT_BASE_URL + API_PATH;
-    const res = await axios.post("/compileDDC", <CompileRequest>{
-        source: source,
-    })
-    return res.data
+    try {
+        const res = await axios.post("/compileDDC", <CompileRequest>{
+            source: source,
+        })
+        return res.data
+    } catch (e) {
+        throw e.response
+    }
 }
 
 /**
