@@ -1,5 +1,5 @@
 service:
-  name: serverless-nest-example
+  name: resource-hosting
 
 plugins:
   - '@hewmen/serverless-plugin-typescript'  
@@ -22,7 +22,7 @@ package:
 
 functions:
   main:
-    handler: src/main.handler
+    handler: src/lambda.handler
     events:
       - http:
           method: any
