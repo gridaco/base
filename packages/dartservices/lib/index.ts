@@ -1,4 +1,4 @@
-import Axios from "axios"
+import Axios, { AxiosInstance } from "axios"
 import { CompileDDCResponse, CompileRequest, CompileResponse, } from "./types"
 import { decorateJavascript } from "./utils/deocrate-js"
 
@@ -8,47 +8,66 @@ const BASE_URLS = [
 ]
 const API_PATH = "api/dartservices/v2"
 
-const axios = Axios.create({
-    baseURL: DEFAULT_BASE_URL + API_PATH
-})
 
-/**
- * use this for flutter code compile
- * @param source 
- */
-export async function compileDDC(source: string): Promise<CompileDDCResponse> {
-    try {
-        const res = await axios.post("/compileDDC", <CompileRequest>{
+export class DartServices {
+    readonly axios: AxiosInstance;
+    constructor(private baseUrl: string) {
+        this.axios = Axios.create({
+            baseURL: baseUrl + API_PATH
+        })
+    }
+
+    /**
+     * use this for flutter code compile
+     * @param source 
+     */
+    async compileDDC(source: string): Promise<CompileDDCResponse> {
+        try {
+            const res = await this.axios.post("/compileDDC", <CompileRequest>{
+                source: source,
+            })
+            return res.data
+        } catch (e) {
+            return {
+                error: e.response.data.error
+            }
+        }
+    }
+
+    /**
+     * use this for pure dart code compile. code with flutter dependency will refuse to compile.
+     * @param source 
+     */
+    async compile(source: string): Promise<CompileResponse> {
+        const res = await this.axios.post<CompileResponse>("/compile", <CompileRequest>{
             source: source,
         })
         return res.data
-    } catch (e) {
-        throw e.response
+    }
+
+    /**
+     * compiles and build decorated js
+     * @param source 
+     */
+    async compileComplete(source: string): Promise<CompileResponse> {
+        const compiled = await this.compileDDC(source)
+        if (compiled.error) {
+            return {
+                error: compiled.error,
+            }
+        } else {
+            const complete = decorateJavascript(compiled?.result, { modulesBaseUrl: compiled.modulesBaseUrl });
+            return {
+                result: complete,
+                sourceMap: null,
+                error: null,
+            };
+        }
     }
 }
 
-/**
- * use this for pure dart code compile. code with flutter dependency will refuse to compile.
- * @param source 
- */
-export async function compile(source: string): Promise<CompileResponse> {
-    const res = await axios.post<CompileResponse>("/compile", <CompileRequest>{
-        source: source,
-    })
-    return res.data
-}
+export const defaultClient = new DartServices(DEFAULT_BASE_URL);
 
-/**
- * compiles and build decorated js
- * @param source 
- */
 export async function compileComplete(source: string): Promise<CompileResponse> {
-    const compiled = await compileDDC(source)
-    const complete = decorateJavascript(compiled.result, { modulesBaseUrl: compiled.modulesBaseUrl });
-    return {
-        result: complete,
-        sourceMap: null,
-        error: null
-    };
+    return await defaultClient.compileComplete(source);
 }
-

@@ -4,16 +4,18 @@
  */
 
 
-interface CompileResponse {
-    result: string
-    sourceMap: string
-    error: ErrorMessage
+interface BaseCompileResponse {
+    result?: string
+    error?: ErrorMessage
+    took?: number
 }
 
-interface CompileDDCResponse {
-    result: string
-    modulesBaseUrl: string
-    error: ErrorMessage
+interface CompileResponse extends BaseCompileResponse {
+    sourceMap?: string
+}
+
+interface CompileDDCResponse extends BaseCompileResponse {
+    modulesBaseUrl?: string
 }
 
 interface CompileRequest {

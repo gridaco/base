@@ -1,4 +1,4 @@
-import { compileComplete } from "../dist";
+import { compileComplete, DartServices, defaultClient } from "../lib";
 
 
 
@@ -6,9 +6,11 @@ import { compileComplete } from "../dist";
 const EX_DART_SOURCE = `
 // Copyright 2019 the Dart project authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license
-// that can be found in the LICENSE file.
+// that can be found in the LICENSE file
+
 
 import 'package:flutter/material.dart';
+// import 'package:dynamic/dynamic.dart';
 import 'dart:math' as math;
 
 final Color primaryColor = Colors.orange;
@@ -148,9 +150,14 @@ class _SunflowerState extends State<Sunflower> {
 
 async function test() {
   console.log('start testing')
+
   try {
-    const js = await compileComplete(EX_DART_SOURCE)
+    const start = Date.now()
+    const client = defaultClient //new DartServices("http://localhost:8082/")
+    const js = await client.compileComplete(EX_DART_SOURCE)
+    const end = Date.now()
     console.log(js)
+    console.log(end - start)
   } catch (e) {
     console.error(e)
   }
