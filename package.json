@@ -5,6 +5,7 @@
     "workspaces":[
         "client-sdk",
         "hosting",
+        "xyz-url",
         "packages/*"
     ]
 }
