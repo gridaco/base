@@ -12,6 +12,13 @@ const serverlessConfiguration: Serverless = {
     webpack: {
       webpackConfig: './webpack.config.js',
       includeModules: true
+    },
+    customDomain: {
+      domainName: 'bridged.cc',
+      hostedZoneId: 'us-west-1',
+      basePath: '',
+      stage: '${self:provider.stage}',
+      createRoute53Record: true
     }
   },
   resources: {
@@ -44,10 +51,12 @@ const serverlessConfiguration: Serverless = {
     'serverless-dotenv-plugin',
     'serverless-webpack',
     'serverless-offline',
-    'serverless-dynamodb-local'
+    'serverless-dynamodb-local',
+    'serverless-domain-manager'
   ],
   provider: {
     name: 'aws',
+    region: 'us-west-1',
     runtime: 'nodejs12.x',
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -72,24 +81,41 @@ const serverlessConfiguration: Serverless = {
     ]
   },
   functions: {
-    url: {
+    short: {
       handler: 'handler.url',
       events: [
         {
           http: {
-            method: 'ANY',
+            method: 'POST',
+            path: '/short',
+          }
+        },
+        {
+          http: {
+            method: 'POST',
+            path: '/short/{proxy+}',
+          }
+        }
+      ]
+    },
+    cc: {
+      handler: 'handler.url',
+      events: [
+        {
+          http: {
+            method: 'GET',
             path: '/',
           }
         },
         {
           http: {
-            method: 'ANY',
+            method: 'GET',
             path: '{proxy+}',
           }
         }
       ]
     }
-  }
+  },
 }
 
 module.exports = serverlessConfiguration;

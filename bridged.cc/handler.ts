@@ -54,6 +54,11 @@ app.put('/short', (req, res) => {
 })
 
 
+
+app.get('/status', (req: Request, res: Response) => {
+  res.send({ message: 'Server is running' });
+});
+
 app.get('/:id', async (req, res) => {
   const id = req.params.id;
   const param: DocumentClient.GetItemInput = {
@@ -71,8 +76,5 @@ app.get('/:id', async (req, res) => {
 })
 
 
-app.use((req: Request, res: Response) => {
-  res.send({ message: 'Server is running' });
-});
 
 export const url: APIGatewayProxyHandler = serverless(app) as any;

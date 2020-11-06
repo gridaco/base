@@ -1,9 +1,9 @@
-## XYZ-URL
+## BRIDGED.CC
 > url shortener for bridged.xyz.
 
 
 ```
-https://xyz.bridged.xyz/hash
+https://bridged.cc/hash
 ```
 
 ## NOTICE - add your `.env`

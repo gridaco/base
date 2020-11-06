@@ -2,10 +2,10 @@
     "name": "@bridged.xyz/services",
     "version": "0.0.1",
     "private": true,
-    "workspaces":[
+    "workspaces": [
         "client-sdk",
         "hosting",
-        "xyz-url",
+        "bridged.cc",
         "packages/*"
     ]
 }

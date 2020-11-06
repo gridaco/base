@@ -1,5 +1,5 @@
 {
-  "name": "@services.bridged.xyz/xyz-url",
+  "name": "bridged.cc",
   "version": "1.0.0",
   "description": "url shortener for bridged services and other general purposes.",
   "main": "handler.js",
@@ -13,16 +13,17 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "nanoid": "^3.1.16",
-    "serverless-dynamodb-local": "^0.2.39",
-    "serverless-http": "^2.6.0",
-    "source-map-support": "^0.5.10"
+    "serverless-http": "^2.6.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.17",
     "@types/express": "^4.17.8",
     "@types/node": "^10.12.18",
     "@types/serverless": "^1.72.5",
+    "source-map-support": "^0.5.10",
     "fork-ts-checker-webpack-plugin": "^3.0.1",
+    "serverless-dynamodb-local": "^0.2.39",
+    "serverless-domain-manager": "^5.1.0",
     "serverless-dotenv-plugin": "^3.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-plugin-monorepo": "^0.9.0",
