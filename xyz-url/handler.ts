@@ -63,7 +63,7 @@ app.get('/:id', async (req, res) => {
     },
   }
   const record = await dynamoDb.get(param).promise()
-  const data = record.$response.data as TBL_URL_SPEC
+  const data = record.Item as TBL_URL_SPEC
   const origin = data.target
   res.status(301).header({
     Location: origin,

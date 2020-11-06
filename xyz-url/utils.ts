@@ -1,9 +1,15 @@
 
 import { URL } from "url"
+
+/**
+ * check if givven url is a valid, and the host does not conficts.
+ * @param s 
+ */
 export function checkIfValidUrl(s): boolean {
     try {
-        new URL(s);
-        return true;
+        const url = new URL(s);
+        console.log(url.host)
+        return !url.host.includes(process.env.HOST)
     } catch (err) {
         return false;
     }
