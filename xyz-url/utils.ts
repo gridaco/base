@@ -25,5 +25,5 @@ export function generateHash() {
 }
 
 export function buildShortUrl(id: string, host: string) {
-    return `https://${host}/${id}`
+    return `https://${host}/dev/${id}`
 }
