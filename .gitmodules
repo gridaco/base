@@ -1,0 +1,3 @@
+[submodule "packages/client-sdk-ts"]
+	path = packages/client-sdk-ts
+	url = https://github.com/bridgedxyz/client-sdk-ts.git
