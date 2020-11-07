@@ -6,10 +6,10 @@ export enum ExpireDuration {
 }
 
 export interface FileHostingRequest {
-    file: Blob | Uint8Array | string
+    file: Blob | string | Buffer
     name: string
-    private: boolean
-    expires: ExpireDuration
+    private?: boolean
+    expires?: ExpireDuration
 }
 
 export interface FileHostingResult {

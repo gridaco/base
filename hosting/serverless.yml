@@ -9,8 +9,8 @@ plugins:
 
 custom:
   customDomain:
-    domainName: api.bridged.cc
-    basePath: 'hosting'
+    domainName: hosting.bridged.cc
+    basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
 
@@ -18,12 +18,18 @@ provider:
   name: aws
   runtime: nodejs12.x
   region: us-west-1
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+      Resource: "arn:aws:s3:::resource-hosting/*"
 
 resource:
   s3bucket:
     Type: S3::Bucket
     Properties:
-      BucketName: static-hosting
+      BucketName: resource-hosting
 
 
 package:

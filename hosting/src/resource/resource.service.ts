@@ -14,7 +14,7 @@ const SITE_HOSTING_BUKET = 'site-hosting';
 export class ResourceService {
     async upload(file: Buffer, name: string): Promise<FileHostingResult> {
         // File name you want to save as in S3
-        const key = nanoid(8) + name
+        const key = `${nanoid(8)}-${name}`
         // Setting up S3 upload parameters
         const params: S3.Types.PutObjectRequest = {
             Bucket: FILE_HOSTING_BUKET,
