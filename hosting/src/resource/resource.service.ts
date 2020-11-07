@@ -19,6 +19,7 @@ export class ResourceService {
         const params: S3.Types.PutObjectRequest = {
             Bucket: FILE_HOSTING_BUKET,
             Key: key,
+            ACL: 'public-read',
             Body: file // Buffer.from(file)
         };
 

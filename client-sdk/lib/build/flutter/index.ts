@@ -4,7 +4,8 @@ import { upload } from "../../hosting"
 
 export async function buildAndHostSimpleApp(props: {
     dart: string,
-    id: string
+    id: string,
+    short?: boolean
 }): Promise<string> {
     // compile dart source to js
     const compiled = await compileComplete(props.dart)
@@ -16,10 +17,13 @@ export async function buildAndHostSimpleApp(props: {
     })
 
     // make short url for hosted js file
-    const short = await makeShortUrl({
-        url: hosted.url
-    })
-
-    // return the short url
-    return short.url;
+    if (props.short) {
+        const short = await makeShortUrl({
+            url: hosted.url
+        })
+        // return the short url
+        return short.url;
+    } else {
+        return hosted.url
+    }
 }
