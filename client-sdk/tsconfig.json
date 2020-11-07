@@ -12,5 +12,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "example",
+    "docs"
+  ]
 }

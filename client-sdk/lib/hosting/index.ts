@@ -4,17 +4,29 @@ import FormData from "form-data"
 import Axios from "axios"
 const axios = Axios.create(
     {
-        baseURL: "https://api.bridged.cc/hosting/dev"
+        baseURL: "https://hosting.bridged.cc/"
+        // baseURL: "http://localhost:3000/dev"
     }
 )
 
 
 
 export async function upload(request: FileHostingRequest) {
-    const form = new FormData()
-    form.append('file', request.file.toString())
-    const res = await axios.post('/resources', form)
-    return res.data
+    try {
+
+        const form = new FormData()
+        form.append('file', JSON.stringify(request.file), { filename: request.name })
+        const header = form.getHeaders ? {
+            'content-type': form.getHeaders()['content-type'],
+            'content-length': form.getLengthSync()
+        } : undefined
+        const res = await axios.post('/resources', form, {
+            headers: header
+        })
+        return res.data as FileHostingResult
+    } catch (e) {
+        throw e.response ?? e
+    }
 }
 
 // const lambda = new Lambda({
