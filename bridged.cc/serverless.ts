@@ -47,7 +47,7 @@ const serverlessConfiguration: Serverless = {
     }
   },
   plugins: [
-    // 'serverless-plugin-monorepo',
+    'serverless-plugin-monorepo',
     'serverless-dotenv-plugin',
     'serverless-webpack',
     'serverless-offline',

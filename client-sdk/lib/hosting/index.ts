@@ -13,9 +13,23 @@ const axios = Axios.create(
 
 export async function upload(request: FileHostingRequest) {
     try {
+        let file;
+
+        if (typeof window === 'undefined') {
+            // this works on server side node js
+            // TODO this may not work intime
+            file = JSON.stringify(request.file);
+        } else {
+            // this works on browser js
+            if (!(request.file instanceof Blob)) {
+                file = new Blob([request.file])
+            } else {
+                file = request.file
+            }
+        }
 
         const form = new FormData()
-        form.append('file', JSON.stringify(request.file), { filename: request.name })
+        form.append('file', file, { filename: request.name })
         const header = form.getHeaders ? {
             'content-type': form.getHeaders()['content-type'],
             'content-length': form.getLengthSync()
@@ -25,6 +39,7 @@ export async function upload(request: FileHostingRequest) {
         })
         return res.data as FileHostingResult
     } catch (e) {
+        console.log(e)
         throw e.response ?? e
     }
 }

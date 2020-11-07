@@ -1,7 +1,6 @@
 import { UrlShortenRequest, UrlShortenResult } from "./types";
 import Axios from "axios"
 
-
 const axios = Axios.create({
     baseURL: "https://bridged.cc/"
 })

@@ -6,10 +6,12 @@ import { buildShortUrl, checkIfValidUrl, generateHash } from './utils';
 import bodyParser from "body-parser"
 import { DocumentClient } from 'aws-sdk/clients/dynamodb';
 import { UrlShortenRequest, UrlShortenResult } from "@bridged.xyz/client-sdk/lib/url/types"
+import * as cors from "cors"
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 
