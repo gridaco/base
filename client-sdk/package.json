@@ -1,6 +1,6 @@
 {
   "name": "@bridged.xyz/client-sdk",
-  "version": "0.0.1-6",
+  "version": "0.0.1-11",
   "description": "bridged's service access api node wrapper",
   "main": "dist/index.js",
   "repository": "https://github.com/bridgedxyz/services",
@@ -21,6 +21,7 @@
     "form-data": "^3.0.0"
   },
   "files": [
-    "dist"
+    "dist",
+    "package.json"
   ]
 }
