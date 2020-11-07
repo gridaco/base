@@ -14,5 +14,6 @@ export interface FileHostingRequest {
 
 export interface FileHostingResult {
     url: string
+    key: string
     private: boolean
 }
