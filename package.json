@@ -3,9 +3,8 @@
     "version": "0.0.1",
     "private": true,
     "workspaces": [
-        "client-sdk",
         "hosting",
-        "bridged.cc",
+        "url",
         "packages/*"
     ]
 }

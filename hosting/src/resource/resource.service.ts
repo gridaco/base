@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import S3 from "aws-sdk/clients/s3"
-import { FileHostingResult } from "@bridged.xyz/client-sdk/lib/hosting/types"
+import { FileHostingResult } from "@bridged.xyz/client-sdk/dist/hosting/types"
 import { nanoid } from 'nanoid';
 const s3 = new S3({
     region: "us-west-1"

@@ -1,5 +1,5 @@
 {
-  "name": "resource-hosting",
+  "name": "url",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -31,8 +31,7 @@
     "nanoid": "^3.1.16",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^6.5.4",
-    "uguu-api": "^0.1.8"
+    "rxjs": "^6.5.4"
   },
   "devDependencies": {
     "@hewmen/serverless-plugin-typescript": "^1.1.17",
@@ -52,6 +51,8 @@
     "jest": "26.4.2",
     "plugin": "^0.3.3",
     "prettier": "^1.19.1",
+    "serverless-dotenv-plugin": "^3.1.0",
+    "serverless-dynamodb-local": "^0.2.39",
     "serverless-domain-manager": "^5.1.0",
     "serverless-offline": "^6.8.0",
     "serverless-plugin-optimize": "^4.1.4-rc.1",
