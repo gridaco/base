@@ -29,7 +29,8 @@ export class DartServices {
             return res.data
         } catch (e) {
             return {
-                error: e.response.data.error
+                error: e.response.data.error,
+                sucess: false
             }
         }
     }
@@ -54,6 +55,7 @@ export class DartServices {
         if (compiled.error) {
             return {
                 error: compiled.error,
+                sucess: false
             }
         } else {
             const complete = decorateJavascript(compiled?.result, { modulesBaseUrl: compiled.modulesBaseUrl });
@@ -61,6 +63,7 @@ export class DartServices {
                 result: complete,
                 sourceMap: null,
                 error: null,
+                sucess: true
             };
         }
     }

@@ -5,6 +5,7 @@
 
 
 interface BaseCompileResponse {
+    sucess: boolean
     result?: string
     error?: ErrorMessage
     took?: number

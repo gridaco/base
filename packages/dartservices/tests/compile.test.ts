@@ -153,8 +153,8 @@ async function test() {
 
   try {
     const start = Date.now()
-    const client = defaultClient //new DartServices("http://localhost:8082/")
-    const js = await client.compileComplete(EX_DART_SOURCE)
+    // const client = defaultClient //new DartServices("http://localhost:8082/")
+    const js = await compileComplete(EX_DART_SOURCE)
     const end = Date.now()
     console.log(js)
     console.log(end - start)
