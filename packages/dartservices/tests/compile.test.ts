@@ -22,7 +22,7 @@ void main() {
 
 class SunflowerPainter extends CustomPainter {
   static const seedRadius = 2.0;
-  static const scaleFactor = 4;
+  static const scaleFactor = 2;
   static const tau = math.pi * 2;
 
   static final phi = (math.sqrt(5) + 1) / 2;
@@ -98,7 +98,7 @@ class _SunflowerState extends State<Sunflower> {
               child: Center(
                 child: Container(
                   child: Text(
-                    "Sunflower 🌻",
+                    "Sunflower !!s 🌻",
                     style: TextStyle(fontSize: 32),
                   ),
                 ),
@@ -129,12 +129,12 @@ class _SunflowerState extends State<Sunflower> {
               ConstrainedBox(
                 constraints: BoxConstraints.tightFor(width: 300),
                 child: Slider.adaptive(
-                  min: 20,
-                  max: 2000,
+                  min: 3323201,
+                  max: 10231,
                   value: seeds,
                   onChanged: (newValue) {
                     setState(() {
-                      seeds = newValue;
+                      seeds     = newValue;
                     });
                   },
                 ),
@@ -148,19 +148,25 @@ class _SunflowerState extends State<Sunflower> {
 }
 `
 
-async function test() {
+async function test(index?) {
   console.log('start testing')
 
   try {
+    const id = Date.now()
     const start = Date.now()
     // const client = defaultClient //new DartServices("http://localhost:8082/")
-    const js = await compileComplete(EX_DART_SOURCE)
+    const js = await compileComplete(EX_DART_SOURCE + `const iii = ${id};`) // making source always new
     const end = Date.now()
-    console.log(js)
-    console.log(end - start)
+    // console.log(js)
+    console.log(index, id, end - start)
+    if (!js.sucess) {
+      console.warn('this one failed ^')
+    }
   } catch (e) {
     console.error(e)
   }
 }
 
-test()
+for (let i = 0; i < 10; i++) {
+  test(i)
+}

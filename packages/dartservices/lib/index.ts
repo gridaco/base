@@ -8,6 +8,16 @@ const BASE_URLS = [
 ]
 const API_PATH = "api/dartservices/v2"
 
+/**
+ * this is an error thrown by dart-services server, which is not a client problem, if you get this message, retry api call.
+ */
+const COMMON_DDC_ERRORS = [
+    "Could not resolve the package 'flutter' in 'package:flutter/material.dart'"
+]
+/**
+ * maximun retry number for handling common serverside errors.
+ */
+const MAX_RETRY = 5
 
 export class DartServices {
     readonly axios: AxiosInstance;
@@ -18,16 +28,42 @@ export class DartServices {
     }
 
     /**
+     * cursor that holds retry counts of requests.
+     */
+    retryCursors: Map<number, number> = new Map<number, number>();
+    /**
      * use this for flutter code compile
      * @param source 
      */
-    async compileDDC(source: string): Promise<CompileDDCResponse> {
+    async compileDDC(source: string, cursor?: number): Promise<CompileDDCResponse> {
         try {
             const res = await this.axios.post("/compileDDC", <CompileRequest>{
                 source: source,
             })
             return res.data
         } catch (e) {
+            if (COMMON_DDC_ERRORS.some((errmsg) => { return (e.response.data.error?.message ?? '' as string).includes(errmsg) })) {
+                // console.warn('dart-services serverside issue detected.')
+                if (!cursor) {
+                    // create cursor
+                    cursor = Date.now()
+                    this.retryCursors[cursor] = 1
+                } else {
+                    // console.log(`retrying with cursor ${cursor}`)
+                    this.retryCursors[cursor] = this.retryCursors[cursor] + 1
+                    if (this.retryCursors[cursor] > MAX_RETRY) {
+                        // delete the cursor.
+                        this.retryCursors.delete(cursor)
+                        console.warn('retried, but failed. closing.')
+                        return {
+                            error: e.response.data.error,
+                            sucess: false
+                        }
+                    }
+                }
+                console.warn('dart-services failed with serverside issues. retrying.. re entry of', this.retryCursors[cursor])
+                return await this.compileDDC(source, cursor)
+            }
             return {
                 error: e.response.data.error,
                 sucess: false
