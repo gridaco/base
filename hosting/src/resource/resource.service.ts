@@ -4,7 +4,7 @@ import { FileHostingResult } from "@bridged.xyz/client-sdk/dist/hosting/types"
 import { nanoid } from 'nanoid';
 const REGION = "us-west-1"
 const s3 = new S3({
-    region: REGION
+    region: REGION,
 })
 
 const FILE_HOSTING_BUKET = 'resource-hosting';
@@ -21,15 +21,17 @@ function buildS3ResourceUrl(props: {
 
 @Injectable()
 export class ResourceService {
-    async upload(file: Buffer, name: string): Promise<FileHostingResult> {
+    async upload(args: { file: Buffer, mimeType: string, encoding: string, name: string }): Promise<FileHostingResult> {
+        const { file, mimeType, encoding, name } = args
         // File name you want to save as in S3
         const key = `${nanoid(8)}-${name}`
         // Setting up S3 upload parameters
+
         const params: S3.Types.PutObjectRequest = {
             Bucket: FILE_HOSTING_BUKET,
             Key: key,
             ACL: 'public-read',
-            Body: file // Buffer.from(file)
+            Body: file
         };
 
         // Uploading files to the bucket

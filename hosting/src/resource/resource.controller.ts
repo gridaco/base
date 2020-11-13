@@ -10,6 +10,12 @@ export class ResourceController {
     @Post('/')
     @UseInterceptors(FileInterceptor('file'))
     async upload(@UploadedFile() file) {
-        return await this.resourceService.upload(file.buffer, file.originalname);
+        console.log(`uploading file..`, file.originalname, file.mimetype, file.encoding)
+        return await this.resourceService.upload({
+            file: file.buffer,
+            encoding: file.encoding,
+            name: file.originalname ? file.originalname : "",
+            mimeType: file.mimetype ? file.mimetype : "*/*"
+        });
     }
 }
