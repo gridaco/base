@@ -11,12 +11,19 @@ const TBL_VARIANT_ASSETS = process.env.DYNAMODB_TABLE_VARIANT_ASSETS
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
 
-    getHello(): string {
-        return 'Welcome to bridged hosting service. Learn more at https://github.com/bridgedxyz/services/';
+    async updateVariantItem(args: {
+        variantAssetId: string
+        variant: string
+        newValue: string
+    }) {
+        // find variant field's linked asset
+        // update asset's value
+        this.rawAssetsService.updateRawAsset()
+        // return updated full assetVariant
     }
 
     async createVariantAsset(request: any): Promise<any> {
-
+        const id = nanoid()
     }
 
     async getVariantAsset(id: string): Promise<any> {

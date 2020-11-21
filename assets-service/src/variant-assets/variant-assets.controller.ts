@@ -11,6 +11,24 @@ export class VariantAssetsController {
 
     }
 
+    @Post('/:id/variant/:variant')
+    async postVariantUpdate(@Param() p: {
+        id: string
+        variant: string
+    }, @Body() req: {
+        value: string
+    }): Promise<any> {
+        const updatedVariantAsset = await this.variantAssetsService.updateVariantItem({
+            variantAssetId: p.id,
+            variant: p.variant,
+            newValue: req.value
+        })
+
+        return {
+            data: updatedVariantAsset
+        }
+    }
+
     @Get(':id')
     async getVariantAsset(@Param() p: { id: string }): Promise<any> {
         const id = p.id

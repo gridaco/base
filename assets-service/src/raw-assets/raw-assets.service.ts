@@ -44,4 +44,8 @@ export class RawAssetsService {
         const record: Asset = itemRes.Item as Asset
         return record
     }
+
+    async updateRawAsset() {
+        throw 'not implemented'
+    }
 }
