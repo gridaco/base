@@ -1,28 +1,19 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Redirect, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, Redirect, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import { AssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
+import { Asset, AssetRegisterRequest, AssetRegisterResponse } from "@bridged.xyz/client-sdk/lib"
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('/')
+  async getHello() {
+    return this.appService.getHello()
   }
 
-  @Get(':id')
-  async getRedirect(@Param() params) {
-
-  }
-
-  @Put('/raw')
-  async putRawAsset(@Body() req: AssetRegisterRequest) {
+  @Get('/variant-assets/:id')
+  async getVariantAsset(@Param() p: { id: string }) {
 
   }
 
-  @Patch('/raw/:id')
-  async patchRawAsset(@Body() req: AssetRegisterRequest) {
-
-  }
 }
