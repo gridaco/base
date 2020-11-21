@@ -3,12 +3,12 @@
     "version": "0.0.1",
     "private": true,
     "workspaces": [
-        "asset",
-        "build",
-        "hosting",
-        "project",
-        "resources",
-        "url",
+        "assets-service",
+        "build-service",
+        "hosting-service",
+        "project-service",
+        "resources-service",
+        "url-service",
         "packages/*"
     ]
 }
