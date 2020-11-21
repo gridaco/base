@@ -3,7 +3,11 @@
     "version": "0.0.1",
     "private": true,
     "workspaces": [
+        "asset",
+        "build",
         "hosting",
+        "project",
+        "resources",
         "url",
         "packages/*"
     ]
