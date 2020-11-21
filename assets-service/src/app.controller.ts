@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Redirect, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Redirect, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-import { UrlShortenRequest, UrlShortenResult } from "@bridged.xyz/client-sdk/dist/url/types"
+import { AssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
 
 @Controller()
 export class AppController {
@@ -16,8 +16,13 @@ export class AppController {
 
   }
 
-  @Post('/short')
-  async postShort(@Body() req: UrlShortenRequest) {
+  @Put('/raw')
+  async putRawAsset(@Body() req: AssetRegisterRequest) {
+
+  }
+
+  @Patch('/raw/:id')
+  async patchRawAsset(@Body() req: AssetRegisterRequest) {
 
   }
 }

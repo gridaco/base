@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from "aws-sdk"
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 
