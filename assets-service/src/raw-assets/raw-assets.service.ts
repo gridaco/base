@@ -45,6 +45,17 @@ export class RawAssetsService {
         return record
     }
 
+    async getRawAssets(ids: string[]): Promise<Array<Asset>> {
+        // TODO -> implement this via batch query for better performance
+        const requests: Array<Promise<Asset>> = []
+        for (const id of ids) {
+            requests.push(this.getRawAsset(id))
+        }
+
+        const results = await Promise.all(requests)
+        return results
+    }
+
     async updateRawAsset() {
         throw 'not implemented'
     }

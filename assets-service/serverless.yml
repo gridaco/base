@@ -17,6 +17,49 @@ custom:
     stage: ${self:provider.stage}
     createRoute53Record: true
 
+
+resources:
+  Resources:
+    rawAssetsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: "${self:provider.environment.DYNAMODB_TABLE_RAW_ASSETS}"
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    variantAssetsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: "${self:provider.environment.DYNAMODB_TABLE_VARIANT_ASSETS}"
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: projectId
+            AttributeType: S
+        GlobalSecondaryIndexes:
+          - IndexName: projectIndex
+            KeySchema:
+              - AttributeName: projectId
+                KeyType: HASH
+            Projection: 
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+
 provider:
   name: aws
   runtime: nodejs12.x
@@ -47,34 +90,6 @@ provider:
         - dynamodb:DeleteItem
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_VARIANT_ASSETS}"
 
-resources:
-  Resources:
-    rawAssetsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: "${self:provider.environment.DYNAMODB_TABLE_RAW_ASSETS}"
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-    variantAssetsTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: "${self:provider.environment.DYNAMODB_TABLE_VARIANT_ASSETS}"
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
 
 package:
   individually: true

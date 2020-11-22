@@ -11,9 +11,4 @@ export class AppController {
     return this.appService.getHello()
   }
 
-  @Get('/variant-assets/:id')
-  async getVariantAsset(@Param() p: { id: string }) {
-
-  }
-
 }
