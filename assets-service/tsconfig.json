@@ -2,14 +2,22 @@
   "compilerOptions": {
     "module": "commonjs",
     "declaration": true,
+    "noImplicitAny": false,
     "removeComments": true,
+    "noLib": false,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "allowSyntheticDefaultImports": true,
-    "target": "es2017",
+    "target": "es6",
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true
-  }
+    "typeRoots": [
+      "./node_modeuls/@types"
+    ]
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }
