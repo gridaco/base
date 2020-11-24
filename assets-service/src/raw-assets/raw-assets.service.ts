@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from "aws-sdk"
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { AssetRegisterRequest, Asset } from "@bridged.xyz/client-sdk/lib";
+import { RawAssetRegisterRequest, RawAsset } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -13,7 +13,7 @@ export class RawAssetsService {
         return 'Welcome to bridged hosting service. Learn more at https://github.com/bridgedxyz/services/';
     }
 
-    async createRawAsset(request: AssetRegisterRequest): Promise<Asset> {
+    async createRawAsset(request: RawAssetRegisterRequest): Promise<RawAsset> {
 
         // TODO handle by types. -> if input contains image, then host image and make a asset record.
         // only text asset is supported at this point
@@ -34,20 +34,20 @@ export class RawAssetsService {
         }
     }
 
-    async getRawAsset(id: string): Promise<Asset> {
+    async getRawAsset(id: string): Promise<RawAsset> {
         const query: DocumentClient.GetItemInput = {
             TableName: TBL_RAW_ASSETS,
             Key: { id: id }
         }
 
         const itemRes = await dynamoDb.get(query).promise()
-        const record: Asset = itemRes.Item as Asset
+        const record: RawAsset = itemRes.Item as RawAsset
         return record
     }
 
-    async getRawAssets(ids: string[]): Promise<Array<Asset>> {
+    async getRawAssets(ids: string[]): Promise<Array<RawAsset>> {
         // TODO -> implement this via batch query for better performance
-        const requests: Array<Promise<Asset>> = []
+        const requests: Array<Promise<RawAsset>> = []
         for (const id of ids) {
             requests.push(this.getRawAsset(id))
         }

@@ -1,5 +1,7 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Redirect, Req } from '@nestjs/common';
+import { StorableSceneType } from '@bridged.xyz/client-sdk/lib';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Redirect, Req } from '@nestjs/common';
 import { AppService } from './app.service';
+
 
 @Controller()
 export class AppController {
@@ -8,10 +10,5 @@ export class AppController {
   @Get()
   async getHello() {
     return await this.appService.getHello();
-  }
-
-  @Post('/')
-  async postRegisterScene(@Body() body) {
-    return await this.appService.registerScreen(body)
   }
 }
