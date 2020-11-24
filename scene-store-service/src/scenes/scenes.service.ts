@@ -1,4 +1,4 @@
-import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk/lib';
+import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
 import * as dynamoose from "dynamoose";
 import { NestedLayerRecord, Scene, SceneRecord } from "../app.entity"
