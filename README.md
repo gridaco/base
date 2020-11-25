@@ -17,8 +17,18 @@
 - [dartservices](./packages/dartservices)
 
 
+```shell
+# cloning with git submodules
+git clone https://github.com/bridgedxyz/services.git --recurse-submodules
+
+# pulling with git submodules (second entry)
+git submodule update --init --recursive
+```
+
+
 ## Docs
 [birdged msa docs on notion](https://www.notion.so/bridgedxyz/services-msa-d00ff606766d4df09a2ea8dcfa1b0de2)
+
 
 
 

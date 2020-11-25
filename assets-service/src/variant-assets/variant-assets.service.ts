@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from "aws-sdk"
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { Asset, AssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib";
+import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetTable } from '../app.entity';
@@ -29,10 +29,10 @@ export class VariantAssetsService {
         // register assets first
         console.log('request.initialAssets', request.initialAssets)
         const initialAssetKeys = Object.keys(request.initialAssets)
-        const registeredRawAssets: Array<Asset> = []
+        const registeredRawAssets: Array<RawAsset> = []
         for (const key of initialAssetKeys) {
             const minimizedAssetRegisterRequest: NestedAssetRegisterRequest = request.initialAssets[key]
-            const fullAssetRegiisterRequest: AssetRegisterRequest = {
+            const fullAssetRegiisterRequest: RawAssetRegisterRequest = {
                 name: minimizedAssetRegisterRequest.name,
                 value: minimizedAssetRegisterRequest.value,
                 tags: minimizedAssetRegisterRequest.tags,
@@ -136,8 +136,8 @@ export class VariantAssetsService {
      * @param assetMap 
      * @param assets 
      */
-    private assetsToMap(assetMap: Map<string, string>, assets: Asset[]): Map<string, Asset> {
-        const result = new Map<string, Asset>()
+    private assetsToMap(assetMap: Map<string, string>, assets: RawAsset[]): Map<string, RawAsset> {
+        const result = new Map<string, RawAsset>()
         const assetKeys = Object.keys(assetMap)
         for (const key of assetKeys) {
             const assetId = assetMap[key]
