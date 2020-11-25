@@ -105,6 +105,12 @@ export interface SceneRecord {
      * the height of the scene. as-is
      */
     height: number
+
+    /**
+     * the background of this scene. can be color or asset uri.
+     * in most cases, it will be color. #FFFFFF
+     */
+    background: string
 }
 
 
@@ -181,9 +187,35 @@ export interface NestedLayerRecord {
 
 const TABLE = process.env.DYNAMODB_TABLE
 
-// export const Layer = new dynamoose.Schema({})
 
-export const Scene = new dynamoose.Schema({
+export const NestedLayer = new dynamoose.Schema({
+    nodeId: String,
+    key: String,
+    index: Number,
+    name: String,
+    sdkVersion: String,
+    node: Object,
+    type: {
+        type: String,
+        enum: ["INSTANCE", "GROUP", "VANILLA"]
+    },
+    layers: {
+        type: {
+            value: Array,
+            settings: {
+                model: dynamoose.THIS as any
+            }
+        },
+    },
+    componentId: String,
+    width: Number,
+    height: Number,
+}, {
+    saveUnknown: true,
+})
+
+
+export const SceneScheam = new dynamoose.Schema({
     id: String,
     projectId: String,
     fileId: String,
@@ -191,29 +223,37 @@ export const Scene = new dynamoose.Schema({
     sdkVersion: String,
     //DesignPlatformType
     designPlatform: {
-        "type": String,
-        "enum": ["com.figma.Desktop", "com.bohemiancoding.sketch3", "xyz.bridged.bridged"]
+        type: String,
+        enum: ["com.figma.Desktop", "com.bohemiancoding.sketch3", "xyz.bridged.bridged"]
     },
     cachedPreview: String,
     // SceneType
     sceneType: {
-        "type": String,
-        "enum": ["SCREEN", "COMPONENT", "DOCS"]
+        type: String,
+        enum: ["SCREEN", "COMPONENT", "DOCS"]
     },
     route: String,
     path: String,
     name: String,
     description: String,
     tags: {
-        "type": Set,
-        "schema": [String]
+        type: Set,
+        schema: [String]
     },
     alias: String,
     variant: String,
-    // layers: {
-    //     type: Set,
-    //     schema: Layer
-    // },
+    layers: {
+        type: Array,
+        schema: [NestedLayer as any]
+    },
     width: Number,
-    height: Number
+    height: Number,
+    background: String
+}, {
+    // https://github.com/dynamoose/dynamoose/pull/1050
+    saveUnknown: true
+})
+
+export const Scene = dynamoose.model(TABLE, SceneScheam, {
+    create: false
 });

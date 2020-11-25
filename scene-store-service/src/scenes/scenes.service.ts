@@ -1,26 +1,24 @@
 import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
 import * as dynamoose from "dynamoose";
-import { NestedLayerRecord, Scene, SceneRecord } from "../app.entity"
-
-
-// Create new DynamoDB instance
-const ddb = new dynamoose.aws.sdk.DynamoDB({});
-// Set DynamoDB instance to the Dynamoose DDB instance
-dynamoose.aws.ddb.set(ddb);
+import { NestedLayerRecord, Scene, NestedLayer, SceneRecord } from "../app.entity"
 
 
 @Injectable()
 export class ScenesService {
     async registerScreen(request) {
+
         const sdkVer = SdkVersion.v2020_0
-        const layer = <NestedLayerRecord>{
-            nodeId: "",
-            key: undefined,
+
+        const someChild = <NestedLayerRecord>{
+            nodeId: "other",
+            key: 'yolo',
             index: 0,
-            name: "",
+            name: "text:1",
             sdkVersion: sdkVer,
-            node: {},
+            node: {
+                text: "hi~"
+            },
             type: StorableLayerType.vanilla,
             layers: undefined,
             componentId: undefined,
@@ -28,8 +26,25 @@ export class ScenesService {
             height: 0,
         }
 
-        const sceneTable = dynamoose.model(process.env.DYNAMODB_TABLE, Scene)
-        const scene = new sceneTable(<SceneRecord>{
+        const layer = <NestedLayerRecord>{
+            id: "testing id",
+            nodeId: "",
+            key: undefined,
+            index: 0,
+            name: "",
+            sdkVersion: sdkVer,
+            node: {
+                anything: "test"
+            },
+            type: StorableLayerType.vanilla,
+            layers: [someChild,],
+            componentId: undefined,
+            width: 0,
+            height: 0,
+        }
+
+
+        const scene = new Scene({
             id: "test",
             projectId: "demo",
             fileId: "test",
@@ -38,24 +53,28 @@ export class ScenesService {
             designPlatform: DesignPlatform.figma,
             cachedPreview: "https://example.com/dog.png",
             sceneType: StorableSceneType.screen,
-            route: "",
-            path: "",
-            name: "",
-            description: "",
+            route: "/home",
+            path: "/home",
+            name: "home",
+            description: "home screen",
             tags: ["1", "2"],
-            alias: "",
-            variant: "",
+            alias: "home",
+            variant: "default",
             layers: [layer],
             width: 100,
             height: 100,
         });
 
-        const saved = await scene.save()
-        console.log('screen registered', saved)
+        // const saved = await scene.save()
+
+        const saved = await new Scene(request).save()
+
+        return saved
     }
 
     async fetchScene(id: string) {
-        throw 'fetch scene not implemented'
+        const scene = await Scene.get({ id: id })
+        return scene
     }
 
     async updateSceneInfo(request: {
