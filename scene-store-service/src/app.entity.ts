@@ -215,7 +215,7 @@ export const NestedLayer = new dynamoose.Schema({
 })
 
 
-export const SceneScheam = new dynamoose.Schema({
+export const SceneSchema = new dynamoose.Schema({
     id: String,
     projectId: String,
     fileId: String,
@@ -254,6 +254,6 @@ export const SceneScheam = new dynamoose.Schema({
     saveUnknown: true
 })
 
-export const Scene = dynamoose.model(TABLE, SceneScheam, {
+export const Scene = dynamoose.model(TABLE, SceneSchema, {
     create: false
 });
