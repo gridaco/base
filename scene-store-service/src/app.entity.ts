@@ -52,8 +52,6 @@ export interface SceneRecord {
      */
     route?: string
 
-    path?: string
-
     /**
      * name of this layer described by designer, defaults to the node's name, can be overriden through the console.
      * which means, the name can be different with the design node's name.
@@ -124,11 +122,6 @@ export interface NestedLayerRecord {
      */
     nodeId: string
 
-    /**
-     * the key of this vanilla typed layer.
-     * only vanilla typed layer can hold key, this key is used for matching text / image resource to be displayed through this layer.
-     */
-    key?: string
 
     /**
      * the index of this layer based on the scene it's attatched to. the layer under parent group layer will still have index relative to root scene.
@@ -233,7 +226,6 @@ export const SceneSchema = new dynamoose.Schema({
         enum: ["SCREEN", "COMPONENT", "DOCS"]
     },
     route: String,
-    path: String,
     name: String,
     description: String,
     tags: {
