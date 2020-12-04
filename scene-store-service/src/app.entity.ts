@@ -1,4 +1,4 @@
-import { StorableSceneType, DesignPlatform, SdkVersion, StorableLayerType } from "@bridged.xyz/client-sdk"
+import { StorableSceneType, DesignPlatform, SdkVersion, StorableLayerType } from "@bridged.xyz/client-sdk/lib"
 import * as dynamoose from "dynamoose";
 
 

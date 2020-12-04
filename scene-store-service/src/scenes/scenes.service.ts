@@ -1,4 +1,4 @@
-import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
+import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk/lib';
 import { Injectable } from '@nestjs/common';
 import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk/lib"
 import { NestedLayerRecord, Scene } from "../app.entity"
