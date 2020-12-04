@@ -1,6 +1,6 @@
-import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk/lib';
+import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
-import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk/lib"
+import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk"
 import { NestedLayerRecord, Scene } from "../app.entity"
 import { nanoid } from 'nanoid';
 
@@ -89,10 +89,14 @@ export class ScenesService {
 function convertStorableLayerToNestedLayer(layer: StorableLayer): NestedLayerRecord {
     // TODO
 
-    const nestedChildLayers: NestedLayerRecord[] = layer.layers?.map((childLayre: StorableLayer) => {
-        const nestedChildLayer = convertStorableLayerToNestedLayer(childLayre)
-        return nestedChildLayer;
-    })
+    let nestedChildLayers: NestedLayerRecord[];
+    if (layer.layers) {
+        nestedChildLayers = layer.layers.map((childLayre: StorableLayer) => {
+            const nestedChildLayer = convertStorableLayerToNestedLayer(childLayre)
+            return nestedChildLayer;
+        })
+    }
+
 
     const convertedLayer = <NestedLayerRecord>{
         nodeId: layer.id,

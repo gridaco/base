@@ -1,3 +1,4 @@
+import { SceneRegisterRequest } from '@bridged.xyz/client-sdk/lib';
 import { StorableSceneType } from '@bridged.xyz/client-sdk/lib';
 import { Body, Controller, Get, HttpCode, Param, Post, Query, Redirect, Req } from '@nestjs/common';
 import { ScenesService } from './scenes.service';
@@ -46,7 +47,7 @@ export class ScenesController {
     constructor(private readonly scenesService: ScenesService) { }
 
     @Post('/')
-    async postRegisterScene(@Body() body) {
+    async postRegisterScene(@Body() body: SceneRegisterRequest) {
         return await this.scenesService.registerScreen(body)
     }
 
