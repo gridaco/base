@@ -1,73 +1,51 @@
-import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
+import { DesignPlatform, SdkVersion, StorableLayerType } from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
-import * as dynamoose from "dynamoose";
-import { NestedLayerRecord, Scene, NestedLayer, SceneRecord } from "../app.entity"
+import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk"
+import { NestedLayerRecord, Scene } from "../app.entity"
+import { nanoid } from 'nanoid';
+
+const sdkVer = SdkVersion.v2020_0
 
 
+// TODO - choose multipart or json.
+// if multipart, get the full request including the image in single request.
+// if json way, image must be uploaded, or atleast the url must be reserved before posting a register scene request.
+
+
+// how to handle nested component? -> we should also upload the components linked. how to handle this case.
 @Injectable()
 export class ScenesService {
-    async registerScreen(request) {
+    async registerScreen(request: SceneRegisterRequest) {
 
-        const sdkVer = SdkVersion.v2020_0
-
-        const someChild = <NestedLayerRecord>{
-            nodeId: "other",
-            key: 'yolo',
-            index: 0,
-            name: "text:1",
-            sdkVersion: sdkVer,
-            node: {
-                text: "hi~"
-            },
-            type: StorableLayerType.vanilla,
-            layers: undefined,
-            componentId: undefined,
-            width: 0,
-            height: 0,
-        }
-
-        const layer = <NestedLayerRecord>{
-            id: "testing id",
-            nodeId: "",
-            key: undefined,
-            index: 0,
-            name: "",
-            sdkVersion: sdkVer,
-            node: {
-                anything: "test"
-            },
-            type: StorableLayerType.vanilla,
-            layers: [someChild,],
-            componentId: undefined,
-            width: 0,
-            height: 0,
-        }
+        // convert storable layer from request to nested layer record.
+        const nestedLayers: NestedLayerRecord[] = request.layers.map((l: StorableLayer) => {
+            const nestedLayer = convertStorableLayerToNestedLayer(l)
+            return nestedLayer
+        })
 
 
+        const id = nanoid()
         const scene = new Scene({
-            id: "test",
-            projectId: "demo",
-            fileId: "test",
-            nodeId: "test",
+            id: id,
+            projectId: request.projectId,
+            fileId: request.fileId,
+            nodeId: request.nodeId,
             sdkVersion: sdkVer,
             designPlatform: DesignPlatform.figma,
-            cachedPreview: "https://example.com/dog.png",
-            sceneType: StorableSceneType.screen,
-            route: "/home",
-            path: "/home",
-            name: "home",
-            description: "home screen",
-            tags: ["1", "2"],
-            alias: "home",
-            variant: "default",
-            layers: [layer],
-            width: 100,
-            height: 100,
+            cachedPreview: request.preview,
+            sceneType: request.sceneType,
+            route: request.route,
+            name: request.name,
+            description: request.description,
+            tags: request.tags,
+            alias: request.alias,
+            variant: request.variant,
+            layers: nestedLayers,
+            width: request.width,
+            height: request.height,
         });
 
-        // const saved = await scene.save()
-
-        const saved = await new Scene(request).save()
+        const saved = await scene.save()
 
         return saved
     }
@@ -96,4 +74,46 @@ export class ScenesService {
             // update description
         }
     }
+
+
+    // multipart form request with image data
+    async updateScenePreview() {
+        // connect to asset service, host the image.
+    }
+}
+
+
+/**
+ * converts / maps storable layer (wich is also nested type,) to db nested layers type.
+ */
+function convertStorableLayerToNestedLayer(layer: StorableLayer): NestedLayerRecord {
+    // TODO
+
+    let nestedChildLayers: NestedLayerRecord[];
+    if (layer.layers) {
+        nestedChildLayers = layer.layers.map((childLayre: StorableLayer) => {
+            const nestedChildLayer = convertStorableLayerToNestedLayer(childLayre)
+            return nestedChildLayer;
+        })
+    }
+
+
+    const convertedLayer = <NestedLayerRecord>{
+        nodeId: layer.nodeId,
+        index: layer.index,
+        name: layer.name,
+        sdkVersion: sdkVer,
+        data: layer.data,
+        type: layer.type,
+        layers: nestedChildLayers,
+
+        // TODO linked component to layer is currently not supported.
+        componentId: undefined,
+        width: layer.width,
+        height: layer.height,
+        x: layer.x,
+        y: layer.y
+    }
+
+    return convertedLayer
 }

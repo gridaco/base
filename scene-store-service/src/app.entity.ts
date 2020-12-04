@@ -1,4 +1,4 @@
-import { StorableSceneType, DesignPlatform, SdkVersion, StorableLayerType } from "@bridged.xyz/client-sdk"
+import { StorableSceneType, DesignPlatform, SdkVersion, StorableLayerType } from "@bridged.xyz/client-sdk/lib"
 import * as dynamoose from "dynamoose";
 
 
@@ -51,8 +51,6 @@ export interface SceneRecord {
      * the route of this scene, used for screen.
      */
     route?: string
-
-    path?: string
 
     /**
      * name of this layer described by designer, defaults to the node's name, can be overriden through the console.
@@ -124,11 +122,6 @@ export interface NestedLayerRecord {
      */
     nodeId: string
 
-    /**
-     * the key of this vanilla typed layer.
-     * only vanilla typed layer can hold key, this key is used for matching text / image resource to be displayed through this layer.
-     */
-    key?: string
 
     /**
      * the index of this layer based on the scene it's attatched to. the layer under parent group layer will still have index relative to root scene.
@@ -149,7 +142,7 @@ export interface NestedLayerRecord {
     /**
      * the transport node data of this layer. often used with vanilla layer transport's data configuration.
      */
-    node: object
+    data: object
 
     /**
      * the type of the layer. it can be instance, group, or vanilla.
@@ -197,7 +190,7 @@ export const NestedLayer = new dynamoose.Schema({
     node: Object,
     type: {
         type: String,
-        enum: ["INSTANCE", "GROUP", "VANILLA"]
+        enum: ["INSTANCE", "GROUP", "VANILLA", "TEXT", "LINE", "VECTOR", "IMAGE"]
     },
     layers: {
         type: {
@@ -215,7 +208,7 @@ export const NestedLayer = new dynamoose.Schema({
 })
 
 
-export const SceneScheam = new dynamoose.Schema({
+export const SceneSchema = new dynamoose.Schema({
     id: String,
     projectId: String,
     fileId: String,
@@ -233,7 +226,6 @@ export const SceneScheam = new dynamoose.Schema({
         enum: ["SCREEN", "COMPONENT", "DOCS"]
     },
     route: String,
-    path: String,
     name: String,
     description: String,
     tags: {
@@ -254,6 +246,6 @@ export const SceneScheam = new dynamoose.Schema({
     saveUnknown: true
 })
 
-export const Scene = dynamoose.model(TABLE, SceneScheam, {
+export const Scene = dynamoose.model(TABLE, SceneSchema, {
     create: false
 });

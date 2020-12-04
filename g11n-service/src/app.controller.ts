@@ -1,13 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, Redirect, Req } from '@nestjs/common';
 import { AppService } from './app.service';
-
 
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
-  @Get()
+  @Get('/')
   async getHello() {
-    return await this.appService.getHello();
+    return this.appService.getHello()
   }
+
 }
