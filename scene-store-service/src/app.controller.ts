@@ -1,5 +1,4 @@
-import { StorableSceneType } from '@bridged.xyz/client-sdk/lib';
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Redirect, Req } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 
 

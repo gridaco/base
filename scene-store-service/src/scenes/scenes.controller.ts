@@ -1,6 +1,6 @@
-import { SceneRegisterRequest } from '@bridged.xyz/client-sdk/lib';
-import { StorableSceneType } from '@bridged.xyz/client-sdk/lib';
-import { Body, Controller, Get, HttpCode, Param, Post, Query, Redirect, Req } from '@nestjs/common';
+import { SceneRegisterRequest } from '@bridged.xyz/client-sdk';
+import { StorableSceneType } from '@bridged.xyz/client-sdk';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ScenesService } from './scenes.service';
 
 

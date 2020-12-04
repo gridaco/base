@@ -13,6 +13,8 @@ custom:
     basePath: ''
     stage: ${self:provider.stage}
     createRoute53Record: true
+  serverless-offline:
+    httpPort: 4000
 
 provider:
   name: aws

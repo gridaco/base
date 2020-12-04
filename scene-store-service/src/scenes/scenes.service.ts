@@ -1,4 +1,4 @@
-import { DesignPlatform, SdkVersion, StorableLayerType, StorableSceneType } from '@bridged.xyz/client-sdk';
+import { DesignPlatform, SdkVersion, StorableLayerType } from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
 import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk"
 import { NestedLayerRecord, Scene } from "../app.entity"
@@ -99,18 +99,20 @@ function convertStorableLayerToNestedLayer(layer: StorableLayer): NestedLayerRec
 
 
     const convertedLayer = <NestedLayerRecord>{
-        nodeId: layer.id,
+        nodeId: layer.nodeId,
         index: layer.index,
         name: layer.name,
         sdkVersion: sdkVer,
-        node: layer.data,
-        type: StorableLayerType.vanilla,
+        data: layer.data,
+        type: layer.type,
         layers: nestedChildLayers,
 
         // TODO linked component to layer is currently not supported.
         componentId: undefined,
         width: layer.width,
         height: layer.height,
+        x: layer.x,
+        y: layer.y
     }
 
     return convertedLayer

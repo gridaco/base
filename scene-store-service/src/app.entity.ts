@@ -142,7 +142,7 @@ export interface NestedLayerRecord {
     /**
      * the transport node data of this layer. often used with vanilla layer transport's data configuration.
      */
-    node: object
+    data: object
 
     /**
      * the type of the layer. it can be instance, group, or vanilla.
@@ -190,7 +190,7 @@ export const NestedLayer = new dynamoose.Schema({
     node: Object,
     type: {
         type: String,
-        enum: ["INSTANCE", "GROUP", "VANILLA"]
+        enum: ["INSTANCE", "GROUP", "VANILLA", "TEXT", "LINE", "VECTOR", "IMAGE"]
     },
     layers: {
         type: {
