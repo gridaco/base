@@ -190,7 +190,7 @@ export const NestedLayer = new dynamoose.Schema({
     node: Object,
     type: {
         type: String,
-        enum: ["INSTANCE", "GROUP", "VANILLA", "TEXT", "LINE", "VECTOR", "IMAGE"]
+        enum: ["INSTANCE", "GROUP", "VANILLA", "TEXT", "LINE", "VECTOR", "IMAGE", "RECT"]
     },
     layers: {
         type: {
