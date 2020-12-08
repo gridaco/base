@@ -7,7 +7,12 @@ export class AppController {
 
   @Get('/')
   async getHello() {
-    return this.appService.getHello()
+    return 'service is running'
+  }
+
+  @Post('/keys')
+  async postRegisterKey(@Body() request) {
+    return await this.appService.registerNewKey(request)
   }
 
 }

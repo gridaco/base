@@ -2,12 +2,13 @@ service:
   name: globalization
 
 plugins:
-  - serverless-dotenv-plugin
+  - serverless-plugin-monorepo
   - '@hewmen/serverless-plugin-typescript'  
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-dynamodb-local
   - serverless-domain-manager
+
 
 custom:
   customDomain:
