@@ -1,6 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import * as AWS from "aws-sdk"
-import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { nanoid } from 'nanoid';
 
 
@@ -10,4 +8,24 @@ export class AppService {
     return 'Welcome to bridged hosting service. Learn more at https://github.com/bridgedxyz/services/';
   }
 
+
+  createKey() {
+
+  }
+
+  deleteKey() {
+
+  }
+
+  udateKeyName() {
+
+  }
+
+  registerVariant() {
+
+  }
+
+  removeVariant() {
+
+  }
 }

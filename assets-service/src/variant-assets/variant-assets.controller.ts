@@ -1,6 +1,6 @@
-import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, Redirect, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { VariantAssetsService } from './variant-assets.service';
-import { Asset, AssetRegisterRequest, AssetRegisterResponse, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
+import { VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
 
 @Controller('variant-assets')
 export class VariantAssetsController {
