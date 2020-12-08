@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { nanoid } from 'nanoid';
-
-
+import { GlobalizedKeyRegisterRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
+import { KeyModel } from "./app.entity"
 @Injectable()
 export class AppService {
-  getHello(): string {
-    return 'Welcome to bridged hosting service. Learn more at https://github.com/bridgedxyz/services/';
-  }
+  async registerNewKey(request: GlobalizedKeyRegisterRequest) {
+    const input = new KeyModel({
+      projectId: 'temp',
+      keyName: request.keyName,
+      type: request.assetType,
+      embeddable: request.embeddable,
+    })
 
-
-  createKey() {
-
+    const newKeyRecord = await input.save()
+    console.log('new key created', newKeyRecord)
+    return newKeyRecord
   }
 
   deleteKey() {

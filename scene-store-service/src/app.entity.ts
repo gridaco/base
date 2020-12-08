@@ -241,10 +241,14 @@ export const SceneSchema = new dynamoose.Schema({
     width: Number,
     height: Number,
     background: String
-}, {
-    // https://github.com/dynamoose/dynamoose/pull/1050
-    saveUnknown: true
-})
+},
+    {
+        // https://github.com/dynamoose/dynamoose/pull/1050
+        saveUnknown: true
+    }
+)
+
+
 
 export const Scene = dynamoose.model(TABLE, SceneSchema, {
     create: false
