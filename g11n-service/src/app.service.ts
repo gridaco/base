@@ -16,19 +16,24 @@ export class AppService {
     return newKeyRecord
   }
 
-  deleteKey() {
+  async deleteKey(id: string) {
 
   }
 
-  udateKeyName() {
+  async udateKeyName(id: string, name: string) {
 
   }
 
-  registerVariant() {
 
+  registerTranslation() {
+    // register new asset via asset service
   }
 
   removeVariant() {
+
+  }
+
+  fetchiSingleAsset(keyId: string, locale: string) {
 
   }
 }
