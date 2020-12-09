@@ -33,6 +33,12 @@ export class VariantAssetsController {
         return this.variantAssetsService.getVariantAssetsInProject(projectId)
     }
 
+    @Get('/from-key/:key')
+    async getVariantAssetFromKey() {
+
+    }
+
+
     @Patch('/:id/variant/:variant')
     async postVariantUpdate(@Param() p: {
         id: string

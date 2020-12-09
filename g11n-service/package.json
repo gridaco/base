@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "description": "g11n asset linker service for bridged systems",
     "author": "bridged.xyz",
-    "private": true,
+    "private": false,
     "main": "dist/index.js",
     "license": "MIT",
     "scripts": {
