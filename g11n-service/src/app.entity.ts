@@ -1,5 +1,5 @@
 import { AssetType } from "@bridged.xyz/client-sdk/lib/assets"
-// import { keyNameFormatValidation } from "@bridged.xyz/client-sdk/lib/g11n"
+import { keyNameFormatValidation, placeholderNameFormatValidation, PlaceholderType } from "@bridged.xyz/client-sdk/lib/g11n"
 import * as dynamoose from "dynamoose"
 import { nanoid } from "nanoid"
 /**
@@ -38,6 +38,15 @@ export interface KeyRecord {
 }
 
 /**
+ * place holder used for creating templated text, e.g. - "hi {USER_NAME}, glad to meet you here again"
+ */
+export interface PlaceHolderRecord {
+    id: string
+    name: string
+    type: PlaceholderType
+}
+
+/**
  * maps scene's layer and asset's key together
  */
 export interface LayerKeyMapRecord {
@@ -51,6 +60,28 @@ export interface LayerKeyMapRecord {
      */
     layerId: string
 }
+
+
+const PlaceholderSchema = new dynamoose.Schema({
+    id: {
+        type: String,
+        hashKey: true,
+        required: true,
+        default: () => nanoid()
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: ["NUMBER", "DATE", "BOOLEAN", "TEXT", "CURRENCY"],
+        required: true
+    }
+}, {
+    saveUnknown: false
+})
+
 
 const KeySchema = new dynamoose.Schema({
     id: {
