@@ -3,7 +3,6 @@ import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantA
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetTable, VariantAssetModel } from '../app.entity';
-import * as dynamoose from "dynamoose"
 @Injectable()
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
@@ -66,8 +65,6 @@ export class VariantAssetsService {
 
         const builtAssetMap = this.assetsToMap(assetIdMap, registeredRawAssets)
 
-        console.log('builtAssetMap', builtAssetMap)
-
         return {
             ...created,
             assets: builtAssetMap
@@ -78,8 +75,6 @@ export class VariantAssetsService {
         console.log('fetching variant asset with id', id)
         const variantAsset = await VariantAssetModel.get(id)
         // as VariantAssetTable
-
-        console.log('fetched variantAsset', variantAsset)
 
         const assetsInVariantAsset = variantAsset.assets
         console.log('assetsInVariantAsset', assetsInVariantAsset)
@@ -129,26 +124,11 @@ export class VariantAssetsService {
     }
 
     async getVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
-        // const query: DocumentClient.QueryInput = {
-        //     TableName: TBL_VARIANT_ASSETS,
-        //     IndexName: 'projectIndex',
-        //     KeyConditionExpression: "projectId = :projectId",
-        //     ExpressionAttributeValues: {
-        //         ":projectId": projectId
-        //     }
-        // }
-
-
-        // const variantAssetRecords: VariantAssetTable[] = await (await dynamoDb.query(query).promise()).Items as VariantAssetTable[]
-        console.log('fetching variant assets in project', projectId)
         const PROJECT_INDEX_NAME = 'projectIndex'
         const variantAssetRecords = await VariantAssetModel.query('projectId')
             .eq(projectId)
             .using(PROJECT_INDEX_NAME)
             .exec()
-
-
-        console.log('variantAssetRecords', variantAssetRecords)
 
         const requests: Array<Promise<VariantAsset>> = []
         for (const variantAssetRecord of variantAssetRecords) {
