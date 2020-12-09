@@ -5,6 +5,7 @@
     "noImplicitAny": false,
     "removeComments": true,
     "noLib": false,
+    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,

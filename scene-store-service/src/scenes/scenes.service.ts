@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { SceneRegisterRequest, StorableLayer } from "@bridged.xyz/client-sdk"
 import { NestedLayerRecord, Scene } from "../app.entity"
 import { nanoid } from 'nanoid';
+import * as dynamoose from "dynamoose"
 
 const sdkVer = SdkVersion.v2020_0
 
@@ -24,27 +25,29 @@ export class ScenesService {
         })
 
 
+        console.log('request.nodeId', request.nodeId)
         const id = nanoid()
         const scene = new Scene({
             id: id,
             projectId: request.projectId,
-            fileId: request.fileId,
+            // fileId: request.fileId,
             nodeId: request.nodeId,
             sdkVersion: sdkVer,
             designPlatform: DesignPlatform.figma,
-            cachedPreview: request.preview,
+            // cachedPreview: request.preview,
             sceneType: request.sceneType,
-            route: request.route,
+            // route: request.route || dynamoose.UNDEFINED,
             name: request.name,
-            description: request.description,
-            tags: request.tags,
-            alias: request.alias,
-            variant: request.variant,
+            // description: request.description || dynamoose.UNDEFINED,
+            // tags: request.tags,
+            // alias: request.alias || dynamoose.UNDEFINED,
+            // variant: request.variant || dynamoose.UNDEFINED,
             layers: nestedLayers,
             width: request.width,
             height: request.height,
         });
 
+        console.log('saving scene', scene)
         const saved = await scene.save()
 
         return saved
@@ -105,10 +108,10 @@ function convertStorableLayerToNestedLayer(layer: StorableLayer): NestedLayerRec
         sdkVersion: sdkVer,
         data: layer.data,
         type: layer.type,
-        layers: nestedChildLayers,
+        layers: nestedChildLayers,// || dynamoose.UNDEFINED,
 
         // TODO linked component to layer is currently not supported.
-        componentId: undefined,
+        // componentId: dynamoose.UNDEFINED as any,
         width: layer.width,
         height: layer.height,
         x: layer.x,

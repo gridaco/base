@@ -1,13 +1,13 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query, Redirect, Req } from '@nestjs/common';
 import { RawAssetsService } from './raw-assets.service';
-import { Asset, AssetRegisterRequest, AssetRegisterResponse } from "@bridged.xyz/client-sdk/lib"
+import { RawAsset, RawAssetRegisterRequest, RawAssetRegisterResponse } from "@bridged.xyz/client-sdk/lib/assets"
 
 @Controller('raw-assets')
 export class RawAssetsController {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
 
     @Post('/')
-    async postRawAsset(@Body() req: AssetRegisterRequest): Promise<AssetRegisterResponse> {
+    async postRawAsset(@Body() req: RawAssetRegisterRequest): Promise<RawAssetRegisterResponse> {
         const asset = await this.rawAssetsService.createRawAsset(req)
 
         return {
@@ -18,7 +18,7 @@ export class RawAssetsController {
     }
 
     @Get(':id')
-    async getRawAsset(@Param() p: { id: string }): Promise<Asset> {
+    async getRawAsset(@Param() p: { id: string }): Promise<RawAsset> {
         const id = p.id
         const asset = await this.rawAssetsService.getRawAsset(id)
         return asset

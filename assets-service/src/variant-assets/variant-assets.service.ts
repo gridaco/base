@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import * as AWS from "aws-sdk"
-import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
-import { VariantAssetTable } from '../app.entity';
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
+import { VariantAssetTable, VariantAssetModel } from '../app.entity';
 
-const TBL_VARIANT_ASSETS = process.env.DYNAMODB_TABLE_VARIANT_ASSETS
 @Injectable()
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
@@ -59,24 +55,16 @@ export class VariantAssetsService {
 
         console.log(`assetIdMap`, assetIdMap)
 
-        const query: DocumentClient.PutItemInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            Item: <VariantAssetTable>{
-                id: id,
-                key: request.key,
-                projectId: projectId,
-                name: request.name,
-                description: request.description,
-                tags: request.tags,
-                assets: assetIdMap
-            }
-        }
-
-        const response = await (await dynamoDb.put(query).promise()).$response
-        if (response.error) {
-            throw response.error
-        }
-
+        const record = new VariantAssetModel(<VariantAssetTable>{
+            id: id,
+            key: request.key,
+            projectId: projectId,
+            name: request.name,
+            description: request.description,
+            tags: request.tags,
+            assets: assetIdMap
+        })
+        const created = await record.save()
 
         const builtAssetMap = this.assetsToMap(assetIdMap, registeredRawAssets)
 
@@ -95,36 +83,31 @@ export class VariantAssetsService {
 
     async getVariantAsset(id: string): Promise<VariantAsset> {
 
-        const query: DocumentClient.GetItemInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            Key: { id: id }
-        }
+        const variantAsset = await VariantAssetModel.get(id)
+        // as VariantAssetTable
 
+        console.log('fetched variantAsset', variantAsset)
 
-        console.log('query', query)
-        const record: VariantAssetTable = await (await dynamoDb.get(query).promise()).Item as VariantAssetTable
-
-        console.log('record', record)
-
+        const assetsInVariantAsset = variantAsset.assets
         // get assets
-        const rawAssetIds = Object.keys(record.assets).map(function (key) {
-            return record.assets[key];
+        const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
+            return assetsInVariantAsset.assets[key];
         });
         const rawAssets = await this.rawAssetsService.getRawAssets(rawAssetIds)
 
         // convert `variant name: asset id` map to `variant name: asset`
-        const assetMap = this.assetsToMap(record.assets, rawAssets)
+        const assetMap = this.assetsToMap(assetsInVariantAsset, rawAssets)
 
 
         // transform record to variant asset
         const finalVariantAsset: VariantAsset = {
-            id: record.id,
-            projectId: record.projectId,
-            key: record.key,
-            description: record.description,
-            name: record.name,
-            type: record.type,
-            tags: record.tags,
+            id: variantAsset.id,
+            projectId: variantAsset.projectId,
+            key: variantAsset.key,
+            description: variantAsset.description,
+            name: variantAsset.name,
+            type: variantAsset.type,
+            tags: variantAsset.tags,
             assets: assetMap
         }
 
@@ -150,15 +133,22 @@ export class VariantAssetsService {
     }
 
     async getVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
-        const query: DocumentClient.QueryInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            IndexName: 'projectIndex',
-            KeyConditionExpression: "projectId = :projectId",
-            ExpressionAttributeValues: {
-                ":projectId": projectId
-            }
-        }
-        const variantAssetRecords: VariantAssetTable[] = await (await dynamoDb.query(query).promise()).Items as VariantAssetTable[]
+        // const query: DocumentClient.QueryInput = {
+        //     TableName: TBL_VARIANT_ASSETS,
+        //     IndexName: 'projectIndex',
+        //     KeyConditionExpression: "projectId = :projectId",
+        //     ExpressionAttributeValues: {
+        //         ":projectId": projectId
+        //     }
+        // }
+
+
+        // const variantAssetRecords: VariantAssetTable[] = await (await dynamoDb.query(query).promise()).Items as VariantAssetTable[]
+        const PROJECT_INDEX_NAME = 'projectIndex'
+        const variantAssetRecords = await VariantAssetModel.query({
+            projectId: projectId
+        }).using(PROJECT_INDEX_NAME).exec()
+
 
         console.log('variantAssetRecords', variantAssetRecords)
 
