@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GlobalizedKeyRegisterRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
 import { KeyModel } from "./app.entity"
-import * as dynamoose from "dynamoose"
 import { nanoid } from 'nanoid';
 
 @Injectable()
