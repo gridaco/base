@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GlobalizedKeyRegisterRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
 import { KeyModel } from "./app.entity"
 import { nanoid } from 'nanoid';
-
+import { registerVariantAsset } from '@bridged.xyz/client-sdk/lib/assets/api'
 @Injectable()
 export class AppService {
   async registerNewKey(request: GlobalizedKeyRegisterRequest) {
@@ -32,11 +32,13 @@ export class AppService {
     return updatedRecrod
   }
 
-  async registerTranslation(request: {
+  async addTranslation(request: {
+    projectId: string
     locale: string,
     key: string,
     text: string,
   }) {
+    // registerVariantAsset(request.projectId,)
     // putAsset
     // register new asset via asset service
   }
