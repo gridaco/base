@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import * as AWS from "aws-sdk"
-import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib";
+import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest, AssetType } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
-import { VariantAssetTable } from '../app.entity';
-const dynamoDb = new AWS.DynamoDB.DocumentClient();
-
-const TBL_VARIANT_ASSETS = process.env.DYNAMODB_TABLE_VARIANT_ASSETS
+import { VariantAssetTable, VariantAssetModel } from '../app.entity';
 @Injectable()
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
@@ -49,82 +44,61 @@ export class VariantAssetsService {
         // make variant name : asset id map
         const assetIdMap = new Map<string, string>()
         const varaintNames = Object.keys(request.initialAssets)
-        console.log('varaintNames', varaintNames)
         for (let i = 0; i < varaintNames.length; i++) {
             const variantName = varaintNames[i]
             const variantRawAsset = registeredRawAssets[i]
-            console.log('variantName', variantName,)
             assetIdMap[variantName] = variantRawAsset.id
         }
 
-        console.log(`assetIdMap`, assetIdMap)
-
-        const query: DocumentClient.PutItemInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            Item: <VariantAssetTable>{
-                id: id,
-                key: request.key,
-                projectId: projectId,
-                name: request.name,
-                description: request.description,
-                tags: request.tags,
-                assets: assetIdMap
-            }
-        }
-
-        const response = await (await dynamoDb.put(query).promise()).$response
-        if (response.error) {
-            throw response.error
-        }
-
+        const record = new VariantAssetModel(<VariantAssetTable>{
+            id: id,
+            key: request.key,
+            projectId: projectId,
+            name: request.name,
+            type: request.type,
+            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
+            // tags: variantAsset.tags,
+            description: request.description,
+            assets: { ...assetIdMap }
+        })
+        const created = await record.save()
 
         const builtAssetMap = this.assetsToMap(assetIdMap, registeredRawAssets)
 
-        console.log('builtAssetMap', builtAssetMap)
-
-        return <VariantAsset>{
-            id: id,
-            name: request.name,
-            projectId: 'demo', // TODO - replace this
-            description: request.description,
-            tags: request.tags,
-            key: request.key,
+        return {
+            ...created,
             assets: builtAssetMap
         }
     }
 
     async getVariantAsset(id: string): Promise<VariantAsset> {
+        console.log('fetching variant asset with id', id)
+        const variantAsset = await VariantAssetModel.get(id)
+        // as VariantAssetTable
 
-        const query: DocumentClient.GetItemInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            Key: { id: id }
-        }
-
-
-        console.log('query', query)
-        const record: VariantAssetTable = await (await dynamoDb.get(query).promise()).Item as VariantAssetTable
-
-        console.log('record', record)
+        const assetsInVariantAsset = variantAsset.assets
+        console.log('assetsInVariantAsset', assetsInVariantAsset)
 
         // get assets
-        const rawAssetIds = Object.keys(record.assets).map(function (key) {
-            return record.assets[key];
+        const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
+            return assetsInVariantAsset[key];
         });
         const rawAssets = await this.rawAssetsService.getRawAssets(rawAssetIds)
 
         // convert `variant name: asset id` map to `variant name: asset`
-        const assetMap = this.assetsToMap(record.assets, rawAssets)
+        const assetMap = this.assetsToMap(assetsInVariantAsset, rawAssets)
 
 
         // transform record to variant asset
         const finalVariantAsset: VariantAsset = {
-            id: record.id,
-            projectId: record.projectId,
-            key: record.key,
-            description: record.description,
-            name: record.name,
-            type: record.type,
-            tags: record.tags,
+            id: variantAsset.id,
+            projectId: variantAsset.projectId,
+            key: variantAsset.key,
+            description: variantAsset.description,
+            name: variantAsset.name,
+            type: variantAsset.type,
+            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
+            // tags: variantAsset.tags,
             assets: assetMap
         }
 
@@ -150,17 +124,11 @@ export class VariantAssetsService {
     }
 
     async getVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
-        const query: DocumentClient.QueryInput = {
-            TableName: TBL_VARIANT_ASSETS,
-            IndexName: 'projectIndex',
-            KeyConditionExpression: "projectId = :projectId",
-            ExpressionAttributeValues: {
-                ":projectId": projectId
-            }
-        }
-        const variantAssetRecords: VariantAssetTable[] = await (await dynamoDb.query(query).promise()).Items as VariantAssetTable[]
-
-        console.log('variantAssetRecords', variantAssetRecords)
+        const PROJECT_INDEX_NAME = 'projectIndex'
+        const variantAssetRecords = await VariantAssetModel.query('projectId')
+            .eq(projectId)
+            .using(PROJECT_INDEX_NAME)
+            .exec()
 
         const requests: Array<Promise<VariantAsset>> = []
         for (const variantAssetRecord of variantAssetRecords) {
