@@ -1,5 +1,5 @@
 import { AssetType } from "@bridged.xyz/client-sdk/lib/assets"
-import { keyNameFormatValidation } from "@bridged.xyz/client-sdk/lib/g11n/validators/key-name.validate"
+// import { keyNameFormatValidation } from "@bridged.xyz/client-sdk/lib/g11n"
 import * as dynamoose from "dynamoose"
 import { nanoid } from "nanoid"
 /**
@@ -54,9 +54,8 @@ export interface LayerKeyMapRecord {
 
 const KeySchema = new dynamoose.Schema({
     id: {
-        required: true,
         type: String,
-        forceDefault: true,
+        required: true,
         hashKey: true,
         default: () => nanoid()
     },
@@ -67,21 +66,23 @@ const KeySchema = new dynamoose.Schema({
     keyName: {
         type: String,
         required: true,
-        validate: (v: string) => keyNameFormatValidation(v)
+        // validate: (v: string) => keyNameFormatValidation(v)
     },
     type: {
         type: String,
-        enum: ["URI", "TEXT", "IMAGE", "ICON", "ILLUST", "COLOR", "FILE", "UNKNOWN"]
+        enum: ["URI", "TEXT", "IMAGE", "ICON", "ILLUST", "COLOR", "FILE", "UNKNOWN"],
+        required: true
     },
     embeddable: {
         type: Boolean,
         default: false,
+        required: true
     }
 }, {
     saveUnknown: false
 })
 
-const KEY_TABLE_NAME = process.env.DYNAMO_KEY_TABLE
+const KEY_TABLE_NAME = process.env.DYNAMODB_KEY_TABLE
 export const KeyModel = dynamoose.model(KEY_TABLE_NAME, KeySchema, {
     create: false
 })

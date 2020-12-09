@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { VariantAssetsService } from './variant-assets.service';
 import { VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
 
@@ -8,7 +8,7 @@ export class VariantAssetsController {
 
     @Post('/')
     async postCreateVariantAsset(@Body() req: VariantAssetRegisterRequest): Promise<any> {
-        const projectId = "demo"
+        const projectId = "temp"
         return await this.variantAssetsService.createVariantAsset(projectId, req)
     }
 
@@ -16,11 +16,7 @@ export class VariantAssetsController {
     @Get('/:id')
     async getVariantAsset(@Param() p: { id: string }): Promise<any> {
         const id = p.id
-        console.log('id', id)
         const data = await this.variantAssetsService.getVariantAsset(id)
-
-        console.log('data', data)
-
         return {
             data: data
         }
@@ -37,7 +33,7 @@ export class VariantAssetsController {
         return this.variantAssetsService.getVariantAssetsInProject(projectId)
     }
 
-    @Post('/:id/variant/:variant')
+    @Patch('/:id/variant/:variant')
     async postVariantUpdate(@Param() p: {
         id: string
         variant: string
@@ -54,14 +50,5 @@ export class VariantAssetsController {
             data: updatedVariantAsset
         }
     }
-
-
-    @Post('/:id')
-    async postUpdateVariantAssetKey(@Body() body: {
-        keyName: string
-    }) {
-
-    }
-
 
 }

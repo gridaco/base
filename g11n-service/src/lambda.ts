@@ -7,6 +7,7 @@ import { eventContext } from 'aws-serverless-express/middleware';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
 
 const express = require('express');
 
@@ -28,6 +29,7 @@ async function bootstrapServer(): Promise<Server> {
         nestApp.enableCors({
             origin: true
         })
+        nestApp.useGlobalPipes(new ValidationPipe());
         await nestApp.init();
         cachedServer = createServer(expressApp, undefined,
             binaryMimeTypes);
