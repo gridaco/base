@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib";
+import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest, AssetType } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetTable, VariantAssetModel } from '../app.entity';
-
 @Injectable()
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
@@ -45,53 +44,44 @@ export class VariantAssetsService {
         // make variant name : asset id map
         const assetIdMap = new Map<string, string>()
         const varaintNames = Object.keys(request.initialAssets)
-        console.log('varaintNames', varaintNames)
         for (let i = 0; i < varaintNames.length; i++) {
             const variantName = varaintNames[i]
             const variantRawAsset = registeredRawAssets[i]
-            console.log('variantName', variantName,)
             assetIdMap[variantName] = variantRawAsset.id
         }
-
-        console.log(`assetIdMap`, assetIdMap)
 
         const record = new VariantAssetModel(<VariantAssetTable>{
             id: id,
             key: request.key,
             projectId: projectId,
             name: request.name,
+            type: request.type,
+            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
+            // tags: variantAsset.tags,
             description: request.description,
-            tags: request.tags,
-            assets: assetIdMap
+            assets: { ...assetIdMap }
         })
         const created = await record.save()
 
         const builtAssetMap = this.assetsToMap(assetIdMap, registeredRawAssets)
 
-        console.log('builtAssetMap', builtAssetMap)
-
-        return <VariantAsset>{
-            id: id,
-            name: request.name,
-            projectId: 'demo', // TODO - replace this
-            description: request.description,
-            tags: request.tags,
-            key: request.key,
+        return {
+            ...created,
             assets: builtAssetMap
         }
     }
 
     async getVariantAsset(id: string): Promise<VariantAsset> {
-
+        console.log('fetching variant asset with id', id)
         const variantAsset = await VariantAssetModel.get(id)
         // as VariantAssetTable
 
-        console.log('fetched variantAsset', variantAsset)
-
         const assetsInVariantAsset = variantAsset.assets
+        console.log('assetsInVariantAsset', assetsInVariantAsset)
+
         // get assets
         const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
-            return assetsInVariantAsset.assets[key];
+            return assetsInVariantAsset[key];
         });
         const rawAssets = await this.rawAssetsService.getRawAssets(rawAssetIds)
 
@@ -107,7 +97,8 @@ export class VariantAssetsService {
             description: variantAsset.description,
             name: variantAsset.name,
             type: variantAsset.type,
-            tags: variantAsset.tags,
+            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
+            // tags: variantAsset.tags,
             assets: assetMap
         }
 
@@ -133,24 +124,11 @@ export class VariantAssetsService {
     }
 
     async getVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
-        // const query: DocumentClient.QueryInput = {
-        //     TableName: TBL_VARIANT_ASSETS,
-        //     IndexName: 'projectIndex',
-        //     KeyConditionExpression: "projectId = :projectId",
-        //     ExpressionAttributeValues: {
-        //         ":projectId": projectId
-        //     }
-        // }
-
-
-        // const variantAssetRecords: VariantAssetTable[] = await (await dynamoDb.query(query).promise()).Items as VariantAssetTable[]
         const PROJECT_INDEX_NAME = 'projectIndex'
-        const variantAssetRecords = await VariantAssetModel.query({
-            projectId: projectId
-        }).using(PROJECT_INDEX_NAME).exec()
-
-
-        console.log('variantAssetRecords', variantAssetRecords)
+        const variantAssetRecords = await VariantAssetModel.query('projectId')
+            .eq(projectId)
+            .using(PROJECT_INDEX_NAME)
+            .exec()
 
         const requests: Array<Promise<VariantAsset>> = []
         for (const variantAssetRecord of variantAssetRecords) {

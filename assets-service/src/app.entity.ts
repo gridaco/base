@@ -39,7 +39,7 @@ export interface VariantAssetTable {
      * *REQUIRED*
      * explicit name set by editor
      */
-    name: string
+    name?: string
 
     /**
      * description of this localized, variantized asset set by editor
@@ -92,7 +92,9 @@ const RawAssetSchema = new dynamoose.Schema({
 })
 
 const TBL_RAW_ASSETS = process.env.DYNAMODB_TABLE_RAW_ASSETS
-export const RawAssetModel = dynamoose.model(TBL_RAW_ASSETS, RawAssetSchema)
+export const RawAssetModel = dynamoose.model(TBL_RAW_ASSETS, RawAssetSchema, {
+    create: false
+})
 
 
 
@@ -104,6 +106,9 @@ const VariantAssetSchema = new dynamoose.Schema({
     projectId: {
         type: String,
         required: true,
+        index: {
+            "name": "projectIndex",
+        },
     },
     key: {
         type: String,
@@ -111,7 +116,7 @@ const VariantAssetSchema = new dynamoose.Schema({
     },
     name: {
         type: String,
-        required: true
+        required: false
     },
     description: {
         type: String,
@@ -125,16 +130,20 @@ const VariantAssetSchema = new dynamoose.Schema({
     // TODO change type to string: string map -> {variant: raw-asset-id}
     assets: {
         type: Object,
-        default: {},
+        default: { 'default': '__empty__' },
         required: true
     },
-    tags: {
-        type: Set,
-        default: [],
-        required: false
-    }
+    // tags: {
+    //     type: Set,
+    //     default: [],
+    //     required: false
+    // }
+}, {
+    saveUnknown: true
 })
 
 
 const TBL_VARIANT_ASSETS = process.env.DYNAMODB_TABLE_VARIANT_ASSETS
-export const VariantAssetModel = dynamoose.model(TBL_VARIANT_ASSETS, VariantAssetSchema)
+export const VariantAssetModel = dynamoose.model(TBL_VARIANT_ASSETS, VariantAssetSchema, {
+    create: false
+})

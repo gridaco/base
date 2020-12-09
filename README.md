@@ -5,7 +5,8 @@
 
 
 ## micros
-
+- [asset-service](./assets-service)
+- []
 - [resource-hosting](./resource-hosting)
 - application hosting
 - auth (read the development token generation docs)
