@@ -2,11 +2,10 @@ service:
   name: g11n
 
 plugins:
-  - serverless-plugin-monorepo
-  - '@hewmen/serverless-plugin-typescript'  
+  - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
-  - serverless-offline
   - serverless-dynamodb-local
+  - serverless-offline
   - serverless-domain-manager
 
 

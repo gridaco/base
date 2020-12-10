@@ -2,9 +2,8 @@
     "name": "g11n-service",
     "version": "0.0.0",
     "description": "g11n asset linker service for bridged systems",
-    "author": "bridged.xyz",
+    "author": "bridged.xyz authors",
     "private": false,
-    "main": "dist/index.js",
     "license": "MIT",
     "scripts": {
         "prebuild": "rimraf dist",
@@ -35,7 +34,8 @@
         "nanoid": "^3.1.16",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
-        "rxjs": "^6.5.4"
+        "rxjs": "^6.5.4",
+        "serverless-plugin-typescript": "^1.1.9"
     },
     "devDependencies": {
         "@hewmen/serverless-plugin-typescript": "^1.1.17",
