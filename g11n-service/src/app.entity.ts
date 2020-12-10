@@ -35,6 +35,11 @@ export interface KeyRecord {
      * if embeddable 'changed' to false, all the referening assets will be replaced with last known value & localse of this key's asset.
      */
     embeddable: boolean
+
+    /**
+     * the id of variant asset 1:1 matched to this key
+     */
+    linkedAssetId?: string
 }
 
 /**
@@ -108,6 +113,10 @@ const KeySchema = new dynamoose.Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    linkedAssetId: {
+        type: String,
+        required: false,
     }
 }, {
     saveUnknown: false
