@@ -14,11 +14,16 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@bridged.xyz/client-sdk": ["../packages/client-sdk-ts"]
+    },
     "typeRoots": [
-      "./node_modeuls/@types"
+      "./node_modeuls/@types",
+      "../node_modeuls/@types"
     ]
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }
