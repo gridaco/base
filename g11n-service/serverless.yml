@@ -2,8 +2,8 @@ service:
   name: g11n
 
 plugins:
-  - serverless-webpack
-  # - serverless-bundle
+  # - serverless-webpack
+  - serverless-bundle
   # - serverless-plugin-typescript 
   # - serverless-plugin-optimize
   - serverless-dynamodb-local
@@ -13,9 +13,9 @@ plugins:
 
 
 custom:
-  # webpack:
-  #   webpackConfig: 'webpack.config.js'
-  #   packager: 'yarn'
+  bundle:
+    caching: false
+    # linting: false
   customDomain:
     domainName: g11n.bridged.cc
     hostedZoneId: us-west-1
