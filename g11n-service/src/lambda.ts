@@ -3,18 +3,19 @@ import { Handler, Context } from 'aws-lambda';
 import { Server } from 'http';
 import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
-
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 
+/* eslint-disable */
 const express = require('express');
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this
 // is likely due to a compressed response (e.g. gzip) which has not
 // been handled correctly by aws-serverless-express and/or API
 // Gateway. Add the necessary MIME types to binaryMimeTypes below
+/* eslint-disable */
 const binaryMimeTypes: string[] = [];
 
 let cachedServer: Server;

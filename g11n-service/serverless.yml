@@ -2,14 +2,20 @@ service:
   name: g11n
 
 plugins:
-  - '@hewmen/serverless-plugin-typescript'
-  - serverless-plugin-optimize
+  # - serverless-webpack
+  - serverless-bundle
+  # - serverless-plugin-typescript 
+  # - serverless-plugin-optimize
   - serverless-dynamodb-local
   - serverless-offline
   - serverless-domain-manager
+  # - serverless-plugin-monorepo
 
 
 custom:
+  bundle:
+    caching: false
+    # linting: false
   customDomain:
     domainName: g11n.bridged.cc
     hostedZoneId: us-west-1

@@ -5,6 +5,7 @@
     "author": "bridged.xyz authors",
     "private": false,
     "license": "MIT",
+    "main": "lambda",
     "scripts": {
         "prebuild": "rimraf dist",
         "build": "nest build",
@@ -34,11 +35,9 @@
         "nanoid": "^3.1.16",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
-        "rxjs": "^6.5.4",
-        "serverless-plugin-typescript": "^1.1.9"
+        "rxjs": "^6.5.4"
     },
     "devDependencies": {
-        "@hewmen/serverless-plugin-typescript": "^1.1.17",
         "@nestjs/cli": "^7.0.0",
         "@nestjs/schematics": "^7.0.0",
         "@nestjs/testing": "^7.0.0",
@@ -56,11 +55,9 @@
         "plugin": "^0.3.3",
         "prettier": "^1.19.1",
         "serverless-domain-manager": "^5.1.0",
-        "serverless-dotenv-plugin": "^3.1.0",
         "serverless-dynamodb-local": "^0.2.39",
         "serverless-offline": "^6.8.0",
-        "serverless-plugin-monorepo": "^0.10.0",
-        "serverless-plugin-optimize": "^4.1.4-rc.1",
+        "serverless-bundle": "^4.1.0",
         "supertest": "^4.0.2",
         "ts-jest": "26.2.0",
         "ts-loader": "^6.2.1",

@@ -65,7 +65,7 @@ export class AppService {
   async updateTranslation(request: {
     newText: string
   }) {
-
+    throw 'not implemented'
   }
 
   /**
@@ -81,6 +81,6 @@ export class AppService {
   }
 
   fetchSingleAsset(keyId: string, locale: string) {
-
+    throw 'not implemented'
   }
 }

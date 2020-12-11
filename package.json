@@ -12,8 +12,5 @@
         "resources-service",
         "url-service",
         "packages/*"
-    ],
-    "nohoist": [
-        "**"
     ]
 }
