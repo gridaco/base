@@ -39,11 +39,11 @@ export class AppController {
     text: string
   }) {
     const id = p.id
-    return await this.appService.registerTranslation({
-      key: id,
-      locale: request.locale,
-      text: request.text
-    })
+    // return await this.appService.addTranslation({
+    //   key: id,
+    //   locale: request.locale,
+    //   text: request.text
+    // })
   }
 
   @Patch('/keys/:id/translations/:locale')
@@ -51,7 +51,6 @@ export class AppController {
     const id = p.id
     const locale = p.locale
     const text = request.text
-    // return await this.appService.udateKeyName(id, keyName)
   }
 
 

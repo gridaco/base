@@ -112,7 +112,7 @@ const VariantAssetSchema = new dynamoose.Schema({
     },
     key: {
         type: String,
-        required: true,
+        required: false,
     },
     name: {
         type: String,

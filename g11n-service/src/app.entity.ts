@@ -1,5 +1,5 @@
 import { AssetType } from "@bridged.xyz/client-sdk/lib/assets"
-// import { keyNameFormatValidation } from "@bridged.xyz/client-sdk/lib/g11n"
+import { keyNameFormatValidation, placeholderNameFormatValidation, PlaceholderType } from "@bridged.xyz/client-sdk/lib/g11n"
 import * as dynamoose from "dynamoose"
 import { nanoid } from "nanoid"
 /**
@@ -35,6 +35,20 @@ export interface KeyRecord {
      * if embeddable 'changed' to false, all the referening assets will be replaced with last known value & localse of this key's asset.
      */
     embeddable: boolean
+
+    /**
+     * the id of variant asset 1:1 matched to this key
+     */
+    linkedAssetId?: string
+}
+
+/**
+ * place holder used for creating templated text, e.g. - "hi {USER_NAME}, glad to meet you here again"
+ */
+export interface PlaceHolderRecord {
+    id: string
+    name: string
+    type: PlaceholderType
 }
 
 /**
@@ -51,6 +65,28 @@ export interface LayerKeyMapRecord {
      */
     layerId: string
 }
+
+
+const PlaceholderSchema = new dynamoose.Schema({
+    id: {
+        type: String,
+        hashKey: true,
+        required: true,
+        default: () => nanoid()
+    },
+    name: {
+        type: String,
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: ["NUMBER", "DATE", "BOOLEAN", "TEXT", "CURRENCY"],
+        required: true
+    }
+}, {
+    saveUnknown: false
+})
+
 
 const KeySchema = new dynamoose.Schema({
     id: {
@@ -77,6 +113,10 @@ const KeySchema = new dynamoose.Schema({
         type: Boolean,
         default: false,
         required: true
+    },
+    linkedAssetId: {
+        type: String,
+        required: false,
     }
 }, {
     saveUnknown: false

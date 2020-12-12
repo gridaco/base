@@ -5,7 +5,7 @@ import { RawAssetsModule } from './raw-assets/raw-assets.module';
 import { VariantAssetsModule } from './variant-assets/variant-assets.module';
 
 @Module({
-  imports: [RawAssetsModule, VariantAssetsModule],
+  imports: [VariantAssetsModule, RawAssetsModule],
   controllers: [AppController],
   providers: [AppService],
 })

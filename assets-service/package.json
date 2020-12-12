@@ -52,6 +52,7 @@
         "jest": "26.4.2",
         "plugin": "^0.3.3",
         "prettier": "^1.19.1",
+        "serverless-bundle": "^4.1.0",
         "serverless-domain-manager": "^5.1.0",
         "serverless-dynamodb-local": "^0.2.39",
         "serverless-offline": "^6.8.0",

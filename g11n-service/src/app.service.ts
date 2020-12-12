@@ -2,18 +2,37 @@ import { Injectable } from '@nestjs/common';
 import { GlobalizedKeyRegisterRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
 import { KeyModel } from "./app.entity"
 import { nanoid } from 'nanoid';
-
+import { registerVariantAsset, addVariantToAsset } from '@bridged.xyz/client-sdk/lib/assets/api'
 @Injectable()
 export class AppService {
   async registerNewKey(request: GlobalizedKeyRegisterRequest) {
+
+    /**
+     * create the variant asset to be linked with this key first.
+     */
+    const projectId = 'temp'
+    let reservedLinkedAsset
+    try {
+      reservedLinkedAsset = await registerVariantAsset(projectId, {
+        type: request.assetType,
+        initialAssets: request.initialVariants
+      })
+    } catch (_) {
+      console.log('error', _)
+      throw _
+    }
+
+
     const id = nanoid()
     const input = new KeyModel({
       id: id,
-      projectId: 'temp',
+      projectId: projectId,
       keyName: request.keyName,
       type: request.assetType,
+      linkedAssetId: reservedLinkedAsset.id,
       embeddable: request.embeddable ? request.embeddable : false,
     })
+
 
 
     const newKeyRecord = await input.save()
@@ -32,11 +51,17 @@ export class AppService {
     return updatedRecrod
   }
 
-  async registerTranslation(request: {
+  async addTranslation(request: {
+    projectId: string
     locale: string,
     key: string,
     text: string,
   }) {
+
+    // addVariantToAsset(request.projectId, {
+    // addVariantToAssetWithKey
+
+    // })
     // putAsset
     // register new asset via asset service
   }
@@ -47,7 +72,7 @@ export class AppService {
   async updateTranslation(request: {
     newText: string
   }) {
-
+    throw 'not implemented'
   }
 
   /**
@@ -63,6 +88,6 @@ export class AppService {
   }
 
   fetchSingleAsset(keyId: string, locale: string) {
-
+    throw 'not implemented'
   }
 }

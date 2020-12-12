@@ -2,15 +2,20 @@ service:
   name: g11n
 
 plugins:
-  - serverless-plugin-monorepo
-  - '@hewmen/serverless-plugin-typescript'  
-  - serverless-plugin-optimize
-  - serverless-offline
+  - serverless-bundle
   - serverless-dynamodb-local
+  - serverless-offline
   - serverless-domain-manager
 
 
 custom:
+  bundle:
+    caching: false
+    forceExclude:
+      - '@nestjs/microservices'
+      - '@nestjs/microservices/microservices-module'
+      - '@nestjs/websockets/socket-module'
+      - 'cache-manager'
   customDomain:
     domainName: g11n.bridged.cc
     hostedZoneId: us-west-1
@@ -56,6 +61,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_KEY_TABLE}"
 
 package:
