@@ -11,9 +11,16 @@ export class AppService {
      * create the variant asset to be linked with this key first.
      */
     const projectId = 'temp'
-    const reservedLinkedAsset = await registerVariantAsset(projectId, {
-      type: request.assetType,
-    })
+    let reservedLinkedAsset
+    try {
+      reservedLinkedAsset = await registerVariantAsset(projectId, {
+        type: request.assetType,
+        initialAssets: request.initialVariants
+      })
+    } catch (_) {
+      console.log('error', _)
+      throw _
+    }
 
 
     const id = nanoid()
@@ -22,7 +29,7 @@ export class AppService {
       projectId: projectId,
       keyName: request.keyName,
       type: request.assetType,
-      linkedAssetId: reservedLinkedAsset,
+      linkedAssetId: reservedLinkedAsset.id,
       embeddable: request.embeddable ? request.embeddable : false,
     })
 

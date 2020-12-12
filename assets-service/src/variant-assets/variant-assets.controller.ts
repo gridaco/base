@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, forwardRef, Get, Inject, Param, Patch, Post } from '@nestjs/common';
 import { VariantAssetsService } from './variant-assets.service';
 import { VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
 
 @Controller('variant-assets')
 export class VariantAssetsController {
-    constructor(private readonly variantAssetsService: VariantAssetsService) { }
+    constructor(
+        @Inject(forwardRef(() => VariantAssetsService))
+        private readonly variantAssetsService: VariantAssetsService) { }
 
     @Post('/')
     async postCreateVariantAsset(@Body() req: VariantAssetRegisterRequest): Promise<any> {
@@ -35,7 +37,7 @@ export class VariantAssetsController {
 
     @Get('/from-key/:key')
     async getVariantAssetFromKey() {
-
+        throw 'not implemented'
     }
 
 
