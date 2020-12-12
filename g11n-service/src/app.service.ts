@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { GlobalizedKeyRegisterRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
-import { KeyModel } from "./app.entity"
+import { GlobalizedKeyRegisterRequest, TranslationUpdateRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
+import { KeyModel, KeyRecord } from "./app.entity"
 import { nanoid } from 'nanoid';
-import { registerVariantAsset, addVariantToAsset } from '@bridged.xyz/client-sdk/lib/assets/api'
+import { registerVariantAsset, addVariantToAsset, getVariantAsset, } from '@bridged.xyz/client-sdk/lib/assets/api'
+import { IGlobalizedKey } from '@bridged.xyz/client-sdk/lib/g11n';
+const projectId = 'temp'
+
 @Injectable()
 export class AppService {
   async registerNewKey(request: GlobalizedKeyRegisterRequest) {
@@ -10,7 +13,6 @@ export class AppService {
     /**
      * create the variant asset to be linked with this key first.
      */
-    const projectId = 'temp'
     let reservedLinkedAsset
     try {
       reservedLinkedAsset = await registerVariantAsset(projectId, {
@@ -37,18 +39,24 @@ export class AppService {
 
     const newKeyRecord = await input.save()
     console.log('new key created', newKeyRecord)
-    return newKeyRecord
+
+    return await this.fetchTranslation(id)
   }
 
   async deleteKey(id: string) {
     return await KeyModel.delete(id)
   }
 
+  async fetchKey(id: string) {
+    return await KeyModel.get(id)
+  }
+
   async udateKeyName(id: string, name: string) {
     const updatedRecrod = await KeyModel.update({ id: id }, {
       keyName: name
     })
-    return updatedRecrod
+    console.log('key name updated.', updatedRecrod)
+    return await this.fetchTranslation(id)
   }
 
   async addTranslation(request: {
@@ -69,10 +77,25 @@ export class AppService {
   /**
    * updates tranlation's text value
    */
-  async updateTranslation(request: {
-    newText: string
-  }) {
+  async updateTranslation(request: TranslationUpdateRequest) {
+    const key = await KeyModel.get(request.keyId)
+
+    // TODO - asset api - put raw asset with variant asset id
+    const linkedAssetId = key.linkedAssetId
     throw 'not implemented'
+  }
+
+  async fetchTranslation(id: string): Promise<IGlobalizedKey> {
+    console.log('fetching translations with key ', id)
+    const key = await KeyModel.get(id) as any as KeyRecord
+    const linkedAssetId = key.linkedAssetId
+    const linkedAsset = (await getVariantAsset(projectId, linkedAssetId)).data
+
+    return {
+      id: key.id,
+      key: key.keyName,
+      translations: linkedAsset.assets
+    }
   }
 
   /**

@@ -7,16 +7,7 @@ import { VariantAssetTable, VariantAssetModel } from '../app.entity';
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
 
-    async updateVariantItem(args: {
-        variantAssetId: string
-        variant: string
-        newValue: string
-    }) {
-        // find variant field's linked asset
-        // update asset's value
-        this.rawAssetsService.updateRawAsset()
-        // return updated full assetVariant
-    }
+
 
     async createVariantAsset(projectId: string, request: VariantAssetRegisterRequest): Promise<any> {
         const id = nanoid()
@@ -70,6 +61,43 @@ export class VariantAssetsService {
             assets: builtAssetMap
         }
     }
+
+
+    async updateVariantItem(args: {
+        variantAssetId: string
+        variant: string
+        newValue: string
+    }) {
+        // find variant field's linked asset
+        // update asset's value
+        // this.rawAssetsService.updateRawAsset()
+        // return updated full assetVariant
+        throw 'not implemented'
+    }
+
+
+    async registerVariant(id: string, variant: string, request: RawAssetRegisterRequest) {
+        throw ' not impllemented'
+    }
+
+    async putVariant(id: string, request: {
+        variant: string,
+        value: string
+    }) {
+        const variant = request.variant
+        const variantAsset = await this.getVariantAsset(id)
+        const exists = Object.keys(variantAsset.assets).find((v) => v == variant) !== undefined
+        if (exists) {
+            const rawAssetId = variantAsset[variant]
+            await this.rawAssetsService.updateRawAsset(rawAssetId, {
+                id: id,
+                newValue: request.value
+            })
+        } else {
+            //registerVariant
+        }
+    }
+
 
     async getVariantAsset(id: string): Promise<VariantAsset> {
         console.log('fetching variant asset with id', id)

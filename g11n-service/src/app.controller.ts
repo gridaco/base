@@ -11,6 +11,31 @@ export class AppController {
     return 'service is running'
   }
 
+  @Get('/translations/:id')
+  async getTranslation(@Param() p) {
+    const id = p.id
+    return await this.appService.fetchTranslation(id)
+  }
+
+  @Put('/translations/:id')
+  async putTranslation(
+    @Param() p: {
+      id: string
+    },
+    @Body() body: {
+      locale: string
+      newText: string
+    }) {
+    // put raw asset to with target locale
+
+  }
+
+
+  @Patch('/translations/:id/:locale')
+  async updateLocaleTranslation() {
+
+  }
+
 
   @Post('/keys')
   async postRegisterKey(@Body() request) {
@@ -21,6 +46,13 @@ export class AppController {
   @Delete('/keys/:id')
   async deleteKey(@Param() p) {
     const id = p.id
+    return await this.appService.fetchKey(id)
+  }
+
+
+  @Get('/keys/:id')
+  async getKey(@Param() p) {
+    const id = p.id
     return await this.appService.deleteKey(id)
   }
 
@@ -30,20 +62,6 @@ export class AppController {
     const id = p.id
     const keyName = request.keyName
     return await this.appService.udateKeyName(id, keyName)
-  }
-
-
-  @Put('/keys/:id/translations')
-  async putTranslation(@Param() p, @Body() request: {
-    locale: string,
-    text: string
-  }) {
-    const id = p.id
-    // return await this.appService.addTranslation({
-    //   key: id,
-    //   locale: request.locale,
-    //   text: request.text
-    // })
   }
 
   @Patch('/keys/:id/translations/:locale')
