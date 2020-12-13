@@ -58,12 +58,14 @@ export class RawAssetsService {
     }
 
     async updateRawAsset(id: string, request: RawAssetUpdateRequest) {
-        const updated = await RawAssetModel.update({ id: id }, <RawAssetTable>{
-            name: request.name,
-            type: request.type,
+        const update = <RawAssetTable>{
+            // name: request.name,
+            // type: request.type,
             value: request.value,
-            tags: request.tags
-        })
+            // tags: request.tags
+        }
+        console.log('updating raw asset with request', request, 'the update value is..', update)
+        const updated = await RawAssetModel.update({ id: id }, { "$SET": update })
         console.log('updated raw asset', id, updated)
         return updated
     }

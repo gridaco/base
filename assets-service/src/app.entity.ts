@@ -87,6 +87,7 @@ const RawAssetSchema = new dynamoose.Schema({
     },
     tags: {
         type: Set,
+        schema: [String],
         required: false
     }
 })

@@ -96,12 +96,13 @@ export class VariantAssetsService {
 
 
     async updateVariant(request: VariantUpdateRequest) {
-
+        console.log('update variant with request', request)
         const id = request.variantAssetId
         const variantName = request.variant
         const variantAsset = await VariantAssetModel.get(id) as any as VariantAssetTable
 
         const variantId = variantAsset.assets[variantName]
+        console.log('updating raw asset linked to this variant with raw asset id of', variantId)
         await this.rawAssetsService.updateRawAsset(variantId, {
             id: variantId,
             ...request.asset
@@ -112,17 +113,19 @@ export class VariantAssetsService {
 
 
     async addVariant(request: VariantAddRequest) {
-
+        console.log('add variant with request', request)
         const id = request.variantAssetId
         const variantName = request.variant
         const variantAsset = await VariantAssetModel.get(id) as any as VariantAssetTable
+        console.log('permorming add variant request to existing variat asset', variantAsset)
         const newRawAsset = await this.rawAssetsService.createRawAsset({
             type: variantAsset.type,
             ...request.asset
         })
 
         const updatedAssetsMap: Map<string, string> = variantAsset.assets
-        updatedAssetsMap.set(variantName, newRawAsset.id)
+        // add new raw asset to variants
+        updatedAssetsMap[variantName] = newRawAsset.id
 
         // update with added raw asset
         await VariantAssetModel.update({
@@ -135,13 +138,16 @@ export class VariantAssetsService {
     }
 
     async putVariant(request: VariantPutRequest) {
+        console.log('put variant with request', request)
         const variant = request.variant
         const id = request.variantAssetId
         const variantAsset = await this.fetchVariantAsset(id)
         const exists = Object.keys(variantAsset.assets).find((v) => v == variant) !== undefined
         if (exists) {
+            console.log('handling put request. since data exists already, performing "update"')
             return await this.updateVariant(request)
         } else {
+            console.log('handling put request. since data is fresh and new, performing "add"')
             return await this.addVariant({
                 variant: request.variant,
                 variantAssetId: request.variantAssetId,
