@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GlobalizedKeyRegisterRequest, TranslationUpdateRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
 import { KeyModel, KeyRecord } from "./app.entity"
 import { nanoid } from 'nanoid';
-import { registerVariantAsset, addVariantToAsset, getVariantAsset, } from '@bridged.xyz/client-sdk/lib/assets/api'
+import { registerVariantAsset, getVariantAsset, } from '@bridged.xyz/client-sdk/lib/assets/api'
 import { IGlobalizedKey } from '@bridged.xyz/client-sdk/lib/g11n';
 const projectId = 'temp'
 

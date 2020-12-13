@@ -111,7 +111,7 @@ export class VariantAssetsService {
         const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
             return assetsInVariantAsset[key];
         });
-        const rawAssets = await this.rawAssetsService.getRawAssets(rawAssetIds)
+        const rawAssets = await this.rawAssetsService.fetchRawAssets(rawAssetIds)
 
         // convert `variant name: asset id` map to `variant name: asset`
         const assetMap = this.assetsToMap(assetsInVariantAsset, rawAssets)

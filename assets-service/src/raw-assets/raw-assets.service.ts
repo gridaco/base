@@ -35,7 +35,7 @@ export class RawAssetsService {
         }
     }
 
-    async getRawAsset(id: string): Promise<RawAsset> {
+    async fetchRawAsset(id: string): Promise<RawAsset> {
         const query: DocumentClient.GetItemInput = {
             TableName: TBL_RAW_ASSETS,
             Key: { id: id }
@@ -46,11 +46,11 @@ export class RawAssetsService {
         return record
     }
 
-    async getRawAssets(ids: string[]): Promise<Array<RawAsset>> {
+    async fetchRawAssets(ids: string[]): Promise<Array<RawAsset>> {
         // TODO -> implement this via batch query for better performance
         const requests: Array<Promise<RawAsset>> = []
         for (const id of ids) {
-            requests.push(this.getRawAsset(id))
+            requests.push(this.fetchRawAsset(id))
         }
 
         const results = await Promise.all(requests)

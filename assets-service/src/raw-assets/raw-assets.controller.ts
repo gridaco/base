@@ -20,7 +20,7 @@ export class RawAssetsController {
     @Get(':id')
     async getRawAsset(@Param() p: { id: string }): Promise<RawAsset> {
         const id = p.id
-        const asset = await this.rawAssetsService.getRawAsset(id)
+        const asset = await this.rawAssetsService.fetchRawAsset(id)
         return asset
     }
 }
