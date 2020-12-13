@@ -101,7 +101,7 @@ export class AppController {
     return this.appService.addTranslation({
       keyId: p.id,
       locale: p.locale,
-      text: body.value
+      value: body.value
     })
   }
 
@@ -121,7 +121,7 @@ export class AppController {
     return this.appService.putTranslation({
       keyId: p.id,
       locale: p.locale,
-      text: body.value
+      value: body.value
     })
   }
 
@@ -140,7 +140,7 @@ export class AppController {
     return this.appService.updateTranslation({
       keyId: p.id,
       locale: p.locale,
-      newText: body.value
+      value: body.value
     })
   }
 }

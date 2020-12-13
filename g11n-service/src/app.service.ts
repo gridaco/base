@@ -69,7 +69,7 @@ export class AppService {
       variantAssetId: key.linkedAssetId,
       variant: request.locale,
       asset: {
-        value: request.text
+        value: request.value
       }
     })
     return await this.fetchTranslation(request.keyId)
@@ -89,7 +89,7 @@ export class AppService {
       variantAssetId: key.linkedAssetId,
       variant: request.locale,
       asset: {
-        value: request.newText
+        value: request.value
       }
     })
     return await this.fetchTranslation(request.keyId)
@@ -104,7 +104,7 @@ export class AppService {
       variantAssetId: key.linkedAssetId,
       variant: request.locale,
       asset: {
-        value: request.text
+        value: request.value
       }
     })
     return await this.fetchTranslation(request.keyId)
