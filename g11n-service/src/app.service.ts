@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { GlobalizedKeyRegisterRequest, TranslationUpdateRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { GlobalizedKeyRegisterRequest, TextTranslationAddRequest, TextTranslationPutRequest, TextTranslationUpdateRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
 import { KeyModel, KeyRecord } from "./app.entity"
 import { nanoid } from 'nanoid';
-import { registerVariantAsset, getVariantAsset, } from '@bridged.xyz/client-sdk/lib/assets/api'
+import { registerVariantAsset, getVariantAsset, addAvariant, putVariant, updateVariant, } from '@bridged.xyz/client-sdk/lib/assets/api'
 import { IGlobalizedKey } from '@bridged.xyz/client-sdk/lib/g11n';
 const projectId = 'temp'
 
@@ -59,12 +59,12 @@ export class AppService {
     return await this.fetchTranslation(id)
   }
 
-  async addTranslation(request: {
-    projectId: string
-    locale: string,
-    key: string,
-    text: string,
-  }) {
+  async addTranslation(request: TextTranslationAddRequest) {
+
+    // get key's linked asset
+    // fetch linked asset and variant -> check exsistence (No, asset service hanldes this.)
+
+    addAvariant()
 
     // addVariantToAsset(request.projectId, {
     // addVariantToAssetWithKey
@@ -72,17 +72,35 @@ export class AppService {
     // })
     // putAsset
     // register new asset via asset service
+    throw new HttpException('translation already exists', HttpStatus.CONFLICT);
   }
 
   /**
    * updates tranlation's text value
    */
-  async updateTranslation(request: TranslationUpdateRequest) {
+  async updateTranslation(request: TextTranslationUpdateRequest) {
     const key = await KeyModel.get(request.keyId)
+
+    // updateVariant()
 
     // TODO - asset api - put raw asset with variant asset id
     const linkedAssetId = key.linkedAssetId
     throw 'not implemented'
+  }
+
+  async putTranslation(request: TextTranslationPutRequest) {
+    // putVariant()
+
+    // const exists = true
+    // if (exists) {
+    //   return this.updateTranslation({
+    //     keyId: request.keyId,
+    //     locale: request.locale,
+    //     newText: request.text
+    //   })
+    // } else {
+    //   return this.addTranslation(request)
+    // }
   }
 
   async fetchTranslation(id: string): Promise<IGlobalizedKey> {
@@ -103,14 +121,6 @@ export class AppService {
    * all related keys' assets key reference will be replaced with last cached value
    */
   async removeTranslation() {
-    throw 'not implemented'
-  }
-
-  removeVariant() {
-    throw 'not implemented'
-  }
-
-  fetchSingleAsset(keyId: string, locale: string) {
     throw 'not implemented'
   }
 }

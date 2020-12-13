@@ -3,7 +3,7 @@ import * as AWS from "aws-sdk"
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
 import { RawAssetRegisterRequest, RawAsset, RawAssetUpdateRequest } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
-import { RawAssetModel, RawAssetTable } from 'src/app.entity';
+import { RawAssetModel, RawAssetTable } from '../app.entity';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 
@@ -59,10 +59,10 @@ export class RawAssetsService {
 
     async updateRawAsset(id: string, request: RawAssetUpdateRequest) {
         const updated = await RawAssetModel.update({ id: id }, <RawAssetTable>{
-            name: request.newName,
-            type: request.newType,
-            value: request.newValue,
-            tags: request.newTags
+            name: request.name,
+            type: request.type,
+            value: request.value,
+            tags: request.tags
         })
         console.log('updated raw asset', id, updated)
         return updated

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { RawAsset, RawAssetRegisterRequest, NestedAssetRegisterRequest, VariantAsset, VariantAssetRegisterRequest, AssetType } from "@bridged.xyz/client-sdk/lib";
+import { RawAsset, RawAssetRegisterRequest, VariantAddRequest, NestedAssetPutRequest, VariantAsset, VariantAssetRegisterRequest, AssetType, VariantPutRequest, VariantUpdateRequest } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetTable, VariantAssetModel } from '../app.entity';
@@ -7,9 +7,41 @@ import { VariantAssetTable, VariantAssetModel } from '../app.entity';
 export class VariantAssetsService {
     constructor(private readonly rawAssetsService: RawAssetsService) { }
 
+    async fetchVariantAsset(id: string): Promise<VariantAsset> {
+        console.log('fetching variant asset with id', id)
+        const variantAsset = await VariantAssetModel.get(id)
+        // as VariantAssetTable
+
+        const assetsInVariantAsset = variantAsset.assets
+        console.log('assetsInVariantAsset', assetsInVariantAsset)
+
+        // get assets
+        const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
+            return assetsInVariantAsset[key];
+        });
+        const rawAssets = await this.rawAssetsService.fetchRawAssets(rawAssetIds)
+
+        // convert `variant name: asset id` map to `variant name: asset`
+        const assetMap = assetsToMap(assetsInVariantAsset, rawAssets)
 
 
-    async createVariantAsset(projectId: string, request: VariantAssetRegisterRequest): Promise<any> {
+        // transform record to variant asset
+        const finalVariantAsset: VariantAsset = {
+            id: variantAsset.id,
+            projectId: variantAsset.projectId,
+            key: variantAsset.key,
+            description: variantAsset.description,
+            name: variantAsset.name,
+            type: variantAsset.type,
+            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
+            // tags: variantAsset.tags,
+            assets: assetMap
+        }
+
+        return finalVariantAsset
+    }
+
+    async registerVariantAsset(projectId: string, request: VariantAssetRegisterRequest): Promise<any> {
         const id = nanoid()
 
         // register assets first
@@ -17,7 +49,7 @@ export class VariantAssetsService {
         const initialAssetKeys = Object.keys(request.initialAssets)
         const registeredRawAssets: Array<RawAsset> = []
         for (const key of initialAssetKeys) {
-            const minimizedAssetRegisterRequest: NestedAssetRegisterRequest = request.initialAssets[key]
+            const minimizedAssetRegisterRequest: NestedAssetPutRequest = request.initialAssets[key]
             const fullAssetRegiisterRequest: RawAssetRegisterRequest = {
                 name: minimizedAssetRegisterRequest.name,
                 value: minimizedAssetRegisterRequest.value,
@@ -54,7 +86,7 @@ export class VariantAssetsService {
         })
         const created = await record.save()
 
-        const builtAssetMap = this.assetsToMap(assetIdMap, registeredRawAssets)
+        const builtAssetMap = assetsToMap(assetIdMap, registeredRawAssets)
 
         return {
             ...created,
@@ -63,95 +95,67 @@ export class VariantAssetsService {
     }
 
 
-    async updateVariantItem(args: {
-        variantAssetId: string
-        variant: string
-        newValue: string
-    }) {
-        // find variant field's linked asset
-        // update asset's value
-        // this.rawAssetsService.updateRawAsset()
-        // return updated full assetVariant
-        throw 'not implemented'
+    async updateVariant(request: VariantUpdateRequest) {
+
+        const id = request.variantAssetId
+        const variantName = request.variant
+        const variantAsset = await VariantAssetModel.get(id) as any as VariantAssetTable
+
+        const variantId = variantAsset.assets[variantName]
+        await this.rawAssetsService.updateRawAsset(variantId, {
+            id: variantId,
+            ...request.asset
+        })
+
+        return await this.fetchVariantAsset(id)
     }
 
 
-    async registerVariant(id: string, variant: string, request: RawAssetRegisterRequest) {
-        throw ' not impllemented'
+    async addVariant(request: VariantAddRequest) {
+
+        const id = request.variantAssetId
+        const variantName = request.variant
+        const variantAsset = await VariantAssetModel.get(id) as any as VariantAssetTable
+        const newRawAsset = await this.rawAssetsService.createRawAsset({
+            type: variantAsset.type,
+            ...request.asset
+        })
+
+        const updatedAssetsMap: Map<string, string> = variantAsset.assets
+        updatedAssetsMap.set(variantName, newRawAsset.id)
+
+        // update with added raw asset
+        await VariantAssetModel.update({
+            id: id
+        }, {
+            assets: updatedAssetsMap
+        })
+
+        return await this.fetchVariantAsset(id)
     }
 
-    async putVariant(id: string, request: {
-        variant: string,
-        value: string
-    }) {
+    async putVariant(request: VariantPutRequest) {
         const variant = request.variant
-        const variantAsset = await this.getVariantAsset(id)
+        const id = request.variantAssetId
+        const variantAsset = await this.fetchVariantAsset(id)
         const exists = Object.keys(variantAsset.assets).find((v) => v == variant) !== undefined
         if (exists) {
-            const rawAssetId = variantAsset[variant]
-            await this.rawAssetsService.updateRawAsset(rawAssetId, {
-                id: id,
-                newValue: request.value
-            })
+            return await this.updateVariant(request)
         } else {
-            //registerVariant
+            return await this.addVariant({
+                variant: request.variant,
+                variantAssetId: request.variantAssetId,
+                asset: {
+                    value: request.asset.value,
+                    tags: request.asset.tags,
+                    name: request.asset.name
+                }
+            })
         }
     }
 
 
-    async getVariantAsset(id: string): Promise<VariantAsset> {
-        console.log('fetching variant asset with id', id)
-        const variantAsset = await VariantAssetModel.get(id)
-        // as VariantAssetTable
-
-        const assetsInVariantAsset = variantAsset.assets
-        console.log('assetsInVariantAsset', assetsInVariantAsset)
-
-        // get assets
-        const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
-            return assetsInVariantAsset[key];
-        });
-        const rawAssets = await this.rawAssetsService.fetchRawAssets(rawAssetIds)
-
-        // convert `variant name: asset id` map to `variant name: asset`
-        const assetMap = this.assetsToMap(assetsInVariantAsset, rawAssets)
-
-
-        // transform record to variant asset
-        const finalVariantAsset: VariantAsset = {
-            id: variantAsset.id,
-            projectId: variantAsset.projectId,
-            key: variantAsset.key,
-            description: variantAsset.description,
-            name: variantAsset.name,
-            type: variantAsset.type,
-            // TODO fix this layer on. - https://github.com/dynamoose/dynamoose/issues/1073
-            // tags: variantAsset.tags,
-            assets: assetMap
-        }
-
-        return finalVariantAsset
-    }
-
-    /**
-     * converts `variant name: asset id` map to `variant name: asset`
-     * @param assetMap 
-     * @param assets 
-     */
-    private assetsToMap(assetMap: Map<string, string>, assets: RawAsset[]): Map<string, RawAsset> {
-        const result = new Map<string, RawAsset>()
-        const assetKeys = Object.keys(assetMap)
-        for (const key of assetKeys) {
-            const assetId = assetMap[key]
-            const asset = assets.find(a => a.id == assetId)
-
-            result[key] = asset
-        }
-
-        return result
-    }
-
-    async getVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
+    async fetchVariantAssetsInProject(projectId: string): Promise<Array<VariantAsset>> {
         const PROJECT_INDEX_NAME = 'projectIndex'
         const variantAssetRecords = await VariantAssetModel.query('projectId')
             .eq(projectId)
@@ -160,10 +164,30 @@ export class VariantAssetsService {
 
         const requests: Array<Promise<VariantAsset>> = []
         for (const variantAssetRecord of variantAssetRecords) {
-            const variantAssetRequest = this.getVariantAsset(variantAssetRecord.id)
+            const variantAssetRequest = this.fetchVariantAsset(variantAssetRecord.id)
             requests.push(variantAssetRequest)
         }
         const results = Promise.all(requests)
         return results
     }
+}
+
+
+
+/**
+ * converts `variant name: asset id` map to `variant name: asset`
+ * @param assetMap 
+ * @param assets 
+ */
+function assetsToMap(assetMap: Map<string, string>, assets: RawAsset[]): Map<string, RawAsset> {
+    const result = new Map<string, RawAsset>()
+    const assetKeys = Object.keys(assetMap)
+    for (const key of assetKeys) {
+        const assetId = assetMap[key]
+        const asset = assets.find(a => a.id == assetId)
+
+        result[key] = asset
+    }
+
+    return result
 }
