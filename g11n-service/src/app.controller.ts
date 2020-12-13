@@ -67,6 +67,7 @@ export class AppController {
    */
   @Get('/translations')
   async getTranslations(@Query() q) {
+    throw 'not implemented'
   }
 
 
@@ -92,16 +93,16 @@ export class AppController {
   @HttpCode(200)
   @HttpCode(409)
   @HttpCode(400)
-  @Post('/translations/:id/:locale')
+  @Post('/translations/:id/locales/:locale')
   async addTranslation(
-    @Param() p: {
-      id: string
-      locale: string
-    },
-    @Body() body: {
-    }
+    @Param() p: TranslationAccessorParams,
+    @Body() body: PutTranslationRequestBody
   ) {
-    const { id, locale } = p
+    return this.appService.addTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      text: body.value
+    })
   }
 
 
@@ -112,17 +113,16 @@ export class AppController {
    */
   @HttpCode(200)
   @HttpCode(400)
-  @Put('/translations/:id/:locale')
+  @Put('/translations/:id/locales/:locale')
   async putTranslation(
-    @Param() p: {
-      id: string
-      locale: string
-    },
-    @Body() body: {
-      newText: string
-    }) {
+    @Param() p: TranslationAccessorParams,
+    @Body() body: PutTranslationRequestBody) {
     // put raw asset to with target locale
-    const { id, locale } = p
+    return this.appService.putTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      text: body.value
+    })
   }
 
 
@@ -134,12 +134,22 @@ export class AppController {
   @HttpCode(200)
   @HttpCode(404)
   @HttpCode(400)
-  @Patch('/translations/:id/:locale')
+  @Patch('/translations/:id/locales/:locale')
   async updateTranslation(
-    @Param() p: {
-      id: string
-      locale: string
-    }, @Body() request) {
-    const { id, locale } = p
+    @Param() p: TranslationAccessorParams, @Body() body: PutTranslationRequestBody) {
+    return this.appService.updateTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      newText: body.value
+    })
   }
+}
+
+interface TranslationAccessorParams {
+  id: string,
+  locale: string
+}
+
+interface PutTranslationRequestBody {
+  value: string
 }

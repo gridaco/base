@@ -62,16 +62,18 @@ export class AppService {
   async addTranslation(request: TextTranslationAddRequest) {
 
     // get key's linked asset
-    // fetch linked asset and variant -> check exsistence (No, asset service hanldes this.)
+    const key = await KeyModel.get(request.keyId) as any as KeyRecord
 
-    addAvariant()
+    // add as variant on asset service
+    await addAvariant(projectId, {
+      variantAssetId: key.linkedAssetId,
+      variant: request.locale,
+      asset: {
+        value: request.text
+      }
+    })
+    return await this.fetchTranslation(request.keyId)
 
-    // addVariantToAsset(request.projectId, {
-    // addVariantToAssetWithKey
-
-    // })
-    // putAsset
-    // register new asset via asset service
     throw new HttpException('translation already exists', HttpStatus.CONFLICT);
   }
 
@@ -79,35 +81,40 @@ export class AppService {
    * updates tranlation's text value
    */
   async updateTranslation(request: TextTranslationUpdateRequest) {
-    const key = await KeyModel.get(request.keyId)
+    // get key's linked asset
+    const key = await KeyModel.get(request.keyId) as any as KeyRecord
 
-    // updateVariant()
-
-    // TODO - asset api - put raw asset with variant asset id
-    const linkedAssetId = key.linkedAssetId
-    throw 'not implemented'
+    // add as variant on asset service
+    await updateVariant(projectId, {
+      variantAssetId: key.linkedAssetId,
+      variant: request.locale,
+      asset: {
+        value: request.newText
+      }
+    })
+    return await this.fetchTranslation(request.keyId)
   }
 
   async putTranslation(request: TextTranslationPutRequest) {
-    // putVariant()
+    // get key's linked asset
+    const key = await KeyModel.get(request.keyId) as any as KeyRecord
 
-    // const exists = true
-    // if (exists) {
-    //   return this.updateTranslation({
-    //     keyId: request.keyId,
-    //     locale: request.locale,
-    //     newText: request.text
-    //   })
-    // } else {
-    //   return this.addTranslation(request)
-    // }
+    // add as variant on asset service
+    await putVariant(projectId, {
+      variantAssetId: key.linkedAssetId,
+      variant: request.locale,
+      asset: {
+        value: request.text
+      }
+    })
+    return await this.fetchTranslation(request.keyId)
   }
 
   async fetchTranslation(id: string): Promise<IGlobalizedKey> {
     console.log('fetching translations with key ', id)
     const key = await KeyModel.get(id) as any as KeyRecord
     const linkedAssetId = key.linkedAssetId
-    const linkedAsset = (await getVariantAsset(projectId, linkedAssetId)).data
+    const linkedAsset = (await getVariantAsset(projectId, linkedAssetId))
 
     return {
       id: key.id,
