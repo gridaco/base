@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from "aws-sdk"
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { RawAssetRegisterRequest, RawAsset } from "@bridged.xyz/client-sdk/lib";
+import { RawAssetRegisterRequest, RawAsset, RawAssetUpdateRequest } from "@bridged.xyz/client-sdk/lib";
 import { nanoid } from 'nanoid';
+import { RawAssetModel, RawAssetTable } from '../app.entity';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 
@@ -34,7 +35,7 @@ export class RawAssetsService {
         }
     }
 
-    async getRawAsset(id: string): Promise<RawAsset> {
+    async fetchRawAsset(id: string): Promise<RawAsset> {
         const query: DocumentClient.GetItemInput = {
             TableName: TBL_RAW_ASSETS,
             Key: { id: id }
@@ -45,18 +46,27 @@ export class RawAssetsService {
         return record
     }
 
-    async getRawAssets(ids: string[]): Promise<Array<RawAsset>> {
+    async fetchRawAssets(ids: string[]): Promise<Array<RawAsset>> {
         // TODO -> implement this via batch query for better performance
         const requests: Array<Promise<RawAsset>> = []
         for (const id of ids) {
-            requests.push(this.getRawAsset(id))
+            requests.push(this.fetchRawAsset(id))
         }
 
         const results = await Promise.all(requests)
         return results
     }
 
-    async updateRawAsset() {
-        throw 'not implemented'
+    async updateRawAsset(id: string, request: RawAssetUpdateRequest) {
+        const update = <RawAssetTable>{
+            // name: request.name,
+            // type: request.type,
+            value: request.value,
+            // tags: request.tags
+        }
+        console.log('updating raw asset with request', request, 'the update value is..', update)
+        const updated = await RawAssetModel.update({ id: id }, { "$SET": update })
+        console.log('updated raw asset', id, updated)
+        return updated
     }
 }

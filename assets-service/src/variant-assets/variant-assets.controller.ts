@@ -1,6 +1,6 @@
-import { Body, Controller, forwardRef, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, forwardRef, Get, Inject, Param, Patch, Post, Put } from '@nestjs/common';
 import { VariantAssetsService } from './variant-assets.service';
-import { VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
+import { NestedAssetPutRequest, VariantAssetRegisterRequest } from "@bridged.xyz/client-sdk/lib"
 
 @Controller('variant-assets')
 export class VariantAssetsController {
@@ -11,17 +11,14 @@ export class VariantAssetsController {
     @Post('/')
     async postCreateVariantAsset(@Body() req: VariantAssetRegisterRequest): Promise<any> {
         const projectId = "temp"
-        return await this.variantAssetsService.createVariantAsset(projectId, req)
+        return await this.variantAssetsService.registerVariantAsset(projectId, req)
     }
 
 
     @Get('/:id')
     async getVariantAsset(@Param() p: { id: string }): Promise<any> {
         const id = p.id
-        const data = await this.variantAssetsService.getVariantAsset(id)
-        return {
-            data: data
-        }
+        return await this.variantAssetsService.fetchVariantAsset(id)
     }
 
 
@@ -32,31 +29,48 @@ export class VariantAssetsController {
     async getVariantAssets() {
         console.log('getting all variant assets in project')
         const projectId = 'demo'
-        return this.variantAssetsService.getVariantAssetsInProject(projectId)
-    }
-
-    @Get('/from-key/:key')
-    async getVariantAssetFromKey() {
-        throw 'not implemented'
+        return this.variantAssetsService.fetchVariantAssetsInProject(projectId)
     }
 
 
-    @Patch('/:id/variant/:variant')
-    async postVariantUpdate(@Param() p: {
-        id: string
-        variant: string
-    }, @Body() req: {
-        value: string
-    }): Promise<any> {
-        const updatedVariantAsset = await this.variantAssetsService.updateVariantItem({
+    @Patch('/:id/variants/:variant')
+    async updateVariant(@Param() p: VariantAccessorParam, @Body() body: NestedAssetPutRequest): Promise<any> {
+        const updatedVariantAsset = await this.variantAssetsService.updateVariant({
             variantAssetId: p.id,
             variant: p.variant,
-            newValue: req.value
+            asset: body
         })
 
-        return {
-            data: updatedVariantAsset
-        }
+        return updatedVariantAsset
     }
 
+    @Put('/:id/variants/:variant')
+    async putVariant(@Param() p: VariantAccessorParam, @Body() body: NestedAssetPutRequest) {
+        return await this.variantAssetsService.putVariant({
+            variantAssetId: p.id,
+            variant: p.variant,
+            asset: body
+        })
+    }
+
+    @Post('/:id/variants/:variant')
+    async addVariant(@Param() p: VariantAccessorParam, @Body() body: NestedAssetPutRequest) {
+        return await this.variantAssetsService.addVariant(
+            {
+                variantAssetId: p.id,
+                variant: p.variant,
+                asset: body
+            }
+        )
+    }
+
+}
+
+
+/**
+ * an indicator to locate variant (raw asset) from variant asset. via id and variant key
+ */
+interface VariantAccessorParam {
+    id: string
+    variant: string
 }

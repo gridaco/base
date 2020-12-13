@@ -56,7 +56,7 @@ custom:
 ## Usage of dynamoose
 > using dynamoose requires `dynamodb:DescribeTable` permission
 
-``` yml
+​``` yml
 
 provider:
   name: aws
@@ -79,3 +79,24 @@ provider:
         - dynamodb:DescribeTable
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_KEY_TABLE}"
 ```
+
+
+
+
+
+## Service Layer Function Naming Conventions
+
+**verb forms**
+- register               when registering record with a characteristic of key. (when creatting a key, we call it as `register key`)
+- create                  when generally creating a data record
+- add                      when adding a component, nested form of data to a object with a characteristic of key. (i.e. `register key`, `add value`)
+- put                       when creating or updating a data record (when performing http put operation)
+- ~~patch~~                   *do not use this as a function name*
+- update                 when updating single / multiple property of data record. (also when performing http patch)
+- get                        *avoid using this when performing remote data request*
+- fetch                     when get-ing the data from remote
+- link                        when linking two different record as a joint
+- unlink                   when disconnecting two different record from a joint
+- remove                opposite of `add`. when unlinking, and deleting the record 
+- delete                   when actually, permanatly deeting a data record
+- archive                 when removing, but not deleting a data, making it not accessable.

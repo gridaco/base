@@ -6,25 +6,53 @@ import { IsNotEmpty } from 'class-validator';
 export class AppController {
   constructor(private readonly appService: AppService) { }
 
+
+  /**
+   * the root api getter, check if function is running properly. used for pulse checking.
+   */
   @Get('/')
   async getHello() {
     return 'service is running'
   }
 
 
+  /**
+   * register new key. initial assets are optional
+   * @param request 
+   */
   @Post('/keys')
   async postRegisterKey(@Body() request) {
     return await this.appService.registerNewKey(request)
   }
 
 
+  /**
+   * deletes the key with givven path id
+   * @param p 
+   */
   @Delete('/keys/:id')
   async deleteKey(@Param() p) {
+    const id = p.id
+    return await this.appService.fetchKey(id)
+  }
+
+
+  /**
+   * fetches the key with givven parameter id
+   * @param p 
+   */
+  @Get('/keys/:id')
+  async getKey(@Param() p) {
     const id = p.id
     return await this.appService.deleteKey(id)
   }
 
 
+  /**
+   * updates the key's key name with givven parameter id, and the request body's `keyName` property
+   * @param p 
+   * @param request 
+   */
   @Patch('/keys/:id/name')
   async patchUpdateKeyName(@Param() p, @Body() request) {
     const id = p.id
@@ -33,38 +61,95 @@ export class AppController {
   }
 
 
-  @Put('/keys/:id/translations')
-  async putTranslation(@Param() p, @Body() request: {
-    locale: string,
-    text: string
+  /**
+   * bulk get translations with query parameter
+   * @param p 
+   */
+  @Get('/translations')
+  async getTranslations(@Query() q) {
+    throw 'not implemented'
+  }
+
+
+  /**
+   * get single translation. 
+   * id is a id of key, wich indicates to the translation map (variant asset)
+   * @param p 
+   */
+  @Get('/translations/:id')
+  async getTranslation(@Param() p: {
+    id: string
   }) {
     const id = p.id
-    // return await this.appService.addTranslation({
-    //   key: id,
-    //   locale: request.locale,
-    //   text: request.text
-    // })
-  }
-
-  @Patch('/keys/:id/translations/:locale')
-  async updateTranslation(@Param() p, @Body() request) {
-    const id = p.id
-    const locale = p.locale
-    const text = request.text
+    return await this.appService.fetchTranslation(id)
   }
 
 
-  @Put('/keys/:id/variants')
-  async putVariant(@Param() p, @Body() request) {
-    const id = p.id
-    throw 'not implemented'
+  /**
+   * adds a new translation. if already exists, throws 409 conflict
+   * id is a id of key, wich indicates to the translation map (variant asset)
+   * @param p 
+   */
+  @HttpCode(200)
+  @HttpCode(409)
+  @HttpCode(400)
+  @Post('/translations/:id/locales/:locale')
+  async addTranslation(
+    @Param() p: TranslationAccessorParams,
+    @Body() body: PutTranslationRequestBody
+  ) {
+    return this.appService.addTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      value: body.value
+    })
   }
 
 
-  @Patch('/keys/:id/variants/:variant')
-  async updateVariant(@Param() p, @Body() request) {
-    const id = p.id
-    throw 'not implemented'
+  /**
+   * puts translation with key id, and locale
+   * @param p 
+   * @param body 
+   */
+  @HttpCode(200)
+  @HttpCode(400)
+  @Put('/translations/:id/locales/:locale')
+  async putTranslation(
+    @Param() p: TranslationAccessorParams,
+    @Body() body: PutTranslationRequestBody) {
+    // put raw asset to with target locale
+    return this.appService.putTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      value: body.value
+    })
   }
 
+
+  /**
+   *  updates translation with key id, and locale. if no locale was added previously, throws 404
+   * @param p 
+   * @param request 
+   */
+  @HttpCode(200)
+  @HttpCode(404)
+  @HttpCode(400)
+  @Patch('/translations/:id/locales/:locale')
+  async updateTranslation(
+    @Param() p: TranslationAccessorParams, @Body() body: PutTranslationRequestBody) {
+    return this.appService.updateTranslation({
+      keyId: p.id,
+      locale: p.locale,
+      value: body.value
+    })
+  }
+}
+
+interface TranslationAccessorParams {
+  id: string,
+  locale: string
+}
+
+interface PutTranslationRequestBody {
+  value: string
 }
