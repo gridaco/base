@@ -51,7 +51,7 @@ custom:
     createRoute53Record: true
   serverless-offline:
     httpPort: 4004
-
+```
 
 ## Usage of dynamoose
 > using dynamoose requires `dynamodb:DescribeTable` permission
