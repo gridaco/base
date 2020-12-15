@@ -55,8 +55,7 @@ custom:
 
 ## Usage of dynamoose
 > using dynamoose requires `dynamodb:DescribeTable` permission
-
-​``` yml
+``` yml
 
 provider:
   name: aws
