@@ -143,6 +143,40 @@ export class AppController {
       value: body.value
     })
   }
+
+
+
+  //
+  // ==========================================
+  //
+
+  @Get('/scenes/:scene')
+  async getSceneTranslations(@Param() p: {
+    scene: string
+  }) {
+    return await this.appService.fetchSceneTranslations('')
+  }
+
+  @Get('/scenes/:scene/layers/:layer')
+  async getLayerTranslation(@Param() p: LayerKeyMapAccessorParams) {
+    console.log(p)
+  }
+
+  @Put('/scenes/:scene/layers/:layer')
+  async putLayerKeyMap(@Param() p: LayerKeyMapAccessorParams, @Body() body: {
+    keyId: string
+  }) {
+    return await this.appService.putLayerKeyMap({
+      projectId: 'temp',
+      keyId: body.keyId,
+      sceneId: p.scene,
+      layerId: p.layer
+    })
+  }
+
+  //
+  // ==========================================
+  //
 }
 
 interface TranslationAccessorParams {
@@ -152,4 +186,9 @@ interface TranslationAccessorParams {
 
 interface PutTranslationRequestBody {
   value: string
+}
+
+interface LayerKeyMapAccessorParams {
+  scene: string
+  layer: string
 }

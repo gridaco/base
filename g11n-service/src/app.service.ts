@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GlobalizedKeyRegisterRequest, TextTranslationAddRequest, TextTranslationPutRequest, TextTranslationUpdateRequest } from "@bridged.xyz/client-sdk/lib/g11n/api"
-import { KeyModel, KeyRecord } from "./app.entity"
+import { KeyModel, KeyRecord, LayerKeyMapModel } from "./app.entity"
 import { nanoid } from 'nanoid';
+import * as dynamoose from "dynamoose"
 import { registerVariantAsset, getVariantAsset, addAvariant, putVariant, updateVariant, } from '@bridged.xyz/client-sdk/lib/assets/api'
 import { IGlobalizedKey } from '@bridged.xyz/client-sdk/lib/g11n';
 const projectId = 'temp'
@@ -129,5 +130,51 @@ export class AppService {
    */
   async removeTranslation() {
     throw 'not implemented'
+  }
+
+  async fetchSceneTranslations(sceneId: string) {
+    throw 'not implemented'
+  }
+
+  async getLayerTranslation() {
+    throw 'not implemented'
+  }
+
+  async putLayerKeyMap(request: {
+    projectId: string
+    keyId: string,
+    sceneId: string,
+    layerId: string
+  }) {
+    const exists = true
+    if (exists) {
+      const condition = new dynamoose.Condition({
+        "FilterExpression": "#projectId = :projectId",
+        "ExpressionAttributeValues": {
+          ":projectId": projectId
+        },
+        "ExpressionAttributeNames": {
+          "#projectId": "projectId"
+        }
+      })
+      // .where("projectId").eq(projectId).and()
+      // .where("sceneId").eq(request.sceneId).and()
+      // .where("layerId").eq(request.layerId);
+
+      // LayerKeyMapModel.
+
+      const updated = await LayerKeyMapModel.update({
+        keyId: request.keyId,
+        projectId: request.projectId,
+        sceneId: request.sceneId,
+        layerId: request.layerId
+      }
+        , { 'condition': condition }
+      )
+      console.log('updated', updated)
+      return updated
+    }
+
+    const record = await LayerKeyMapModel.create({})
   }
 }

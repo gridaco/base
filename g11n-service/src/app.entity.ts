@@ -56,9 +56,19 @@ export interface PlaceHolderRecord {
  */
 export interface LayerKeyMapRecord {
     /**
+     * id of project this record belongs to
+     */
+    projectId: string
+
+    /**
      * the id of the key
      */
     keyId: string
+
+    /**
+     * the id of the registered scene, which holds this layer
+     */
+    sceneId: string
 
     /**
      * the id of the layer
@@ -85,6 +95,29 @@ const PlaceholderSchema = new dynamoose.Schema({
     }
 }, {
     saveUnknown: false
+})
+
+const LayerKeyMapSchema = new dynamoose.Schema({
+    id: {
+        type: String,
+        required: true
+    },
+    projectId: {
+        type: String,
+        required: true
+    },
+    keyId: {
+        type: String,
+        required: true,
+    },
+    sceneId: {
+        type: String,
+        required: true
+    },
+    layerId: {
+        type: String,
+        required: true
+    }
 })
 
 
@@ -124,5 +157,11 @@ const KeySchema = new dynamoose.Schema({
 
 const KEY_TABLE_NAME = process.env.DYNAMODB_KEY_TABLE
 export const KeyModel = dynamoose.model(KEY_TABLE_NAME, KeySchema, {
+    create: false
+})
+
+const LAYER_KEY_MAP_TABLE = process.env.DYNAMODB_LAYER_KEY_MAP_TABLE
+
+export const LayerKeyMapModel = dynamoose.model(LAYER_KEY_MAP_TABLE, LayerKeyMapSchema, {
     create: false
 })

@@ -41,7 +41,64 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-
+    layerKeyMapTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: "${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}"
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: projectId
+            AttributeType: S
+          - AttributeName: keyId
+            AttributeType: S   
+          - AttributeName: sceneId
+            AttributeType: S
+          - AttributeName: layerId
+            AttributeType: S
+        GlobalSecondaryIndexes:
+          - IndexName: projectIndex
+            KeySchema:
+              - AttributeName: projectId
+                KeyType: HASH
+            Projection: 
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+          - IndexName: keyIndex
+            KeySchema:
+              - AttributeName: keyId
+                KeyType: HASH
+            Projection: 
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+          - IndexName: sceneIndex
+            KeySchema:
+              - AttributeName: sceneId
+                KeyType: HASH
+            Projection: 
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+          - IndexName: layerIndex
+            KeySchema:
+              - AttributeName: layerId
+                KeyType: HASH
+            Projection: 
+              ProjectionType: "ALL"
+            ProvisionedThroughput:
+                    ReadCapacityUnits: 1
+                    WriteCapacityUnits: 1
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 
 provider:
   name: aws
@@ -52,6 +109,7 @@ provider:
   environment: 
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
     DYNAMODB_KEY_TABLE: "${self:service}-key-${opt:stage, self:provider.stage}"
+    DYNAMODB_LAYER_KEY_MAP_TABLE: "${self:service}-layer-key-map-${opt:stage, self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -63,6 +121,17 @@ provider:
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
       Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_KEY_TABLE}"
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}"
+
 
 package:
   individually: true
