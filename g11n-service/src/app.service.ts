@@ -4,7 +4,7 @@ import { KeyModel, KeyRecord, LayerKeyMapModel, LayerKeyMapRecord } from "./app.
 import { nanoid } from 'nanoid';
 import * as dynamoose from "dynamoose"
 import { registerVariantAsset, getVariantAsset, addAvariant, putVariant, updateVariant, } from '@bridged.xyz/client-sdk/lib/assets/api'
-import { IGlobalizedKey } from '@bridged.xyz/client-sdk/lib/g11n';
+import { IGlobalizedKey, LayerTranslation } from '@bridged.xyz/client-sdk/lib/g11n';
 const projectId = 'temp'
 
 @Injectable()
@@ -277,10 +277,3 @@ export class AppService {
 }
 
 
-export interface LayerTranslation {
-  sceneId: string,
-  layerId: string,
-  keyId: string
-  projectId: string,
-  translation: IGlobalizedKey
-}
