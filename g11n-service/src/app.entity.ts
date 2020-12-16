@@ -55,6 +55,8 @@ export interface PlaceHolderRecord {
  * maps scene's layer and asset's key together
  */
 export interface LayerKeyMapRecord {
+    id: string
+
     /**
      * id of project this record belongs to
      */
@@ -104,19 +106,35 @@ const LayerKeyMapSchema = new dynamoose.Schema({
     },
     projectId: {
         type: String,
-        required: true
+        required: true,
+        index: {
+            name: "projectIndex",
+            global: true
+        }
     },
     keyId: {
         type: String,
         required: true,
+        index: {
+            name: "keyIndex",
+            global: true
+        }
     },
     sceneId: {
         type: String,
-        required: true
+        required: true,
+        index: {
+            name: "sceneIndex",
+            global: true
+        }
     },
     layerId: {
         type: String,
-        required: true
+        required: true,
+        index: {
+            name: "layerIndex",
+            global: true
+        }
     }
 })
 

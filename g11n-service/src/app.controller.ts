@@ -154,12 +154,16 @@ export class AppController {
   async getSceneTranslations(@Param() p: {
     scene: string
   }) {
-    return await this.appService.fetchSceneTranslations('')
+    console.log('starting [GET] getSceneTranslations')
+    return await this.appService.fetchSceneTranslations(p.scene)
   }
 
   @Get('/scenes/:scene/layers/:layer')
   async getLayerTranslation(@Param() p: LayerKeyMapAccessorParams) {
-    console.log(p)
+    return await this.appService.fetchLayerTranslation({
+      sceneId: p.scene,
+      layerId: p.layer
+    })
   }
 
   @Put('/scenes/:scene/layers/:layer')
@@ -167,7 +171,6 @@ export class AppController {
     keyId: string
   }) {
     return await this.appService.putLayerKeyMap({
-      projectId: 'temp',
       keyId: body.keyId,
       sceneId: p.scene,
       layerId: p.layer
