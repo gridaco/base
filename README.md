@@ -1,8 +1,8 @@
-# service
+# bridged cloud service - [bridged.cc](https://bridged.cc)
 > public services (all services except auth and billing) msa repository
 
 
-
+# development
 
 ## micros
 - [asset-service](./assets-service)
@@ -33,8 +33,14 @@ git submodule update --init --recursive
 
 
 
-
 ## Frameworks
 
 nestjs - [learn more](https://docs.nestjs.com/microservices/basics)
 
+
+# usage
+
+> if you are simply lookin for bridged cloud access, this can be done with [client-sdk](https://github.com/bridgedxyz/client-sdk-ts)
+## Client usage - Installation
+
+goto https://github.com/bridgedxyz/client-sdk-ts
