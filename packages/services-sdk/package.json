@@ -1,6 +1,6 @@
 {
-    "name": "services-sdk",
-    "description": "internal server-shared typings definitions for bridged msa infrastructure",
-    "version": "0.0.0",
-    "main": "dist/index.js"
+  "name": "services-sdk",
+  "description": "internal server-shared typings definitions for bridged msa infrastructure",
+  "version": "0.0.0",
+  "main": "dist/index.js"
 }

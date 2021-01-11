@@ -3,7 +3,7 @@ service:
 
 plugins:
   - serverless-dotenv-plugin
-  - '@hewmen/serverless-plugin-typescript'  
+  - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-dynamodb-local
@@ -19,13 +19,12 @@ custom:
   serverless-offline:
     httpPort: 4007
 
-
 resources:
   Resources:
     projectsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: "${self:provider.environment.DYNAMODB_TABLE}"
+        TableName: '${self:provider.environment.DYNAMODB_TABLE}'
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -36,16 +35,15 @@ resources:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
 
-
 provider:
   name: aws
   runtime: nodejs12.x
   region: us-west-1
   apiGateway:
     minimumCompressionSize: 1024
-  environment: 
+  environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
-    DYNAMODB_TABLE: "${self:service}-${opt:stage, self:provider.stage}"
+    DYNAMODB_TABLE: '${self:service}-${opt:stage, self:provider.stage}'
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -55,7 +53,7 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
 
 package:
   individually: true

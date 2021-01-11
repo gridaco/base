@@ -7,7 +7,6 @@ plugins:
   - serverless-offline
   - serverless-domain-manager
 
-
 custom:
   bundle:
     caching: false
@@ -25,13 +24,12 @@ custom:
   serverless-offline:
     httpPort: 4004
 
-
 resources:
   Resources:
     globalizationsTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: "${self:provider.environment.DYNAMODB_KEY_TABLE}"
+        TableName: '${self:provider.environment.DYNAMODB_KEY_TABLE}'
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -44,7 +42,7 @@ resources:
     layerKeyMapTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: "${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}"
+        TableName: '${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}'
         KeySchema:
           - AttributeName: id
             KeyType: HASH
@@ -54,7 +52,7 @@ resources:
           - AttributeName: projectId
             AttributeType: S
           - AttributeName: keyId
-            AttributeType: S   
+            AttributeType: S
           - AttributeName: sceneId
             AttributeType: S
           - AttributeName: layerId
@@ -64,38 +62,38 @@ resources:
             KeySchema:
               - AttributeName: projectId
                 KeyType: HASH
-            Projection: 
-              ProjectionType: "ALL"
+            Projection:
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: keyIndex
             KeySchema:
               - AttributeName: keyId
                 KeyType: HASH
-            Projection: 
-              ProjectionType: "ALL"
+            Projection:
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: sceneIndex
             KeySchema:
               - AttributeName: sceneId
                 KeyType: HASH
-            Projection: 
-              ProjectionType: "ALL"
+            Projection:
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
           - IndexName: layerIndex
             KeySchema:
               - AttributeName: layerId
                 KeyType: HASH
-            Projection: 
-              ProjectionType: "ALL"
+            Projection:
+              ProjectionType: 'ALL'
             ProvisionedThroughput:
-                    ReadCapacityUnits: 1
-                    WriteCapacityUnits: 1
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
@@ -106,10 +104,10 @@ provider:
   region: us-west-1
   apiGateway:
     minimumCompressionSize: 1024
-  environment: 
+  environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
-    DYNAMODB_KEY_TABLE: "${self:service}-key-${opt:stage, self:provider.stage}"
-    DYNAMODB_LAYER_KEY_MAP_TABLE: "${self:service}-layer-key-map-${opt:stage, self:provider.stage}"
+    DYNAMODB_KEY_TABLE: '${self:service}-key-${opt:stage, self:provider.stage}'
+    DYNAMODB_LAYER_KEY_MAP_TABLE: '${self:service}-layer-key-map-${opt:stage, self:provider.stage}'
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -120,7 +118,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_KEY_TABLE}"
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_KEY_TABLE}'
     - Effect: Allow
       Action:
         - dynamodb:Query
@@ -130,8 +128,7 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
         - dynamodb:DescribeTable
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}"
-
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_LAYER_KEY_MAP_TABLE}'
 
 package:
   individually: true
