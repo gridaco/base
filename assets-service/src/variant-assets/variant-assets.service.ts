@@ -1,4 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { nanoid } from 'nanoid';
+
 import {
   RawAsset,
   RawAssetRegisterRequest,
@@ -6,13 +8,12 @@ import {
   NestedAssetPutRequest,
   VariantAsset,
   VariantAssetRegisterRequest,
-  AssetType,
   VariantPutRequest,
   VariantUpdateRequest,
-} from '@bridged.xyz/client-sdk/lib';
-import { nanoid } from 'nanoid';
+} from '@bridged.xyz/client-sdk/lib/assets';
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetTable, VariantAssetModel } from '../app.entity';
+
 @Injectable()
 export class VariantAssetsService {
   constructor(private readonly rawAssetsService: RawAssetsService) {}
@@ -26,7 +27,7 @@ export class VariantAssetsService {
     console.log('assetsInVariantAsset', assetsInVariantAsset);
 
     // get assets
-    const rawAssetIds = Object.keys(assetsInVariantAsset).map(function (key) {
+    const rawAssetIds = Object.keys(assetsInVariantAsset).map(function(key) {
       return assetsInVariantAsset[key];
     });
     const rawAssets = await this.rawAssetsService.fetchRawAssets(rawAssetIds);
@@ -52,7 +53,7 @@ export class VariantAssetsService {
 
   async registerVariantAsset(
     projectId: string,
-    request: VariantAssetRegisterRequest,
+    request: VariantAssetRegisterRequest
   ): Promise<any> {
     const id = nanoid();
 
@@ -73,7 +74,7 @@ export class VariantAssetsService {
 
       // asset created
       const asset = await this.rawAssetsService.createRawAsset(
-        fullAssetRegiisterRequest,
+        fullAssetRegiisterRequest
       );
       registeredRawAssets.push(asset);
     }
@@ -113,13 +114,13 @@ export class VariantAssetsService {
     const id = request.variantAssetId;
     const variantName = request.variant;
     const variantAsset = ((await VariantAssetModel.get(
-      id,
+      id
     )) as any) as VariantAssetTable;
 
     const variantId = variantAsset.assets[variantName];
     console.log(
       'updating raw asset linked to this variant with raw asset id of',
-      variantId,
+      variantId
     );
     await this.rawAssetsService.updateRawAsset(variantId, {
       id: variantId,
@@ -134,11 +135,11 @@ export class VariantAssetsService {
     const id = request.variantAssetId;
     const variantName = request.variant;
     const variantAsset = ((await VariantAssetModel.get(
-      id,
+      id
     )) as any) as VariantAssetTable;
     console.log(
       'permorming add variant request to existing variat asset',
-      variantAsset,
+      variantAsset
     );
     const newRawAsset = await this.rawAssetsService.createRawAsset({
       type: variantAsset.type,
@@ -156,7 +157,7 @@ export class VariantAssetsService {
       },
       {
         assets: updatedAssetsMap,
-      },
+      }
     );
 
     return await this.fetchVariantAsset(id);
@@ -168,15 +169,15 @@ export class VariantAssetsService {
     const id = request.variantAssetId;
     const variantAsset = await this.fetchVariantAsset(id);
     const exists =
-      Object.keys(variantAsset.assets).find((v) => v == variant) !== undefined;
+      Object.keys(variantAsset.assets).find(v => v == variant) !== undefined;
     if (exists) {
       console.log(
-        'handling put request. since data exists already, performing "update"',
+        'handling put request. since data exists already, performing "update"'
       );
       return await this.updateVariant(request);
     } else {
       console.log(
-        'handling put request. since data is fresh and new, performing "add"',
+        'handling put request. since data is fresh and new, performing "add"'
       );
       return await this.addVariant({
         variant: request.variant,
@@ -191,7 +192,7 @@ export class VariantAssetsService {
   }
 
   async fetchVariantAssetsInProject(
-    projectId: string,
+    projectId: string
   ): Promise<Array<VariantAsset>> {
     const PROJECT_INDEX_NAME = 'projectIndex';
     const variantAssetRecords = await VariantAssetModel.query('projectId')
@@ -216,13 +217,13 @@ export class VariantAssetsService {
  */
 function assetsToMap(
   assetMap: Map<string, string>,
-  assets: RawAsset[],
+  assets: RawAsset[]
 ): Map<string, RawAsset> {
   const result = new Map<string, RawAsset>();
   const assetKeys = Object.keys(assetMap);
   for (const key of assetKeys) {
     const assetId = assetMap[key];
-    const asset = assets.find((a) => a.id == assetId);
+    const asset = assets.find(a => a.id == assetId);
 
     result[key] = asset;
   }

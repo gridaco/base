@@ -1,11 +1,11 @@
 // lambda.ts
+import { NestFactory } from '@nestjs/core';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { Handler, Context } from 'aws-lambda';
 import { Server } from 'http';
 import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
 
-import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 
 /* eslint-disable */
@@ -25,7 +25,7 @@ async function bootstrapServer(): Promise<Server> {
     const expressApp = express();
     const nestApp = await NestFactory.create(
       AppModule,
-      new ExpressAdapter(expressApp),
+      new ExpressAdapter(expressApp)
     );
     nestApp.use(eventContext());
     nestApp.enableCors({

@@ -9,22 +9,23 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { VariantAssetsService } from './variant-assets.service';
+
 import {
   NestedAssetPutRequest,
   VariantAssetRegisterRequest,
-} from '@bridged.xyz/client-sdk/lib';
+} from '@bridged.xyz/client-sdk/lib/assets';
+import { VariantAssetsService } from './variant-assets.service';
 
 @Controller('variant-assets')
 export class VariantAssetsController {
   constructor(
     @Inject(forwardRef(() => VariantAssetsService))
-    private readonly variantAssetsService: VariantAssetsService,
+    private readonly variantAssetsService: VariantAssetsService
   ) {}
 
   @Post('/')
   async postCreateVariantAsset(
-    @Body() req: VariantAssetRegisterRequest,
+    @Body() req: VariantAssetRegisterRequest
   ): Promise<any> {
     const projectId = 'temp';
     return await this.variantAssetsService.registerVariantAsset(projectId, req);
@@ -49,7 +50,7 @@ export class VariantAssetsController {
   @Patch('/:id/variants/:variant')
   async updateVariant(
     @Param() p: VariantAccessorParam,
-    @Body() body: NestedAssetPutRequest,
+    @Body() body: NestedAssetPutRequest
   ): Promise<any> {
     const updatedVariantAsset = await this.variantAssetsService.updateVariant({
       variantAssetId: p.id,
@@ -63,7 +64,7 @@ export class VariantAssetsController {
   @Put('/:id/variants/:variant')
   async putVariant(
     @Param() p: VariantAccessorParam,
-    @Body() body: NestedAssetPutRequest,
+    @Body() body: NestedAssetPutRequest
   ) {
     return await this.variantAssetsService.putVariant({
       variantAssetId: p.id,
@@ -75,7 +76,7 @@ export class VariantAssetsController {
   @Post('/:id/variants/:variant')
   async addVariant(
     @Param() p: VariantAccessorParam,
-    @Body() body: NestedAssetPutRequest,
+    @Body() body: NestedAssetPutRequest
   ) {
     return await this.variantAssetsService.addVariant({
       variantAssetId: p.id,

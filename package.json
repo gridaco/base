@@ -2,6 +2,9 @@
   "name": "@bridged.xyz/services",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "setup": "git submodule update --init --recursive"
+  },
   "workspaces": [
     "assets-service",
     "build-service",

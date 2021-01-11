@@ -1,22 +1,11 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  Put,
-  Query,
-  Redirect,
-  Req,
-} from '@nestjs/common';
-import { RawAssetsService } from './raw-assets.service';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+
 import {
   RawAsset,
   RawAssetRegisterRequest,
   RawAssetRegisterResponse,
 } from '@bridged.xyz/client-sdk/lib/assets';
+import { RawAssetsService } from './raw-assets.service';
 
 @Controller('raw-assets')
 export class RawAssetsController {
@@ -24,7 +13,7 @@ export class RawAssetsController {
 
   @Post('/')
   async postRawAsset(
-    @Body() req: RawAssetRegisterRequest,
+    @Body() req: RawAssetRegisterRequest
   ): Promise<RawAssetRegisterResponse> {
     const asset = await this.rawAssetsService.createRawAsset(req);
 

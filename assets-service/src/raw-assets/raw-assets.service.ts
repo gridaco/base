@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import { nanoid } from 'nanoid';
+
 import {
   RawAssetRegisterRequest,
   RawAsset,
   RawAssetUpdateRequest,
-} from '@bridged.xyz/client-sdk/lib';
-import { nanoid } from 'nanoid';
+} from '@bridged.xyz/client-sdk/lib/assets';
 import { RawAssetModel, RawAssetTable } from '../app.entity';
+
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 const TBL_RAW_ASSETS = process.env.DYNAMODB_TABLE_RAW_ASSETS;
@@ -70,7 +72,7 @@ export class RawAssetsService {
       'updating raw asset with request',
       request,
       'the update value is..',
-      update,
+      update
     );
     const updated = await RawAssetModel.update({ id: id }, { $SET: update });
     console.log('updated raw asset', id, updated);

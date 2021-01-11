@@ -1,6 +1,7 @@
-import { AssetType } from '@bridged.xyz/client-sdk/lib';
 import * as dynamoose from 'dynamoose';
 import { nanoid } from 'nanoid';
+
+import { AssetType } from '@bridged.xyz/client-sdk/lib/assets';
 
 /**
  //  * the table definition of asset. the asset can be temporary, and it does not contains any information of which holds this asset.
@@ -154,7 +155,7 @@ const VariantAssetSchema = new dynamoose.Schema(
   },
   {
     saveUnknown: true,
-  },
+  }
 );
 
 const TBL_VARIANT_ASSETS = process.env.DYNAMODB_TABLE_VARIANT_ASSETS;
@@ -163,5 +164,5 @@ export const VariantAssetModel = dynamoose.model(
   VariantAssetSchema,
   {
     create: false,
-  },
+  }
 );

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { RawAssetsService } from '../raw-assets/raw-assets.service';
 import { VariantAssetsController } from './variant-assets.controller';
 import { VariantAssetsService } from './variant-assets.service';
