@@ -1,6 +1,8 @@
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+
 import { SceneRegisterRequest } from '@bridged.xyz/client-sdk';
 import { StorableSceneType } from '@bridged.xyz/client-sdk';
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+
 import { ScenesService } from './scenes.service';
 
 // TODO -> indexing for complex query might be useful
@@ -53,7 +55,7 @@ export class ScenesController {
     params: {
       id: string;
     },
-    @Query() query: IGetSceneQuery,
+    @Query() query: IGetSceneQuery
   ) {
     const id = params.id;
     const scene = await this.scenesService.fetchScene(id);

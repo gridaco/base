@@ -1,23 +1,13 @@
-import {
-  HttpCode,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { nanoid } from 'nanoid';
+import * as dynamoose from 'dynamoose';
+
 import {
   GlobalizedKeyRegisterRequest,
   TextTranslationAddRequest,
   TextTranslationPutRequest,
   TextTranslationUpdateRequest,
 } from '@bridged.xyz/client-sdk/lib/g11n/api';
-import {
-  KeyModel,
-  KeyRecord,
-  LayerKeyMapModel,
-  LayerKeyMapRecord,
-} from './app.entity';
-import { nanoid } from 'nanoid';
-import * as dynamoose from 'dynamoose';
 import {
   registerVariantAsset,
   getVariantAsset,
@@ -29,6 +19,13 @@ import {
   IGlobalizedKey,
   LayerTranslation,
 } from '@bridged.xyz/client-sdk/lib/g11n';
+import {
+  KeyModel,
+  KeyRecord,
+  LayerKeyMapModel,
+  LayerKeyMapRecord,
+} from './app.entity';
+
 const projectId = 'temp';
 
 @Injectable()
@@ -78,7 +75,7 @@ export class AppService {
       { id: id },
       {
         keyName: name,
-      },
+      }
     );
     console.log('key name updated.', updatedRecrod);
     return await this.fetchTranslation(id);
@@ -161,7 +158,7 @@ export class AppService {
   }
 
   async fetchSceneTranslations(
-    sceneId: string,
+    sceneId: string
   ): Promise<ReadonlyArray<LayerTranslation>> {
     const keyMaps = await this.findKeyMapsFromDesign({
       sceneId: sceneId,
@@ -246,10 +243,16 @@ export class AppService {
   }): Promise<LayerKeyMapRecord | undefined> {
     const condition = new dynamoose.Condition();
     if (q.projectId) {
-      condition.where('projectId').eq(projectId).and();
+      condition
+        .where('projectId')
+        .eq(projectId)
+        .and();
     }
     if (q.sceneId) {
-      condition.where('sceneId').eq(q.sceneId).and();
+      condition
+        .where('sceneId')
+        .eq(q.sceneId)
+        .and();
     }
     if (q.layerId) {
       condition.where('layerId').eq(q.layerId);
@@ -276,10 +279,16 @@ export class AppService {
   }): Promise<ReadonlyArray<LayerKeyMapRecord> | undefined> {
     const condition = new dynamoose.Condition();
     if (q.projectId) {
-      condition.where('projectId').eq(projectId).and();
+      condition
+        .where('projectId')
+        .eq(projectId)
+        .and();
     }
     if (q.sceneId) {
-      condition.where('sceneId').eq(q.sceneId).and();
+      condition
+        .where('sceneId')
+        .eq(q.sceneId)
+        .and();
     }
     if (q.layerId) {
       condition.where('layerId').eq(q.layerId);

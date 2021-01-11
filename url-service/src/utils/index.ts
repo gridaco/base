@@ -1,4 +1,5 @@
 import { URL } from 'url';
+import { nanoid } from 'nanoid';
 
 /**
  * check if givven url is a valid, and the host does not conficts.
@@ -14,7 +15,6 @@ export function checkIfValidUrl(s): boolean {
   }
 }
 
-import { nanoid } from 'nanoid';
 // calculate it here. https://zelark.github.io/nano-id-cc/
 const RAND_RANGE = 16;
 

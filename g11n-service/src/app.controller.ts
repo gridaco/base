@@ -12,8 +12,9 @@ import {
   Redirect,
   Req,
 } from '@nestjs/common';
-import { AppService } from './app.service';
 import { IsNotEmpty } from 'class-validator';
+
+import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
@@ -99,7 +100,7 @@ export class AppController {
   @Post('/translations/:id/locales/:locale')
   async addTranslation(
     @Param() p: TranslationAccessorParams,
-    @Body() body: PutTranslationRequestBody,
+    @Body() body: PutTranslationRequestBody
   ) {
     return this.appService.addTranslation({
       keyId: p.id,
@@ -118,7 +119,7 @@ export class AppController {
   @Put('/translations/:id/locales/:locale')
   async putTranslation(
     @Param() p: TranslationAccessorParams,
-    @Body() body: PutTranslationRequestBody,
+    @Body() body: PutTranslationRequestBody
   ) {
     // put raw asset to with target locale
     return this.appService.putTranslation({
@@ -139,7 +140,7 @@ export class AppController {
   @Patch('/translations/:id/locales/:locale')
   async updateTranslation(
     @Param() p: TranslationAccessorParams,
-    @Body() body: PutTranslationRequestBody,
+    @Body() body: PutTranslationRequestBody
   ) {
     return this.appService.updateTranslation({
       keyId: p.id,
@@ -172,7 +173,7 @@ export class AppController {
     @Body()
     body: {
       keyId: string;
-    },
+    }
   ) {
     return await this.appService.putLayerKeyMap({
       keyId: body.keyId,

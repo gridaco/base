@@ -1,10 +1,10 @@
+import * as dynamoose from 'dynamoose';
 import {
   StorableSceneType,
   DesignPlatform,
   SdkVersion,
   StorableLayerType,
 } from '@bridged.xyz/client-sdk/lib';
-import * as dynamoose from 'dynamoose';
 
 /**
  * the record interface of scene table. on scene-store service's db
@@ -209,7 +209,7 @@ export const NestedLayer = new dynamoose.Schema(
   },
   {
     saveUnknown: true,
-  },
+  }
 );
 
 export const SceneSchema = new dynamoose.Schema(
@@ -254,7 +254,7 @@ export const SceneSchema = new dynamoose.Schema(
   {
     // https://github.com/dynamoose/dynamoose/pull/1050
     saveUnknown: true,
-  },
+  }
 );
 
 export const Scene = dynamoose.model(TABLE, SceneSchema, {

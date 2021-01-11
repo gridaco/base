@@ -1,18 +1,10 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  Param,
-  Post,
-  Redirect,
-  Req,
-} from '@nestjs/common';
-import { AppService } from './app.service';
+import { Body, Controller, Get, Param, Post, Redirect } from '@nestjs/common';
+
 import {
   UrlShortenRequest,
   UrlShortenResult,
 } from '@bridged.xyz/client-sdk/dist/url/types';
+import { AppService } from './app.service';
 import { checkIfValidUrl } from './utils';
 
 @Controller()

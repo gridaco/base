@@ -1,6 +1,6 @@
 /**
  * example
- * 
+ *
 ```
 {
     id: 'U6nlG0Y5sfs',

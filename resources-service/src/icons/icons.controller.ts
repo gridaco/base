@@ -1,4 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
+
 import { IconsService } from './icons.service';
 
 @Controller('icons')

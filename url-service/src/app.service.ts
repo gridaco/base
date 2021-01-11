@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
-import { buildShortUrl, generateHash } from './utils';
+
 import { UrlShortenResult } from '@bridged.xyz/client-sdk/dist/url/types';
+import { buildShortUrl, generateHash } from './utils';
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 

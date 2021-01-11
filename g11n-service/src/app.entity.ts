@@ -1,11 +1,13 @@
+import * as dynamoose from 'dynamoose';
+import { nanoid } from 'nanoid';
+
 import { AssetType } from '@bridged.xyz/client-sdk/lib/assets';
 import {
   keyNameFormatValidation,
   placeholderNameFormatValidation,
   PlaceholderType,
 } from '@bridged.xyz/client-sdk/lib/g11n';
-import * as dynamoose from 'dynamoose';
-import { nanoid } from 'nanoid';
+
 /**
  * the key manifest for globallized assets.
  * unique with ( projectId && type && keyName )
@@ -102,7 +104,7 @@ const PlaceholderSchema = new dynamoose.Schema(
   },
   {
     saveUnknown: false,
-  },
+  }
 );
 
 const LayerKeyMapSchema = new dynamoose.Schema({
@@ -187,7 +189,7 @@ const KeySchema = new dynamoose.Schema(
   },
   {
     saveUnknown: false,
-  },
+  }
 );
 
 const KEY_TABLE_NAME = process.env.DYNAMODB_KEY_TABLE;
@@ -202,5 +204,5 @@ export const LayerKeyMapModel = dynamoose.model(
   LayerKeyMapSchema,
   {
     create: false,
-  },
+  }
 );

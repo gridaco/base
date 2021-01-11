@@ -1,13 +1,10 @@
-import {
-  DesignPlatform,
-  SdkVersion,
-  StorableLayerType,
-} from '@bridged.xyz/client-sdk';
 import { Injectable } from '@nestjs/common';
-import { SceneRegisterRequest, StorableLayer } from '@bridged.xyz/client-sdk';
-import { NestedLayerRecord, Scene } from '../app.entity';
 import { nanoid } from 'nanoid';
 import * as dynamoose from 'dynamoose';
+
+import { DesignPlatform, SdkVersion } from '@bridged.xyz/client-sdk';
+import { SceneRegisterRequest, StorableLayer } from '@bridged.xyz/client-sdk';
+import { NestedLayerRecord, Scene } from '../app.entity';
 
 const sdkVer = SdkVersion.v2020_0;
 
@@ -24,7 +21,7 @@ export class ScenesService {
       (l: StorableLayer) => {
         const nestedLayer = convertStorableLayerToNestedLayer(l);
         return nestedLayer;
-      },
+      }
     );
 
     console.log('request.nodeId', request.nodeId);
@@ -90,7 +87,7 @@ export class ScenesService {
  * converts / maps storable layer (wich is also nested type,) to db nested layers type.
  */
 function convertStorableLayerToNestedLayer(
-  layer: StorableLayer,
+  layer: StorableLayer
 ): NestedLayerRecord {
   // TODO
 
