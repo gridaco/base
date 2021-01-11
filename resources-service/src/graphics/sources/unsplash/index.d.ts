@@ -1,4 +1,3 @@
-
 /**
  * example
  * 
@@ -27,32 +26,31 @@
 ```
  */
 interface UnsplashImage {
-    id: string,
-    created_at: Date,
-    updated_at: Date,
-    width: number
-    height: number
-    color: string
-    description: string
-    alt_description: string
-    urls: UnsplashImageUrlMap
-    links: UnsplashLinkMap
-    tags: Array<UnsplashTag>
+  id: string;
+  created_at: Date;
+  updated_at: Date;
+  width: number;
+  height: number;
+  color: string;
+  description: string;
+  alt_description: string;
+  urls: UnsplashImageUrlMap;
+  links: UnsplashLinkMap;
+  tags: Array<UnsplashTag>;
 }
 
 interface UnsplashImageUrlMap {
-    raw: string
-    regular: string
-    small: string
-    thumb: string
+  raw: string;
+  regular: string;
+  small: string;
+  thumb: string;
 }
 
 interface UnsplashResponse {
-    total: number
-    total_pages: number
-    results: Array<UnsplashImage>
+  total: number;
+  total_pages: number;
+  results: Array<UnsplashImage>;
 }
-
 
 /**
  * example
@@ -66,10 +64,10 @@ interface UnsplashResponse {
 ```
  */
 interface UnsplashLinkMap {
-    self: string
-    html: string
-    download: string
-    download_location: string
+  self: string;
+  html: string;
+  download: string;
+  download_location: string;
 }
 
 /**
@@ -91,13 +89,13 @@ interface UnsplashLinkMap {
 ```
  */
 interface UnsplashTag {
-    type: string
-    title: string
-    source: {
-        ancestry: any
-        title: string
-        subtitle: string
-        description: string
-        cover_photo: any
-    }
+  type: string;
+  title: string;
+  source: {
+    ancestry: any;
+    title: string;
+    subtitle: string;
+    description: string;
+    cover_photo: any;
+  };
 }

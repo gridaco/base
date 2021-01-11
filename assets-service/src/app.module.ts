@@ -9,4 +9,4 @@ import { VariantAssetsModule } from './variant-assets/variant-assets.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

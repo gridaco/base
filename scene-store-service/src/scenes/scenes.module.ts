@@ -3,8 +3,8 @@ import { ScenesController } from './scenes.controller';
 import { ScenesService } from './scenes.service';
 
 @Module({
-    imports: [],
-    controllers: [ScenesController],
-    providers: [ScenesService],
+  imports: [],
+  controllers: [ScenesController],
+  providers: [ScenesService],
 })
-export class ScenesModule { }
+export class ScenesModule {}

@@ -1,1 +1,1 @@
-export * from "./project.middleware"
+export * from './project.middleware';
