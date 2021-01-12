@@ -6,7 +6,7 @@
 
 ## micros
 - [asset-service](./assets-service)
-- []
+- [g11n-service](./g11n-service)
 - [resource-hosting](./resource-hosting)
 - application hosting
 - auth (read the development token generation docs)
@@ -22,6 +22,21 @@ git clone https://github.com/bridgedxyz/services.git --recurse-submodules
 # pulling with git submodules (second entry)
 git submodule update --init --recursive
 ```
+
+
+
+## running services
+
+> you need serverless framework to be installed on your local machine
+
+```sh
+yran
+
+# replace target-service with actual directory name that you are targetting
+cd ./target-service
+sls offline
+```
+
 
 
 ## Docs
