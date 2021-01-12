@@ -1,16 +1,19 @@
 {
-    "name": "@bridged.xyz/services",
-    "version": "0.0.1",
-    "private": true,
-    "workspaces": [
-        "assets-service",
-        "build-service",
-        "g11n-service",
-        "scene-store-service",
-        "hosting-service",
-        "project-service",
-        "resources-service",
-        "url-service",
-        "packages/*"
-    ]
+  "name": "@bridged.xyz/services",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "setup": "git submodule update --init --recursive"
+  },
+  "workspaces": [
+    "assets-service",
+    "build-service",
+    "g11n-service",
+    "scene-store-service",
+    "hosting-service",
+    "project-service",
+    "resources-service",
+    "url-service",
+    "packages/*"
+  ]
 }

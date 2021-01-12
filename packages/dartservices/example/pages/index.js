@@ -1,5 +1,5 @@
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Head from 'next/head';
+import styles from '../styles/Home.module.css';
 
 export default function Home() {
   return (
@@ -10,8 +10,14 @@ export default function Home() {
       </Head>
 
       <main className={styles.main}>
-            <iframe src="frame.html" width="375" height="800" id="frame" sandbox="allow-scripts"></iframe>
+        <iframe
+          src="frame.html"
+          width="375"
+          height="800"
+          id="frame"
+          sandbox="allow-scripts"
+        ></iframe>
       </main>
     </div>
-  )
+  );
 }

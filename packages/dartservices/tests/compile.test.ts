@@ -1,6 +1,4 @@
-import { compileComplete, DartServices, defaultClient } from "../lib";
-
-
+import { compileComplete, DartServices, defaultClient } from '../lib';
 
 // from dart-pad
 const EX_DART_SOURCE = `
@@ -146,27 +144,27 @@ class _SunflowerState extends State<Sunflower> {
     );
   }
 }
-`
+`;
 
 async function test(index?) {
-  console.log('start testing')
+  console.log('start testing');
 
   try {
-    const id = Date.now()
-    const start = Date.now()
+    const id = Date.now();
+    const start = Date.now();
     // const client = defaultClient //new DartServices("http://localhost:8082/")
-    const js = await compileComplete(EX_DART_SOURCE + `const iii = ${id};`) // making source always new
-    const end = Date.now()
+    const js = await compileComplete(EX_DART_SOURCE + `const iii = ${id};`); // making source always new
+    const end = Date.now();
     // console.log(js)
-    console.log(index, id, end - start)
+    console.log(index, id, end - start);
     if (!js.sucess) {
-      console.warn('this one failed ^')
+      console.warn('this one failed ^');
     }
   } catch (e) {
-    console.error(e)
+    console.error(e);
   }
 }
 
 for (let i = 0; i < 10; i++) {
-  test(i)
+  test(i);
 }

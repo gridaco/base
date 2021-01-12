@@ -4,7 +4,10 @@
  */
 
 const testKey = '__TESTRESULT__ ';
-export function decorateJavascript(javaScript: string, args: { modulesBaseUrl: string }) {
+export function decorateJavascript(
+  javaScript: string,
+  args: { modulesBaseUrl: string }
+) {
   const { modulesBaseUrl } = args;
   const postMessagePrint = `
     var testKey = '${testKey}';
@@ -59,7 +62,7 @@ export function decorateJavascript(javaScript: string, args: { modulesBaseUrl: s
             "baseUrl": "${modulesBaseUrl}",
             "waitSeconds": 60
         });
-        `
+        `;
   }
 
   const usesRequireJs = modulesBaseUrl != null;
@@ -104,8 +107,7 @@ export function decorateJavascript(javaScript: string, args: { modulesBaseUrl: s
         `;
   }
 
-  const result = `${postMessagePrint}\n${exceptionHandler}\n${requireConfig}\n${javaScript}\n${postfix}`
-    .trim();
+  const result = `${postMessagePrint}\n${exceptionHandler}\n${requireConfig}\n${javaScript}\n${postfix}`.trim();
 
   return result;
 }

@@ -14,14 +14,9 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@bridged.xyz/client-sdk": [
-        "../packages/client-sdk-ts"
-      ]
+      "@bridged.xyz/client-sdk": ["../packages/client-sdk-ts"]
     },
-    "typeRoots": [
-      "./node_modeuls/@types",
-      "../node_modeuls/@types"
-    ]
+    "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
   },
   "exclude": [
     "node_modules",
