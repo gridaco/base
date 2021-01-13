@@ -1,0 +1,139 @@
+service:
+  name: accounts
+
+plugins:
+  - '@hewmen/serverless-plugin-typescript'
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-dynamodb-local
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: accounts.bridged.cc
+    hostedZoneId: us-west-1
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+  serverless-offline:
+    httpPort: 4001
+
+resources:
+  Resources:
+    userTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: '${self:provider.environment.DYNAMODB_TABLE_USER}'
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    organizationTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: '${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION}'
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    organizationUserTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: '${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION_USER}'
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+    organizationSubscriptionTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: '${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION_SUBSCRIPTION}'
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-1
+  apiGateway:
+    minimumCompressionSize: 1024
+  environment:
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
+    DYNAMODB_TABLE_USER: '${self:service}-user-${opt:stage, self:provider.stage}'
+    DYNAMODB_TABLE_ORGANIZATION: '${self:service}-organization-${opt:stage, self:provider.stage}'
+    DYNAMODB_TABLE_ORGANIZATION_USER: '${self:service}-organization-user-${opt:stage, self:provider.stage}'
+    DYNAMODB_TABLE_ORGANIZATION_SUBSCRIPTION: '${self:service}-organization-subscription-${opt:stage, self:provider.stage}'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_USER}'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION}'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION_USER}'
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:DescribeTable
+      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE_ORGANIZATION_SUBSCRIPTION}'
+
+package:
+  individually: true
+
+functions:
+  main:
+    handler: src/lambda.handler
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
