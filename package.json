@@ -6,6 +6,7 @@
     "setup": "git submodule update --init --recursive"
   },
   "workspaces": [
+    "accounts-service",
     "assets-service",
     "build-service",
     "g11n-service",

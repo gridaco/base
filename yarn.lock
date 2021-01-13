@@ -1034,6 +1034,16 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@bridged.xyz/client-sdk@0.0.1-14":
+  version "0.0.1-14"
+  resolved "https://registry.npmjs.org/@bridged.xyz/client-sdk/-/client-sdk-0.0.1-14.tgz#ead6d105c1036fd3c2e103a1ac56601e9de6ea93"
+  integrity sha512-Yq9f53wdkZKMhJzBhKPK1GUHpInwhTRgI0J8QxMvgXyaHbt95bscRslh8mKf62HLYzpDlr/Kbwg5xY202WB5aA==
+  dependencies:
+    aws-sdk "^2.783.0"
+    axios "^0.21.0"
+    dart-services "^0.2.2"
+    form-data "^3.0.0"
+
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@cnakazawa/watch/-/watch-1.0.4.tgz#f864ae85004d0fcab6f50be9141c4da368d1656a"
