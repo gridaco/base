@@ -18,7 +18,7 @@ const UserSocial = new dynamoose.Schema(
   }
 );
 
-const UserSchema = new dynamoose.Schema(
+export const UserSchema = new dynamoose.Schema(
   {
     id: {
       type: String,
@@ -43,7 +43,7 @@ const UserSchema = new dynamoose.Schema(
     type: { type: String },
     isApproved: { type: Boolean, required: true, default: false },
     social: {
-      type: Array,
+      type: Set,
       schema: UserSocial.schemaObject,
     },
   },

@@ -8,7 +8,6 @@ export interface OrganizationTable {
   createdAt: Date;
   isDeleted: boolean;
   deletedAt?: Date;
-  organizationUsers: OrganizationUserTable[];
   projects: string[];
 }
 
