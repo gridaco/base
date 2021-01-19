@@ -1,4 +1,4 @@
-type OrganizationType = 'PERSONAL' | 'GROUP';
+import { OrganizationType } from './organization.constants';
 
 export interface OrganizationTable {
   id: string;

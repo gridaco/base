@@ -1,8 +1,4 @@
-type UserSocialProvider = 'GITHUB';
-
-type UserGender = 'M' | 'F' | 'X';
-
-type UserType = 'NORMAL' | 'ADMINISTRATOR';
+import { UserSocialProvider, UserGender, UserType } from './user.constants';
 
 export interface UserSocial {
   id: string;

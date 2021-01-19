@@ -1,7 +1,8 @@
 import * as dynamoose from 'dynamoose';
 import { nanoid } from 'nanoid';
 
-import { UserSchema } from './user.schema';
+import { UserSchema } from '../user/user.schema';
+import { OrganizationTypes } from './organization.constants';
 
 const OrganizationSchema = new dynamoose.Schema(
   {
@@ -11,7 +12,11 @@ const OrganizationSchema = new dynamoose.Schema(
     },
     name: { type: String, required: true },
     description: { type: String },
-    type: { type: String, enum: ['PERSONAL', 'GROUP'], required: true },
+    type: {
+      type: String,
+      enum: Object.values(OrganizationTypes),
+      required: true,
+    },
     isDeleted: { type: Boolean, required: true, default: false },
     deletedAt: { type: Date },
     projects: { type: Set, schema: [String], default: [] },

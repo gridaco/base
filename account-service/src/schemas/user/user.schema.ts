@@ -1,10 +1,16 @@
 import * as dynamoose from 'dynamoose';
 import { nanoid } from 'nanoid';
 
+import { UserSocialProviders, UserGenders, UserTypes } from './user.constants';
+
 const UserSocial = new dynamoose.Schema(
   {
     id: { type: String, required: true },
-    provider: { type: String, required: true, enum: ['GITHUB'] },
+    provider: {
+      type: String,
+      required: true,
+      enum: Object.values(UserSocialProviders),
+    },
     token: { type: String },
     status: { type: String },
     isDeleted: { type: Boolean, required: true, default: false },
@@ -35,12 +41,20 @@ export const UserSchema = new dynamoose.Schema(
     password: { type: String, required: true },
     profileImageURL: { type: String },
     bio: { type: String },
-    gender: { type: String, enum: ['M', 'F', 'X'], required: true },
+    gender: {
+      type: String,
+      enum: Object.values(UserGenders),
+      required: true,
+    },
     birthday: { type: Date },
     isDeleted: { type: Boolean, required: true, default: false },
     deletedAt: { type: Date },
     referrer: { type: String },
-    type: { type: String },
+    type: {
+      type: String,
+      enum: Object.values(UserTypes),
+      required: true,
+    },
     isApproved: { type: Boolean, required: true, default: false },
     social: {
       type: Set,
