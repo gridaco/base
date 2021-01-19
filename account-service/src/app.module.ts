@@ -3,8 +3,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { UserModule } from './user/user.module';
-import { OrganizationModule } from './organization/organization.module';
+import { UserModule } from './providers/user/user.module';
+import { OrganizationModule } from './providers/organization/organization.module';
 
 @Module({
   imports: [UserModule, OrganizationModule],
