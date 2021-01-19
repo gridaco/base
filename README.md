@@ -5,7 +5,7 @@
 # development
 
 ## micros
-- [accounts-service](./accounts-service)
+- [account-service](./account-service)
 - [asset-service](./assets-service)
 - [g11n-service](./g11n-service)
 - [resource-hosting](./resource-hosting)
