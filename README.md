@@ -30,7 +30,7 @@ git submodule update --init --recursive
 > you need serverless framework to be installed on your local machine
 
 ```sh
-yran
+yarn
 
 # replace target-service with actual directory name that you are targetting
 cd ./target-service
