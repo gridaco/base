@@ -8,7 +8,14 @@
 service:
   name: cors
 
-frameworkVersion: '2'
+custom:
+  customDomain:
+    domainName: cors.bridged.cc
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+  serverless-offline:
+    httpPort: 4012
 
 # The `provider` block defines where your service will be deployed
 provider:
@@ -30,3 +37,4 @@ plugins:
   - '@hewmen/serverless-plugin-typescript'  
   - serverless-plugin-optimize
   - serverless-offline
+  - serverless-domain-manager
