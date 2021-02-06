@@ -5,7 +5,8 @@
 # uses to deploy your code to your provider of choice
 
 # The `service` block is the name of the service
-service: cors.bridged.cc
+service:
+  name: cors
 
 frameworkVersion: '2'
 
