@@ -1,0 +1,25 @@
+{
+    "name": "cors.bridged.cc",
+    "description": "",
+    "version": "0.1.0",
+    "dependencies": {
+        "aws-serverless-express": "^3.4.0",
+        "express": "^4.17.1",
+        "http-proxy": "^1.18.1",
+        "proxy-from-env": "^1.1.0",
+        "serverless-http": "^2.7.0"
+    },
+    "devDependencies": {
+        "@hewmen/serverless-plugin-typescript": "^1.1.17",
+        "@types/aws-lambda": "^8.10.71",
+        "@types/express": "^4.17.11",
+        "@types/http-proxy": "^1.17.5",
+        "@types/node": "^14.14.25",
+        "@types/proxy-from-env": "^1.0.1",
+        "serverless": "^2.22.0",
+        "serverless-offline": "^6.8.0",
+        "serverless-plugin-optimize": "^4.1.4-rc.1",
+        "serverless-domain-manager": "^5.1.0",
+        "typescript": "^4.1.3"
+    }
+}

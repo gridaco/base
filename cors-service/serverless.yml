@@ -1,0 +1,36 @@
+# Welcome to serverless. Read the docs
+# https://serverless.com/framework/docs/
+
+service:
+  name: cors
+
+custom:
+  customDomain:
+    domainName: cors.bridged.cc
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
+  serverless-offline:
+    httpPort: 4012
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  apiGateway:
+    shouldStartNameWithService: true
+  region: us-west-1
+
+# The `functions` block defines what code to deploy
+functions:
+  api:
+    handler: src/index.handler
+    events:
+      - http:
+          path: /{proxy+}
+          method: any
+
+plugins:
+  - '@hewmen/serverless-plugin-typescript'
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-domain-manager

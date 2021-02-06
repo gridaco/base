@@ -15,6 +15,8 @@ for running multuple services via sls offline, we set the difference ports by ea
 - resource service       : 4008
 - design-store service   : 4009
 - scene service          : 4010
+- payment service        : 4011
+- cors service           : 4012
 
 
 
