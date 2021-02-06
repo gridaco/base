@@ -8,6 +8,7 @@ import { withCORS, isValidHostName, parseURL } from "./utils";
 interface OptionParams {
   httpProxyOptions: httpProxy.ServerOptions;
   httpsOptions?: https.ServerOptions;
+  [x: string]: any;
 }
 
 function proxyRequest(req, res, proxy) {
@@ -305,6 +306,5 @@ export const createServer = (options: OptionParams) => {
       res.end("Not found because of proxy error: " + err);
     }
   );
-
   return server;
 };

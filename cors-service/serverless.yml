@@ -1,32 +1,26 @@
 # Welcome to serverless. Read the docs
 # https://serverless.com/framework/docs/
 
-# Serverless.yml is the configuration the CLI
-# uses to deploy your code to your provider of choice
-
-# The `service` block is the name of the service
 service:
   name: cors
 
 frameworkVersion: '2'
 
-# The `provider` block defines where your service will be deployed
 provider:
   name: aws
   runtime: nodejs12.x
-
-# The `functions` block defines what code to deploy
+  apiGateway:
+    shouldStartNameWithService: true
+    
 functions:
-  helloWorld:
-    handler: handler.cors
-    # The `events` block defines how to trigger the handler.helloWorld code
+  api:
+    handler: src/index.handler
     events:
       - http:
-          path: /{url}
-          method: get
-          cors: true
+          path: /{proxy+}
+          method: any
 
 plugins:
-  - '@hewmen/serverless-plugin-typescript'  
+  - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
   - serverless-offline
