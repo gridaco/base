@@ -29,6 +29,10 @@ functions:
           path: /{proxy+}
           method: any
 
+package:
+  include:
+    - public/**
+
 plugins:
   - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
