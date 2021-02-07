@@ -14,6 +14,9 @@ custom:
     httpPort: 4012
   optimize:
     includePaths: ['public']
+  scripts:
+    hooks:
+      'before:deploy:deploy': cd web && yarn build
 
 provider:
   name: aws

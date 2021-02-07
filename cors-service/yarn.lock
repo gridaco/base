@@ -6599,7 +6599,6 @@ semver@^7.1.3, semver@^7.3.4:
   dependencies:
     lru-cache "^6.0.0"
 
-<<<<<<< HEAD
 send@0.17.1:
   version "0.17.1"
   resolved "https://registry.yarnpkg.com/send/-/send-0.17.1.tgz#c1d8b059f7900f7466dd4938bdc44e11ddb376c8"
@@ -6629,13 +6628,6 @@ serve-static@1.14.1:
     parseurl "~1.3.3"
     send "0.17.1"
 
-serverless-http@^2.7.0:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/serverless-http/-/serverless-http-2.7.0.tgz#352ca38cbbba58dc71dcfb11bb27c92c3c81fe69"
-  integrity sha512-iWq0z1X2Xkuvz6wL305uCux/SypbojHlYsB5bzmF5TqoLYsdvMNIoCsgtWjwqWoo3AR2cjw3zAmHN2+U6mF99Q==
-  optionalDependencies:
-    "@types/aws-lambda" "^8.10.56"
-=======
 serverless-domain-manager@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/serverless-domain-manager/-/serverless-domain-manager-5.1.0.tgz#44c975b4adeac6b32507c92313ee001735d56c55"
@@ -6643,7 +6635,13 @@ serverless-domain-manager@^5.1.0:
   dependencies:
     aws-sdk "^2.756.0"
     chalk "^4.1.0"
->>>>>>> b5919d07e59ce3eea866ed658dfca4166807c904
+
+serverless-http@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/serverless-http/-/serverless-http-2.7.0.tgz#352ca38cbbba58dc71dcfb11bb27c92c3c81fe69"
+  integrity sha512-iWq0z1X2Xkuvz6wL305uCux/SypbojHlYsB5bzmF5TqoLYsdvMNIoCsgtWjwqWoo3AR2cjw3zAmHN2+U6mF99Q==
+  optionalDependencies:
+    "@types/aws-lambda" "^8.10.56"
 
 serverless-offline@^6.8.0:
   version "6.8.0"
@@ -6693,6 +6691,11 @@ serverless-plugin-optimize@^4.1.4-rc.1:
     browserify "^16.2.3"
     fs-extra "^7.0.1"
     resolve-from "^4.0.0"
+
+serverless-plugin-scripts@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/serverless-plugin-scripts/-/serverless-plugin-scripts-1.0.2.tgz#21808c3cfd0a1a84e48c0660b0f6f370b5665486"
+  integrity sha1-IYCMPP0KGoTkjAZgsPbzcLVmVIY=
 
 serverless@^2.22.0:
   version "2.22.0"
