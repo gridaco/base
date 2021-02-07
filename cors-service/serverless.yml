@@ -16,7 +16,7 @@ custom:
     includePaths: ['public']
   scripts:
     hooks:
-      'before:package:createDeploymentArtifacts': cd web && yarn build && source scripts/copy-web-build.sh
+      'before:package:createDeploymentArtifacts': yarn --cwd web build && source scripts/copy-web-build.sh
 
 provider:
   name: aws
