@@ -12,6 +12,8 @@ custom:
     createRoute53Record: true
   serverless-offline:
     httpPort: 4012
+  optimize:
+    includePaths: ['public']
 
 provider:
   name: aws
@@ -28,6 +30,9 @@ functions:
       - http:
           path: /{proxy+}
           method: any
+      - http:
+          path: /
+          method: get
 
 package:
   include:
