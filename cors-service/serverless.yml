@@ -16,7 +16,7 @@ custom:
     includePaths: ['public']
   scripts:
     hooks:
-      'before:deploy:deploy': cd web && yarn build
+      'before:package:createDeploymentArtifacts': cd web && yarn build && source scripts/copy-web-build.sh
 
 provider:
   name: aws
@@ -46,3 +46,4 @@ plugins:
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-domain-manager
+  - serverless-plugin-scripts
