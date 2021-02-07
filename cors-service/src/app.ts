@@ -24,11 +24,9 @@ const cors_proxy = corsProxy.createServer({
 
 
 
-app.use(express.static('public'))
-
 function serveDemo(req, res){
   // https://github.com/FidelLimited/serverless-plugin-optimize/issues/32
-  const file = path.resolve(process.env.LAMBDA_TASK_ROOT as string, '_optimize', process.env.AWS_LAMBDA_FUNCTION_NAME as string, 'public', 'index.html')
+  const file = path.resolve(process.env.LAMBDA_TASK_ROOT as string, '_optimize', process.env.AWS_LAMBDA_FUNCTION_NAME as string, 'web/build', 'index.html')
   res.sendFile(file);
 }
 

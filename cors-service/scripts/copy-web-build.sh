@@ -1,1 +1,0 @@
-cp -a web/build/. .build/public/
