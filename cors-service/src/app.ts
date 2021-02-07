@@ -22,6 +22,11 @@ const cors_proxy = corsProxy.createServer({
 });
 
 
+app.use(express.static('public'))
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html');
+});
+
 app.use((req, res, next) => {
   cors_proxy.emit('request', req, res);
 });
@@ -31,5 +36,6 @@ app.use(((err, req, res, next) => {
     message: 'Internal Server Error',
   });
 }) as express.ErrorRequestHandler);
+
 
 export { app };
