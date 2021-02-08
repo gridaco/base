@@ -12,6 +12,7 @@ The web app gets deployed on branch `service/cors`
 
 **other cd options**
 using serverless-finch (dropped & not used)
+> this is an obsolete approach of deploying web to s3, which we are no longer using
 
 in serverless.yml
 ```
