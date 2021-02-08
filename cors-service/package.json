@@ -1,6 +1,6 @@
 {
     "name": "cors.bridged.cc",
-    "description": "",
+    "description": "free cors service for everyone",
     "version": "0.1.0",
     "dependencies": {
         "aws-serverless-express": "^3.4.0",
@@ -18,10 +18,8 @@
         "@types/proxy-from-env": "^1.0.1",
         "serverless": "^2.22.0",
         "serverless-domain-manager": "^5.1.0",
-        "serverless-finch": "^2.6.0",
         "serverless-offline": "^6.8.0",
         "serverless-plugin-optimize": "^4.1.4-rc.1",
-        "serverless-plugin-scripts": "^1.0.2",
         "typescript": "^4.1.3"
     }
 }
