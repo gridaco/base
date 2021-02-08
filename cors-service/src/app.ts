@@ -24,7 +24,7 @@ const cors_proxy = corsProxy.createServer({
 
 
 app.get('/', function (req, res) {
-  res.redirect('http://app.cors.bridged.cc/')
+  res.redirect('https://app.cors.bridged.cc/')
 });
 
 
