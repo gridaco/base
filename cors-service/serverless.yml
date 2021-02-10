@@ -28,9 +28,13 @@ functions:
       - http:
           path: /{proxy+}
           method: any
+      - http:
+          path: /
+          method: get
 
 plugins:
   - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-domain-manager
+  - serverless-plugin-scripts

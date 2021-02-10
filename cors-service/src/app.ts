@@ -21,12 +21,16 @@ const cors_proxy = corsProxy.createServer({
   },
 });
 
+app.get('/', function (req, res) {
+  res.redirect('https://app.cors.bridged.cc/');
+});
 
 app.use((req, res, next) => {
   cors_proxy.emit('request', req, res);
 });
 
 app.use(((err, req, res, next) => {
+  console.error(err);
   return res.status(500).json({
     message: 'Internal Server Error',
   });

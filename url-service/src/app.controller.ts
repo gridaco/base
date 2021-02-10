@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Param, Post, Redirect } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Redirect, Res } from '@nestjs/common';
+import * as path from "path"
 
 import {
   UrlShortenRequest,
@@ -12,8 +13,9 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  getHello(@Res() res) {
+    const file = path.resolve(process.env.LAMBDA_TASK_ROOT as string, '_optimize', process.env.AWS_LAMBDA_FUNCTION_NAME as string, 'web', 'index.html')
+    res.sendFile(file);
   }
 
   @Get(':id')
