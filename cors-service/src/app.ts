@@ -5,7 +5,7 @@ const app = express();
 
 const cors_proxy = corsProxy.createServer({
   // https://github.com/Rob--W/cors-anywhere/issues/39
-  requireHeader: ['origin', 'x-requested-with'],
+  requireHeader: [],
   // requireHeader: [],
   removeHeaders: [
     'cookie',
