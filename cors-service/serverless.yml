@@ -37,4 +37,3 @@ plugins:
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-domain-manager
-  - serverless-plugin-scripts
