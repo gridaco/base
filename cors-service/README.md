@@ -4,9 +4,7 @@
 
 
 ## The Web deployment
-![app.cors.bridged.cc amplify settigns](./docs/app.cors.bridged.cc-amplify-settings.png)
-
-The web app gets deployed on branch `service/cors`
+app.cors.bridged.cc is linked to repositoy https://github.com/bridgedxyz/proxy-client, deployed via aws amplify
 
 
 
