@@ -1,5 +1,4 @@
 import * as express from 'express';
-import * as path from "path"
 import * as corsProxy from '../lib/cors';
 const app = express();
 
@@ -24,15 +23,10 @@ const cors_proxy = corsProxy.createServer({
 
 
 
-function serveDemo(req, res){
-  // https://github.com/FidelLimited/serverless-plugin-optimize/issues/32
-  const file = path.resolve(process.env.LAMBDA_TASK_ROOT as string, '_optimize', process.env.AWS_LAMBDA_FUNCTION_NAME as string, 'web/build', 'index.html')
-  res.sendFile(file);
-}
-
-app.get('/', function(req, res){
-  serveDemo(req, res)
+app.get('/', function (req, res) {
+  res.redirect('https://app.cors.bridged.cc/')
 });
+
 
 app.use((req, res, next) => {
   cors_proxy.emit('request', req, res);

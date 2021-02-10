@@ -12,16 +12,6 @@ custom:
     createRoute53Record: true
   serverless-offline:
     httpPort: 4012
-  optimize:
-    includePaths: ['public', 'web/build']
-  scripts:
-    hooks:
-      'before:package:createDeploymentArtifacts': yarn --cwd web build && sls client deploy
-  client:
-    bucketName: cors-bridged-cc-web
-    distributionFolder: web/build
-    indexDocument: index.html
-    errorDocument: index.html
 
 provider:
   name: aws
@@ -42,15 +32,9 @@ functions:
           path: /
           method: get
 
-package:
-  include:
-    - public/**
-    - web/build/**
-
 plugins:
   - '@hewmen/serverless-plugin-typescript'
   - serverless-plugin-optimize
   - serverless-offline
   - serverless-domain-manager
   - serverless-plugin-scripts
-  - serverless-finch
