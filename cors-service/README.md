@@ -4,7 +4,7 @@
 
 
 ## The Web deployment
-app.cors.bridged.cc is linked to repositoy https://github.com/bridgedxyz/proxy-client, deployed via aws amplify
+app.cors.bridged.cc is linked to repositoy https://github.com/bridgedxyz/proxy-client, deployed via aws amplify on `proxy-client`'s `app.cors.bridged.xyz` branch
 
 
 
