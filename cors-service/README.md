@@ -1,5 +1,5 @@
 # CORS.BRIDGED.CC
-
+![cors.bridged.cc cover artwork](/docs/cors.bridged.cc-cover.png)
 
 
 
