@@ -7,8 +7,9 @@
 ## micros
 - [asset-service](./assets-service)
 - [g11n-service](./g11n-service)
-- [resource-hosting](./resource-hosting)
+- resource-hosting
 - application hosting
+- [cors-service](./cors-service)
 - auth (read the development token generation docs)
 
 ## packages
@@ -22,6 +23,9 @@ git clone https://github.com/bridgedxyz/services.git --recurse-submodules
 # pulling with git submodules (second entry)
 git submodule update --init --recursive
 ```
+
+## Ready to use services
+[CORS.BRIDGED.CC](https://cors.bridged.cc)
 
 
 
