@@ -1,4 +1,4 @@
-# bridged cloud service - [bridged.cc](https://bridged.cc)
+# BASe: Bridged App Services - [bridged.cc](https://bridged.cc)
 > public services (all services except auth and billing) msa repository
 
 
