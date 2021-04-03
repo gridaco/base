@@ -1,4 +1,7 @@
-# BASe: Bridged App Services - [bridged.cc](https://bridged.cc)
+![](./branding/cover.png)
+
+# BASE: Bridged App SErvices - [bridged.cc](https://bridged.cc)
+
 > public services (all services except auth and billing) msa repository
 
 
