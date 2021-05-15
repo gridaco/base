@@ -3,9 +3,12 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "setup": "git submodule update --init --recursive"
+    "setup": "git submodule update --init --recursive",
+    "editor": "yarn workspace editor run dev",
+    "_editor": "yarn editor"
   },
   "workspaces": [
+    "_editor",
     "assets-service",
     "build-service",
     "g11n-service",
