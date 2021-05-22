@@ -1,6 +1,3 @@
-# G11n Service
-> G11n, A globalization service is desinged to link layer (design) and asset together, with extra text-related templating capabilities.
+# Globalization service
 
-
-## Development documetations
-visit our developer's documentations on notion [here](https://www.notion.so/bridgedxyz/G11n-851d0acdfdab4326b5b25175766c8e7e)
+> This project's service is being maintained under [bridgedxyz/g11n](https://github.com/bridgedxyz/g11n) due to it's project size.
