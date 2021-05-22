@@ -1,8 +1,7 @@
 # Welcome to serverless. Read the docs
 # https://serverless.com/framework/docs/
 
-service:
-  name: cors
+service: cors
 
 custom:
   customDomain:
