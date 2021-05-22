@@ -9,7 +9,7 @@
 
 ## micros
 - [asset-service](./assets-service)
-- [g11n-service](./g11n-service)
+- [g11n-service](https://github.com/bridgedxyz/g11n)
 - resource-hosting
 - application hosting
 - [cors-service](./cors-service)
