@@ -5,6 +5,10 @@
 > public services (all services except auth and billing) msa repository
 
 
+## Are you looking for ready-to-use SDK of this service?
+
+In that case, you are looking for [base-sdk](https://github.com/bridgedxyz/base-sdk)
+
 # development
 
 ## micros
