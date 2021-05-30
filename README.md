@@ -58,6 +58,11 @@ sls offline
 [bridged msa diagram on figma](https://www.figma.com/file/t5EdSlZo7eyWgXLSqTx7ok/hackers?node-id=0%3A1)
 
 
+## Resources
+- [base-sdk](https://github.com/bridgedxyz/base-sdk)
+- [base-cdk](https://github.com/bridgedxyz/base-cdk)
+- [base-cli](https://github.com/bridgedxyz/base-cli)
+
 
 ## Frameworks
 
