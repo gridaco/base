@@ -95,9 +95,6 @@ function onProxyResponse(proxy, proxyReq, proxyRes, req, res) {
     }
   }
 
-  delete proxyRes.headers['set-cookie'];
-  delete proxyRes.headers['set-cookie2'];
-
   proxyRes.headers['x-final-url'] = requestState.location.href;
   withCORS(proxyRes.headers, req);
   return true;
