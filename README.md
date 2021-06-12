@@ -22,6 +22,9 @@ In that case, you are looking for [base-sdk](https://github.com/bridgedxyz/base-
 ## packages
 - [dartservices](./packages/dartservices)
 
+## fogs
+Fogs are managed in separate repository. Visit [functions](https://github.com/bridgedxyz/functions)
+
 
 ```shell
 # cloning with git submodules
@@ -63,10 +66,6 @@ sls offline
 - [base-cdk](https://github.com/bridgedxyz/base-cdk)
 - [base-cli](https://github.com/bridgedxyz/base-cli)
 
-
-## Frameworks
-
-nestjs - [learn more](https://docs.nestjs.com/microservices/basics)
 
 
 # usage
