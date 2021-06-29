@@ -2,7 +2,7 @@
   "name": "project-service",
   "version": "0.0.0",
   "description": "g11n asset linker service for bridged systems",
-  "author": "bridged.xyz",
+  "author": "Girda & bridged.xyz authors",
   "private": true,
   "license": "MIT",
   "scripts": {
