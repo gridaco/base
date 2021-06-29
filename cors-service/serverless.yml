@@ -56,11 +56,11 @@ resources:
             Projection:
               ProjectionType: "ALL"
             ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
+              ReadCapacityUnits: 50
+              WriteCapacityUnits: 1 # no write is required
         ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
+          ReadCapacityUnits: 1 # no read is required
+          WriteCapacityUnits: 50
 
 # The `functions` block defines what code to deploy
 functions:
