@@ -3,6 +3,7 @@ import * as useragent from "express-useragent";
 import * as corsProxy from "../lib/cors";
 import * as responsetime from "response-time";
 import * as https from "https";
+import * as http from "http";
 
 import { logRequest } from "./usage";
 
@@ -31,16 +32,23 @@ app.get("/", function(req, res) {
   res.redirect("https://app.cors.bridged.cc/");
 });
 
-const MAX_TARGET_RESOURCE_MB = 31; // 30 mb, 1mb for margin
+/**
+ * this is to save data transfer cost. And basically we should not use CORS Proxy to load large files.
+ *
+ * https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html
+ */
+const MAX_TARGET_RESOURCE_MB = 6; // 6mb is max supported by lambda.
+
 app.use((req, res, next) => {
   const requrl = req.originalUrl.substring(1);
   const MB = 1048576;
-  https
+
+  const agent = requrl.startsWith("https:") ? https : http;
+  agent
     .request(requrl, { method: "HEAD" }, _resp => {
       const len = Number(_resp.headers["content-length"]);
       if (len && len > MB * MAX_TARGET_RESOURCE_MB) {
         // reject if data larger than 30mb.
-        // this is to save data transfer cost. And basically we should not use CORS Proxy to load large files.
         res.status(413).send({
           message: "Requested resource exceeds 30mb",
         });
@@ -90,6 +98,8 @@ app.use(((err, req, res, next) => {
   console.error(err);
   return res.status(500).json({
     message: "Internal Server Error",
+    error: err,
+    issue: "https://github.com/bridgedxyz/base/issues",
   });
 }) as express.ErrorRequestHandler);
 
