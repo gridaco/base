@@ -15,6 +15,7 @@ custom:
 provider:
   name: aws
   memorySize: 128
+  timeout: 12
   runtime: nodejs12.x
   apiGateway:
     shouldStartNameWithService: true
