@@ -77,18 +77,18 @@ app.use(useragent.express());
 // (1)
 app.use((req, res, next) => {
   cors_proxy.emit("request", req, res);
-  // next();
+  next();
 });
 
 // (2)
 /**
  * after response middleware
  */
-// app.use((req, res) => {
-//   res.on("finish", () => {
-//     logRequest(req, res);
-//   });
-// });
+app.use((req, res) => {
+  res.on("finish", () => {
+    logRequest(req, res);
+  });
+});
 // -- execution order matters --
 
 /**
