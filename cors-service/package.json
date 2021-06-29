@@ -4,9 +4,13 @@
     "version": "0.1.0",
     "dependencies": {
         "aws-serverless-express": "^3.4.0",
+        "dynamoose": "^2.7.3",
         "express": "^4.17.1",
+        "express-useragent": "^1.0.15",
         "http-proxy": "^1.18.1",
+        "nanoid": "^3.1.23",
         "proxy-from-env": "^1.1.0",
+        "response-time": "^2.3.2",
         "serverless-http": "^2.7.0"
     },
     "devDependencies": {
@@ -16,6 +20,7 @@
         "@types/http-proxy": "^1.17.5",
         "@types/node": "^14.14.25",
         "@types/proxy-from-env": "^1.0.1",
+        "@types/response-time": "^2.3.4",
         "serverless": "^2.22.0",
         "serverless-domain-manager": "^5.1.0",
         "serverless-offline": "^6.8.0",
