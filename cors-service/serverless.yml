@@ -24,7 +24,9 @@ provider:
 functions:
   api:
     handler: src/index.handler
+    maximumEventAge: 60
     maximumRetryAttempts: 0
+    timeout: 12
     events:
       - http:
           path: /{proxy+}

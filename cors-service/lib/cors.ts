@@ -15,7 +15,7 @@ function proxyRequest(req, res, proxy) {
   var location = req.corsAnywhereRequestState.location;
   req.url = location.path;
 
-  var proxyOptions : any = {
+  var proxyOptions: any = {
     changeOrigin: false,
     prependPath: false,
     target: location,
@@ -26,15 +26,15 @@ function proxyRequest(req, res, proxy) {
       pipe: function(proxyReq) {
         var proxyReqOn = proxyReq.on;
         proxyReq.on = function(eventName, listener) {
-          if (eventName !== 'response') {
+          if (eventName !== "response") {
             return proxyReqOn.call(this, eventName, listener);
           }
-          return proxyReqOn.call(this, 'response', function(proxyRes) {
+          return proxyReqOn.call(this, "response", function(proxyRes) {
             if (onProxyResponse(proxy, proxyReq, proxyRes, req, res)) {
               try {
                 listener(proxyRes);
               } catch (err) {
-                proxyReq.emit('error', err);
+                proxyReq.emit("error", err);
               }
             }
           });
@@ -44,7 +44,9 @@ function proxyRequest(req, res, proxy) {
     },
   };
 
-  var proxyThroughUrl = req.corsAnywhereRequestState.getProxyForUrl(location.href);
+  var proxyThroughUrl = req.corsAnywhereRequestState.getProxyForUrl(
+    location.href
+  );
   if (proxyThroughUrl) {
     proxyOptions.target = proxyThroughUrl;
     proxyOptions.toProxy = true;
@@ -54,7 +56,7 @@ function proxyRequest(req, res, proxy) {
   try {
     proxy.web(req, res, proxyOptions);
   } catch (err) {
-    proxy.emit('error', err, req, res);
+    proxy.emit("error", err, req, res);
   }
 }
 
@@ -64,9 +66,15 @@ function onProxyResponse(proxy, proxyReq, proxyRes, req, res) {
   var statusCode = proxyRes.statusCode;
 
   if (!requestState.redirectCount_) {
-    res.setHeader('x-request-url', requestState.location.href);
+    res.setHeader("x-request-url", requestState.location.href);
   }
-  if (statusCode === 301 || statusCode === 302 || statusCode === 303 || statusCode === 307 || statusCode === 308) {
+  if (
+    statusCode === 301 ||
+    statusCode === 302 ||
+    statusCode === 303 ||
+    statusCode === 307 ||
+    statusCode === 308
+  ) {
     var locationHeader = proxyRes.headers.location;
     var parsedLocation;
     if (locationHeader) {
@@ -77,28 +85,32 @@ function onProxyResponse(proxy, proxyReq, proxyRes, req, res) {
       if (statusCode === 301 || statusCode === 302 || statusCode === 303) {
         requestState.redirectCount_ = requestState.redirectCount_ + 1 || 1;
         if (requestState.redirectCount_ <= requestState.maxRedirects) {
-          res.setHeader('X-CORS-Redirect-' + requestState.redirectCount_, statusCode + ' ' + locationHeader);
+          res.setHeader(
+            "X-CORS-Redirect-" + requestState.redirectCount_,
+            statusCode + " " + locationHeader
+          );
 
-          req.method = 'GET';
-          req.headers['content-length'] = '0';
-          delete req.headers['content-type'];
+          req.method = "GET";
+          req.headers["content-length"] = "0";
+          delete req.headers["content-type"];
           requestState.location = parsedLocation;
           req.removeAllListeners();
-          proxyReq.removeAllListeners('error');
-          proxyReq.once('error', function catchAndIgnoreError() {});
+          proxyReq.removeAllListeners("error");
+          proxyReq.once("error", function catchAndIgnoreError() {});
           proxyReq.abort();
           proxyRequest(req, res, proxy);
           return false;
         }
       }
-      proxyRes.headers.location = requestState.proxyBaseUrl + '/' + locationHeader;
+      proxyRes.headers.location =
+        requestState.proxyBaseUrl + "/" + locationHeader;
     }
   }
 
-  delete proxyRes.headers['set-cookie'];
-  delete proxyRes.headers['set-cookie2'];
+  delete proxyRes.headers["set-cookie"];
+  delete proxyRes.headers["set-cookie2"];
 
-  proxyRes.headers['x-final-url'] = requestState.location.href;
+  proxyRes.headers["x-final-url"] = requestState.location.href;
   withCORS(proxyRes.headers, req);
   return true;
 }
@@ -118,7 +130,7 @@ function getHandler(options, proxy) {
     helpFile: __dirname + "/help.txt",
   };
 
-  Object.keys(corsAnywhere).forEach(function (option) {
+  Object.keys(corsAnywhere).forEach(function(option) {
     if (Object.prototype.hasOwnProperty.call(options, option)) {
       corsAnywhere[option] = options[option];
     }
@@ -132,23 +144,23 @@ function getHandler(options, proxy) {
     ) {
       corsAnywhere.requireHeader = null;
     } else {
-      corsAnywhere.requireHeader = corsAnywhere.requireHeader.map(function (
+      corsAnywhere.requireHeader = corsAnywhere.requireHeader.map(function(
         headerName
       ) {
         return headerName.toLowerCase();
       });
     }
   }
-  var hasRequiredHeaders = function (headers) {
+  var hasRequiredHeaders = function(headers) {
     return (
       !corsAnywhere.requireHeader ||
-      corsAnywhere.requireHeader.some(function (headerName) {
+      corsAnywhere.requireHeader.some(function(headerName) {
         return Object.hasOwnProperty.call(headers, headerName);
       })
     );
   };
 
-  return function (req, res) {
+  return function(req, res) {
     req.corsAnywhereRequestState = {
       getProxyForUrl: corsAnywhere.getProxyForUrl,
       maxRedirects: corsAnywhere.maxRedirects,
@@ -248,11 +260,11 @@ function getHandler(options, proxy) {
     var proxyBaseUrl =
       (isRequestedOverHttps ? "https://" : "http://") + req.headers.host;
 
-    corsAnywhere.removeHeaders.forEach(function (header) {
+    corsAnywhere.removeHeaders.forEach(function(header) {
       delete req.headers[header];
     });
 
-    Object.keys(corsAnywhere.setHeaders).forEach(function (header) {
+    Object.keys(corsAnywhere.setHeaders).forEach(function(header) {
       req.headers[header] = corsAnywhere.setHeaders[header];
     });
 
@@ -272,7 +284,7 @@ export const createServer = (options: OptionParams) => {
   options = options || {};
 
   if (options.httpProxyOptions) {
-    Object.keys(options.httpProxyOptions).forEach(function (option) {
+    Object.keys(options.httpProxyOptions).forEach(function(option) {
       httpProxyOptions[option] = options.httpProxyOptions[option];
     });
   }
@@ -285,26 +297,27 @@ export const createServer = (options: OptionParams) => {
     server = http.createServer(requestHandler);
   }
 
-  proxy.on(
-    "error",
-    function (err: Error, _: http.IncomingMessage, res: http.ServerResponse) {
-      if (res.headersSent) {
-        if (res.writableEnded === false) {
-          res.end();
-        }
-        return;
+  proxy.on("error", function(
+    err: Error,
+    _: http.IncomingMessage,
+    res: http.ServerResponse
+  ) {
+    if (res.headersSent) {
+      if (res.writableEnded === false) {
+        res.end();
       }
-      var headerNames = res.getHeaderNames
-        ? res.getHeaderNames()
-        : //@ts-ignore
-          Object.keys(res._headers || {});
-      headerNames.forEach(function (name) {
-        res.removeHeader(name);
-      });
-
-      res.writeHead(404, { "Access-Control-Allow-Origin": "*" });
-      res.end("Not found because of proxy error: " + err);
+      return;
     }
-  );
+    var headerNames = res.getHeaderNames
+      ? res.getHeaderNames()
+      : //@ts-ignore
+        Object.keys(res._headers || {});
+    headerNames.forEach(function(name) {
+      res.removeHeader(name);
+    });
+
+    res.writeHead(404, { "Access-Control-Allow-Origin": "*" });
+    res.end("Not found because of proxy error: " + err);
+  });
   return server;
 };

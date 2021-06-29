@@ -1,0 +1,10 @@
+{
+    "name": "api-key-auth-service",
+    "version": "0.0.0",
+    "dependencies": {
+        "jsonwebtoken": "^8.5.1"
+    },
+    "devDependencies": {
+        "@types/jsonwebtoken": "^8.5.2"
+    }
+}
