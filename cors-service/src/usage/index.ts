@@ -1,6 +1,18 @@
 import * as express from "express";
-// import * as dynamoose from "dynamoose";
-// import * as moment from "moment";
+import * as dynamoose from "dynamoose";
+import * as https from "https";
+const agent = new https.Agent({
+  keepAlive: true,
+  rejectUnauthorized: true,
+  maxSockets: 1000,
+});
+
+dynamoose.aws.sdk.config.update({
+  httpOptions: {
+    agent: agent,
+  },
+});
+
 import {
   CorsProxyApiRequest,
   CorsProxyApiRequestLog,
@@ -16,6 +28,7 @@ export async function logRequest(req: express.Request, res: express.Response) {
   const ip = (req.headers["x-forwarded-for"] ||
     req.socket.remoteAddress) as string;
   const timestamp = new Date();
+  const origin = req.headers["origin"] || undefined;
   //@ts-ignore (useragent is provided by above useragent.express())
   const _uaobj = req.useragent;
   const ua = _uaobj.source; // gives the raw ua string
@@ -34,6 +47,7 @@ export async function logRequest(req: express.Request, res: express.Response) {
   );
   await log({
     ip: ip,
+    origin: origin,
     ua: ua,
     duration: duration,
     size: payload,
@@ -44,6 +58,7 @@ export async function logRequest(req: express.Request, res: express.Response) {
 }
 
 async function log(request: CorsProxyApiRequest) {
+  // console.log("request", request);
   const id = nanoid();
   const billedduration = Math.ceil(request.duration / 100) * 100; // billed duration is stepped by 100ms
   try {

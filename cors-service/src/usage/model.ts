@@ -14,6 +14,11 @@ export interface CorsProxyApiRequest {
   ua?: string;
 
   /**
+   * request origin from request headers
+   */
+  origin?: string;
+
+  /**
    * target resource url
    */
   target: string;
