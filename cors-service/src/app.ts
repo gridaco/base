@@ -4,7 +4,7 @@ import * as corsProxy from "../lib/cors";
 import * as responsetime from "response-time";
 
 import { logRequest } from "./usage";
-import { payloadlimit } from "./limit";
+import { blaklistoriginlimit, payloadlimit } from "./limit";
 
 const app = express();
 
@@ -31,6 +31,7 @@ app.get("/", function(req, res) {
   res.redirect("https://app.cors.bridged.cc/");
 });
 
+app.use(blaklistoriginlimit);
 app.use(payloadlimit);
 
 app.use(

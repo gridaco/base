@@ -2,7 +2,7 @@
 # https://serverless.com/framework/docs/
 
 service: cors
-
+useDotenv: true
 custom:
   customDomain:
     domainName: cors.bridged.cc
