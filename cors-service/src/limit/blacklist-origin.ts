@@ -12,6 +12,8 @@ const blacklisted_origin = [
   "https://cdn14.esp-cdn.xyz",
   "http://www.digi-hdsport.com",
   "https://siunus.github.io",
+  // ILLEGAL OR AUDULT WEBSITE
+  "https://twerktvnaija.com",
 ];
 
 const blacked401UnAuthorized = (origin: string) => {
