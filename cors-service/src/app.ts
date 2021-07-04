@@ -31,8 +31,8 @@ app.get("/", function(req, res) {
   res.redirect("https://app.cors.bridged.cc/");
 });
 
-app.use(blaklistoriginlimit);
-app.use(payloadlimit);
+app.use(blaklistoriginlimit); // 1
+app.use(payloadlimit); // 2
 
 app.use(
   responsetime({
@@ -72,12 +72,13 @@ app.use(((err, req, res, next) => {
   if (res.headersSent) {
     return;
   }
-
-  return res.status(500).json({
-    message: "Internal Server Error",
-    error: err,
-    issue: "https://github.com/bridgedxyz/base/issues",
-  });
+  try {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: err,
+      issue: "https://github.com/bridgedxyz/base/issues",
+    });
+  } catch (_) {}
 }) as express.ErrorRequestHandler);
 
 export { app };

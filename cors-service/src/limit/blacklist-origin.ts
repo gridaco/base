@@ -3,17 +3,17 @@ import * as express from "express";
 /**
  * explicitly black listed origins. these are not registered to use base.
  */
-const blacklisted_origin = [
+const blacklisted_origin: string[] = [
   "REJECTME",
-  "https://www.titronline.org",
-  "https://www.titr.online",
-  "http://showsport.xyz",
-  "https://showsport.xyz",
-  "https://cdn14.esp-cdn.xyz",
-  "http://www.digi-hdsport.com",
-  "https://siunus.github.io",
-  // ILLEGAL OR AUDULT WEBSITE
-  "https://twerktvnaija.com",
+  // WAITING FOR SERVICE PROVIDER'S ACTION
+  "titronline.org",
+  "titr.online",
+  "showsport.xyz",
+  "cdn14.esp-cdn.xyz",
+  "digi-hdsport.com",
+  "siunus.github.io",
+  // ILLEGAL OR AUDULT WEBSITE (PERMINANTLY BLOCKED)
+  "twerktvnaija.com",
 ];
 
 const blacked401UnAuthorized = (origin: string) => {
@@ -41,5 +41,19 @@ export const blaklistoriginlimit = (
 };
 
 function blacked(origin: string): boolean {
-  return blacklisted_origin.includes(origin);
+  // patterns
+  // 1. www.<origin>
+  // 2. http//<origin>
+  // 3. https//<origin>
+  // 4. http://<origin>
+  // 5. ....
+  try {
+    const u = new URL(origin);
+    return blacklisted_origin.some(o => {
+      return u.hostname == o || u.hostname == "www." + o;
+    });
+  } catch (_) {
+    // we cannot handle url that is invalid (need better logic for this)
+    return false;
+  }
 }
