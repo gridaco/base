@@ -39,14 +39,19 @@ app.use(
     suffix: false,
   })
 );
-
 app.use(useragent.express());
 
 // -- execution order matters --
 // (1)
 app.use((req, res, next) => {
-  cors_proxy.emit("request", req, res);
-  next();
+  if (res.headersSent) {
+    return;
+  }
+
+  try {
+    cors_proxy.emit("request", req, res);
+    next();
+  } catch (_) {}
 });
 
 // (2)
@@ -64,7 +69,10 @@ app.use((req, res) => {
  * global error handler
  */
 app.use(((err, req, res, next) => {
-  console.error(err);
+  if (res.headersSent) {
+    return;
+  }
+
   return res.status(500).json({
     message: "Internal Server Error",
     error: err,

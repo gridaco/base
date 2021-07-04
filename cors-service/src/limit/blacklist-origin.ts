@@ -1,8 +1,17 @@
 import * as express from "express";
 
-const blacklisted_origin: string[] = JSON.parse(
-  process.env.BLACKLIST_ORIGIN || "[]"
-);
+/**
+ * explicitly black listed origins. these are not registered to use base.
+ */
+const blacklisted_origin = [
+  "REJECTME",
+  "https://www.titronline.org",
+  "https://www.titr.online",
+  "http://showsport.xyz",
+  "https://cdn14.esp-cdn.xyz",
+  "http://www.digi-hdsport.com",
+  "https://siunus.github.io",
+];
 
 const blacked401UnAuthorized = (origin: string) => {
   return {

@@ -25,6 +25,10 @@ import { nanoid } from "nanoid";
  * @param res
  */
 export async function logRequest(req: express.Request, res: express.Response) {
+  // do not log the request if client error. (413 or 401 or 400)
+  if (500 > res.statusCode && res.statusCode >= 400) {
+    return;
+  }
   const ip = (req.headers["x-forwarded-for"] ||
     req.socket.remoteAddress) as string;
   const timestamp = new Date();
