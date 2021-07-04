@@ -15,10 +15,11 @@ const blacklisted_origin = [
 ];
 
 const blacked401UnAuthorized = (origin: string) => {
-  return {
-    message: `CORS Proxy request from origin "${origin}" is not allowed. Request is unauthorized`,
-    issue: "https://github.com/bridgedxyz/base/issues/23",
-  };
+  return "https://bit.ly/2UnZSA8";
+  // return {
+  //   message: `CORS Proxy request from origin "${origin}" is not allowed. Request is unauthorized`,
+  //   issue: "https://github.com/bridgedxyz/base/issues/23",
+  // };
 };
 
 export const blaklistoriginlimit = (
