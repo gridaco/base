@@ -8,6 +8,7 @@ const blacklisted_origin = [
   "https://www.titronline.org",
   "https://www.titr.online",
   "http://showsport.xyz",
+  "https://showsport.xyz",
   "https://cdn14.esp-cdn.xyz",
   "http://www.digi-hdsport.com",
   "https://siunus.github.io",
