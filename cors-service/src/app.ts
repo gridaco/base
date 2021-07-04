@@ -4,7 +4,7 @@ import * as corsProxy from "../lib/cors";
 import * as responsetime from "response-time";
 
 import { logRequest } from "./usage";
-import { payloadlimit } from "./limit";
+import { blaklistoriginlimit, payloadlimit } from "./limit";
 
 const app = express();
 
@@ -31,21 +31,27 @@ app.get("/", function(req, res) {
   res.redirect("https://app.cors.bridged.cc/");
 });
 
-app.use(payloadlimit);
+app.use(blaklistoriginlimit); // 1
+app.use(payloadlimit); // 2
 
 app.use(
   responsetime({
     suffix: false,
   })
 );
-
 app.use(useragent.express());
 
 // -- execution order matters --
 // (1)
 app.use((req, res, next) => {
-  cors_proxy.emit("request", req, res);
-  next();
+  if (res.headersSent) {
+    return;
+  }
+
+  try {
+    cors_proxy.emit("request", req, res);
+    next();
+  } catch (_) {}
 });
 
 // (2)
@@ -63,12 +69,16 @@ app.use((req, res) => {
  * global error handler
  */
 app.use(((err, req, res, next) => {
-  console.error(err);
-  return res.status(500).json({
-    message: "Internal Server Error",
-    error: err,
-    issue: "https://github.com/bridgedxyz/base/issues",
-  });
+  if (res.headersSent) {
+    return;
+  }
+  try {
+    return res.status(500).json({
+      message: "Internal Server Error",
+      error: err,
+      issue: "https://github.com/bridgedxyz/base/issues",
+    });
+  } catch (_) {}
 }) as express.ErrorRequestHandler);
 
 export { app };
