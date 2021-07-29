@@ -9,14 +9,7 @@
   },
   "workspaces": [
     "_editor",
-    "assets-service",
-    "build-service",
-    "g11n-service",
-    "scene-store-service",
-    "hosting-service",
-    "project-service",
-    "resources-service",
-    "url-service",
+    "*-service",
     "packages/*"
   ]
 }
