@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { versions, SceneRegisterRequest } from "@base-sdk/base";
+import { versions } from "@base-sdk/base";
+import { SceneRegisterRequest } from "@base-sdk/scene-store/dist/__api/requests";
 import { SceneRecord } from "@prisma/client";
 import { PrismaService } from "../_prisma/prisma.service";
+
 const SDK_VER = versions.SdkVersion.v2020_0;
 
 // how to handle nested component? -> we should also upload the components linked. how to handle this case.
@@ -10,23 +12,25 @@ export class ScenesService {
   constructor(private readonly prisma: PrismaService) {}
 
   async registerScreen(user, request: SceneRegisterRequest) {
-    // owner = user.id at this point
-
-    this.prisma.sceneRecord.create({
+    const new_rec = await this.prisma.sceneRecord.create({
       data: {
+        ...request /** just in case that field is missing by developer's miss */,
         owner: user.id,
-        fileId: "",
-        nodeId: "",
+        fileId: request.fileId,
+        nodeId: request.nodeId,
         sdkVersion: SDK_VER,
-        rawname: "",
-        raw: "",
-        from: "UNKNOWN",
-        width: 0,
-        height: 0,
+        description: request.description,
+        tags: request.initialTags,
+        rawname: request.rawname,
+        raw: request.raw,
+        from: request.from,
+        width: request.width,
+        height: request.height,
+        sharing: request.initialSharingPolicy?.policy,
       },
     });
 
-    return;
+    return new_rec;
   }
 
   async fetchScene(user, id: string): Promise<SceneRecord> {

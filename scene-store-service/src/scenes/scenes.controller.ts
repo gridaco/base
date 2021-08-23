@@ -9,21 +9,21 @@ import {
   UseGuards,
 } from "@nestjs/common";
 
-import { SceneRegisterRequest } from "@base-sdk/base";
-
+import { SceneRegisterRequest } from "@base-sdk/scene-store/dist/__api/requests";
 import { ScenesService } from "./scenes.service";
+import { JwtAuthGuard } from "../_auth/jwt-auth.guard";
 
 @Controller("/scenes")
 export class ScenesController {
   constructor(private readonly scenesService: ScenesService) {}
 
-  @UseGuards() // TODO: add s2s auth guard
+  @UseGuards(JwtAuthGuard) // TODO: add s2s auth guard
   @Post("/new")
   async postRegisterScene(@Req() req, @Body() body: SceneRegisterRequest) {
     return await this.scenesService.registerScreen(req.user, body);
   }
 
-  @UseGuards() // TODO: add s2s auth guard
+  @UseGuards(JwtAuthGuard) // TODO: add s2s auth guard
   @Get("/:id")
   async getScene(
     @Req() req,
@@ -37,6 +37,7 @@ export class ScenesController {
     return await this.scenesService.fetchScene(req.user, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post("/:id/sharing")
   async postUpdateSharingPolicy(
     @Req() req,
@@ -73,7 +74,7 @@ export class ScenesController {
   /**
    * by default, if no queries are provided, this will return all scenes in the project (included in request header).
    */
-  @UseGuards() // TODO: add s2s auth guard
+  @UseGuards(JwtAuthGuard) // TODO: add s2s auth guard
   @Get("/")
   async getScenes(@Req() req, @Query() query? /*notused*/) {
     return this.scenesService.fetchMyScenes(req.user);
