@@ -1,19 +1,19 @@
 service:
   name: scene-store
 
+useDotenv: true
+
 plugins:
-  - serverless-dotenv-plugin
-  - '@hewmen/serverless-plugin-typescript'
+  - "@hewmen/serverless-plugin-typescript"
   - serverless-plugin-optimize
   - serverless-offline
-  - serverless-dynamodb-local
   - serverless-domain-manager
 
 custom:
   customDomain:
     domainName: scene-store.bridged.cc
     hostedZoneId: us-west-1
-    basePath: ''
+    basePath: ""
     stage: ${self:provider.stage}
     createRoute53Record: true
   serverless-offline:
@@ -26,8 +26,8 @@ provider:
   apiGateway:
     minimumCompressionSize: 1024
   environment:
-    AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
-    DYNAMODB_TABLE: '${self:service}-${opt:stage, self:provider.stage}'
+    AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
+    DYNAMODB_TABLE: "${self:service}-${opt:stage, self:provider.stage}"
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -38,14 +38,14 @@ provider:
         - dynamodb:PutItem
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
-      Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
 
 resources:
   Resources:
     sceneStoreTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: '${self:provider.environment.DYNAMODB_TABLE}'
+        TableName: "${self:provider.environment.DYNAMODB_TABLE}"
         KeySchema:
           - AttributeName: id
             KeyType: HASH
