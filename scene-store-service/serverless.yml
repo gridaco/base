@@ -4,60 +4,48 @@ service:
 useDotenv: true
 
 plugins:
-  - "@hewmen/serverless-plugin-typescript"
-  - serverless-plugin-optimize
+  - serverless-webpack
+  - serverless-plugin-warmup
   - serverless-offline
-  - serverless-domain-manager
 
+# custom:
+#   customDomain:
+#     domainName: scene-store.bridged.cc
+#     hostedZoneId: us-west-1
+#     basePath: ""
+#     stage: ${self:provider.stage}
+#     createRoute53Record: true
+#   serverless-offline:
+#     httpPort: 4000
 custom:
-  customDomain:
-    domainName: scene-store.bridged.cc
-    hostedZoneId: us-west-1
-    basePath: ""
-    stage: ${self:provider.stage}
-    createRoute53Record: true
+  webpack:
+    webpackConfig: webpack.config.js
+    packager: "yarn"
+    includeModules: true # This is required
+    packagerOptions:
+      scripts: # this is the magic
+        - prisma generate
+
   serverless-offline:
-    httpPort: 4000
+    httpPort: 9002
+  warmup:
+    - production
+    - staging
 
 provider:
   name: aws
   runtime: nodejs12.x
   region: us-west-1
-  apiGateway:
-    minimumCompressionSize: 1024
   environment:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
-    DYNAMODB_TABLE: "${self:service}-${opt:stage, self:provider.stage}"
+  apiGateway:
+    minimumCompressionSize: 1024
   iamRoleStatements:
+    # email with ses
     - Effect: Allow
       Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
-
-resources:
-  Resources:
-    sceneStoreTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: "${self:provider.environment.DYNAMODB_TABLE}"
-        KeySchema:
-          - AttributeName: id
-            KeyType: HASH
-        AttributeDefinitions:
-          - AttributeName: id
-            AttributeType: S
-        ProvisionedThroughput:
-          ReadCapacityUnits: 1
-          WriteCapacityUnits: 1
-
-package:
-  individually: true
+        - ses:SendEmail
+      Resource: "*"
 
 functions:
   main:
@@ -66,3 +54,41 @@ functions:
       - http:
           method: any
           path: /{proxy+}
+          cors:
+            origins:
+              - "*"
+              - https://www.accounts.grida.co
+              - https://app.grida.co
+              - https://console.grida.co
+              - https://grida.co
+              - https://www.grida.co
+              - https://staging-branch.accounts.grida.co
+              - https://staging-branch-accounts.grida.co
+              - https://grida-accounts-web.ngrok.io
+            allowCredentials: true
+      - http:
+          method: GET
+          path: /
+
+# only include the Prisma binary required on AWS Lambda while packaging
+package:
+  patterns:
+    - "!node_modules/.prisma/client/query-engine-*"
+    - "node_modules/.prisma/client/query-engine-rhel-*"
+
+# TODO: add s3 bucket for preview image hosting
+resources:
+  # Resources:
+  #   sceneStoreTable:
+  #     Type: AWS::DynamoDB::Table
+  #     Properties:
+  #       TableName: "${self:provider.environment.DYNAMODB_TABLE}"
+  #       KeySchema:
+  #         - AttributeName: id
+  #           KeyType: HASH
+  #       AttributeDefinitions:
+  #         - AttributeName: id
+  #           AttributeType: S
+  #       ProvisionedThroughput:
+  #         ReadCapacityUnits: 1
+  #         WriteCapacityUnits: 1
