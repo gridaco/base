@@ -13,10 +13,10 @@ generator client {
 model SceneRecord {
   
   // the unique id on the database
-  id String @id
+  id String @id @default(uuid())
 
   // the id of project this scene is assosiated with.
-  projectId String
+  // TODO: projectId String
 
   // the id of this scene's origin design file
   fileId String
@@ -27,26 +27,43 @@ model SceneRecord {
   // the sdk version of this scene used for conversion and uploading
   sdkVersion String
 
+  // raw big json tree data (snapshot)
+  raw Json
+
+  // raw (original) name at the point of registration.
+  rawname String
+
+  // preview of this scene as png hosted url
+  preview String?
+
+  // name of this layer described by designer, defaults to the node's name, can be overriden through the console.
+  // which means, the name can be different with the design node's name.
+  newname String?
+
+  // the explicit description of this scene set by editor. for human communication purpose.
+  description String?
 
   // the design platform used for design of this origin design file.
-  designPlatform String
+  from DesignOrigin
 
   // the type of this scene. rather it can be screen, component, or docs.
-  sceneType StorableSceneType
+  sceneType StorableSceneType @default(ANYNODE)
 
   // the route of this scene, used for screen.
   route String?
 
-  // name of this layer described by designer, defaults to the node's name, can be overriden through the console.
-  // which means, the name can be different with the design node's name.
-  name String?
-
-  // the explicit description of this scene set by editor. for human communication purpose.
-  description String
-
   // the explicit tags set by editor. for human communication.
   tags String[]
 
+  customdata_1p Json @default("{}")
+  customdata_3p Json @default("{}")
+
+
+  // region layer property
+  background String? @default("#FFFFFF")
+  width Float
+  height Float
+  // endregion layer property
 
   // alias for containing many variants
   // ```
@@ -55,11 +72,30 @@ model SceneRecord {
   // - "main-page/(md)"
   // - "main-page/(xs)"
   // ```
-  alias String?
+  // TODO: alias String?
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // archived = removed
+  archived Boolean @default(false)
+  archivedAt DateTime
 }
 
+enum DesignOrigin {
+  FIGMA_DESKTOP // figma desktop - figma plugin
+  FIGMA_WEB // figma web // via api / url
+  SKETCH_DESKTOP // sketch desktop - sketch file or sketch plugin
+  SKETCH_FILE  // via sketch file upload
+  // SKETCH_WEB // sketch web is currently not available since sketch does not have a web api.
+  XD_DESKTOP // xd desktop - xd plugin
+  IMAGE_UPLOAD // design from uploaded image (unknown source)
+  UNKNOWN // totally unknown source
+}
 
 enum StorableSceneType {
+  ANYNODE
   SCREEN
   COMPONENT
   DOCS
