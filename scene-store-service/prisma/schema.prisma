@@ -11,6 +11,11 @@ generator client {
 }
 
 model SceneRecord {
+  // owner id (currently user id - will be altered later)
+  owner String
+
+  // sharing policy  (currently supports ["none", "*"])
+  sharing String @default("none")
   
   // the unique id on the database
   id String @id @default(uuid())
@@ -23,6 +28,10 @@ model SceneRecord {
 
   // the id of this scene's origin design file's node of this content
   nodeId String
+
+  @@unique([fileId, nodeId])
+
+  // TODO: hash String
 
   // the sdk version of this scene used for conversion and uploading
   sdkVersion String
@@ -80,7 +89,7 @@ model SceneRecord {
 
   // archived = removed
   archived Boolean @default(false)
-  archivedAt DateTime
+  archivedAt DateTime?
 }
 
 enum DesignOrigin {
