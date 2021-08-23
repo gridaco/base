@@ -6,10 +6,12 @@ import { ScenesController } from "./scenes.controller";
 import { ScenesService } from "./scenes.service";
 import { env } from "process";
 import { ApiJwtStrategy } from "../authentication/api-jwt.strategy";
+import { AuthenticationModule } from "../authentication/authentication.module";
 
 @Module({
   imports: [
     PrismaModule,
+    AuthenticationModule,
     JwtModule.register({
       secret: env.JWT_SECRET_KEY,
     }),

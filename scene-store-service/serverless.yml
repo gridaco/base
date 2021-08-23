@@ -8,15 +8,6 @@ plugins:
   - serverless-plugin-warmup
   - serverless-offline
 
-# custom:
-#   customDomain:
-#     domainName: scene-store.bridged.cc
-#     hostedZoneId: us-west-1
-#     basePath: ""
-#     stage: ${self:provider.stage}
-#     createRoute53Record: true
-#   serverless-offline:
-#     httpPort: 4000
 custom:
   webpack:
     webpackConfig: webpack.config.js
@@ -25,6 +16,13 @@ custom:
     packagerOptions:
       scripts: # this is the magic
         - prisma generate
+
+  customDomain:
+    domainName: scene-store.bridged.cc
+    hostedZoneId: us-west-1
+    basePath: ""
+    stage: "production"
+    createRoute53Record: true
 
   serverless-offline:
     httpPort: 9002
@@ -40,12 +38,6 @@ provider:
     AWS_NODEJS_CONNECTION_REUSE_ENABLED: "1"
   apiGateway:
     minimumCompressionSize: 1024
-  iamRoleStatements:
-    # email with ses
-    - Effect: Allow
-      Action:
-        - ses:SendEmail
-      Resource: "*"
 
 functions:
   main:
