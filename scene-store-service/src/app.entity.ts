@@ -1,10 +1,10 @@
-import * as dynamoose from 'dynamoose';
+import * as dynamoose from "dynamoose";
 import {
   StorableSceneType,
   DesignPlatform,
-  SdkVersion,
+  versions,
   StorableLayerType,
-} from '@bridged.xyz/client-sdk/lib';
+} from "@base-sdk/base";
 
 /**
  * the record interface of scene table. on scene-store service's db
@@ -33,7 +33,7 @@ export interface SceneRecord {
   /**
    * the sdk version of this scene used for conversion and uploading
    */
-  sdkVersion: SdkVersion;
+  sdkVersion: versions.SdkVersion;
 
   /**
    * the design platform used for design of this origin design file.
@@ -134,12 +134,12 @@ export interface NestedLayerRecord {
   /**
    * the sdk version of this layer is converted.
    */
-  sdkVersion: SdkVersion;
+  sdkVersion: versions.SdkVersion;
 
   /**
    * the transport node data of this layer. often used with vanilla layer transport's data configuration.
    */
-  data: object;
+  data: any;
 
   /**
    * the type of the layer. it can be instance, group, or vanilla.
@@ -185,14 +185,14 @@ export const NestedLayer = new dynamoose.Schema(
     type: {
       type: String,
       enum: [
-        'INSTANCE',
-        'GROUP',
-        'VANILLA',
-        'TEXT',
-        'LINE',
-        'VECTOR',
-        'IMAGE',
-        'RECT',
+        "INSTANCE",
+        "GROUP",
+        "VANILLA",
+        "TEXT",
+        "LINE",
+        "VECTOR",
+        "IMAGE",
+        "RECT",
       ],
     },
     layers: {
@@ -223,16 +223,16 @@ export const SceneSchema = new dynamoose.Schema(
     designPlatform: {
       type: String,
       enum: [
-        'com.figma.Desktop',
-        'com.bohemiancoding.sketch3',
-        'xyz.bridged.bridged',
+        "com.figma.Desktop",
+        "com.bohemiancoding.sketch3",
+        "xyz.bridged.bridged",
       ],
     },
     cachedPreview: String,
     // SceneType
     sceneType: {
       type: String,
-      enum: ['SCREEN', 'COMPONENT', 'DOCS'],
+      enum: ["SCREEN", "COMPONENT", "DOCS"],
     },
     route: String,
     name: String,

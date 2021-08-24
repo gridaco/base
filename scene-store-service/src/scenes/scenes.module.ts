@@ -1,11 +1,22 @@
-import { Module } from '@nestjs/common';
-
-import { ScenesController } from './scenes.controller';
-import { ScenesService } from './scenes.service';
+import { Module } from "@nestjs/common";
+import { JwtModule } from "@nestjs/jwt";
+import { PrismaService } from "../_prisma/prisma.service";
+import { PrismaModule } from "../_prisma/prisma.module";
+import { ScenesController } from "./scenes.controller";
+import { ScenesService } from "./scenes.service";
+import { env } from "process";
+import { ApiJwtStrategy } from "../authentication/api-jwt.strategy";
+import { AuthenticationModule } from "../authentication/authentication.module";
 
 @Module({
-  imports: [],
+  imports: [
+    PrismaModule,
+    AuthenticationModule,
+    JwtModule.register({
+      secret: env.JWT_SECRET_KEY,
+    }),
+  ],
   controllers: [ScenesController],
-  providers: [ScenesService],
+  providers: [ScenesService, PrismaService, ApiJwtStrategy],
 })
 export class ScenesModule {}

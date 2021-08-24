@@ -1,120 +1,146 @@
-import { Injectable } from '@nestjs/common';
-import { nanoid } from 'nanoid';
-import * as dynamoose from 'dynamoose';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { versions } from "@base-sdk/base";
+import { SceneRegisterRequest } from "@base-sdk/scene-store/dist/__api/requests";
+import { SceneRecord } from "@prisma/client";
+import { PrismaService } from "../_prisma/prisma.service";
 
-import { DesignPlatform, SdkVersion } from '@bridged.xyz/client-sdk';
-import { SceneRegisterRequest, StorableLayer } from '@bridged.xyz/client-sdk';
-import { NestedLayerRecord, Scene } from '../app.entity';
-
-const sdkVer = SdkVersion.v2020_0;
-
-// TODO - choose multipart or json.
-// if multipart, get the full request including the image in single request.
-// if json way, image must be uploaded, or atleast the url must be reserved before posting a register scene request.
+const SDK_VER = versions.SdkVersion.v2020_0;
 
 // how to handle nested component? -> we should also upload the components linked. how to handle this case.
 @Injectable()
 export class ScenesService {
-  async registerScreen(request: SceneRegisterRequest) {
-    // convert storable layer from request to nested layer record.
-    const nestedLayers: NestedLayerRecord[] = request.layers.map(
-      (l: StorableLayer) => {
-        const nestedLayer = convertStorableLayerToNestedLayer(l);
-        return nestedLayer;
-      }
-    );
+  constructor(private readonly prisma: PrismaService) {}
 
-    console.log('request.nodeId', request.nodeId);
-    const id = nanoid();
-    const scene = new Scene({
-      id: id,
-      projectId: request.projectId,
-      // fileId: request.fileId,
-      nodeId: request.nodeId,
-      sdkVersion: sdkVer,
-      designPlatform: DesignPlatform.figma,
-      // cachedPreview: request.preview,
-      sceneType: request.sceneType,
-      // route: request.route || dynamoose.UNDEFINED,
-      name: request.name,
-      // description: request.description || dynamoose.UNDEFINED,
-      // tags: request.tags,
-      // alias: request.alias || dynamoose.UNDEFINED,
-      // variant: request.variant || dynamoose.UNDEFINED,
-      layers: nestedLayers,
-      width: request.width,
-      height: request.height,
+  async registerScreen(user, request: SceneRegisterRequest) {
+    const new_rec = await this.prisma.sceneRecord.create({
+      data: {
+        owner: user.id,
+        customdata_1p: request.customdata_1p,
+        fileId: request.fileId,
+        nodeId: request.nodeId,
+        sdkVersion: SDK_VER,
+        description: request.description,
+        tags: request.initialTags,
+        rawname: request.rawname,
+        raw: request.raw,
+        from: request.from,
+        width: request.width,
+        height: request.height,
+        sharing: request.initialSharingPolicy?.policy,
+      },
     });
 
-    console.log('saving scene', scene);
-    const saved = await scene.save();
-
-    return saved;
+    return new_rec;
   }
 
-  async fetchScene(id: string) {
-    const scene = await Scene.get({ id: id });
-    return scene;
+  async fetchScene(user, id: string): Promise<SceneRecord> {
+    const rec = await this.canAccess(user, id);
+    if (rec) {
+      return rec;
+    }
+    // return 404 instead 403
+    throw new NotFoundException("resource not found");
   }
 
-  async updateSceneInfo(request: {
-    name?: string;
-    tags?: string[];
-    description?: string;
-  }) {
-    // update only provided field
-
-    if (request.name) {
-      // update name
+  async fetchSharedScene(id: string) {
+    const rec = this.canReadAsShared(undefined, id);
+    if (!rec) {
+      throw new NotFoundException("resource not found");
     }
-
-    if (request.tags) {
-      // update tags
-    }
-
-    if (request.description) {
-      // update description
-    }
+    return rec;
   }
+  async fetchMyScenes(user) {
+    return await this.prisma.sceneRecord.findMany({
+      where: {
+        owner: user.id,
+      },
+    });
+  }
+
+  // async updateSceneInfo(request: {
+  //   name?: string;
+  //   tags?: string[];
+  //   description?: string;
+  // }) {
+  //   //
+  //   throw "not implemented";
+  // }
 
   // multipart form request with image data
-  async updateScenePreview() {
-    // connect to asset service, host the image.
-  }
-}
-
-/**
- * converts / maps storable layer (wich is also nested type,) to db nested layers type.
- */
-function convertStorableLayerToNestedLayer(
-  layer: StorableLayer
-): NestedLayerRecord {
-  // TODO
-
-  let nestedChildLayers: NestedLayerRecord[];
-  if (layer.layers) {
-    nestedChildLayers = layer.layers.map((childLayre: StorableLayer) => {
-      const nestedChildLayer = convertStorableLayerToNestedLayer(childLayre);
-      return nestedChildLayer;
-    });
+  async updateScenePreview(user, p: { id: string; preview: string }) {
+    if (await this.canAccess(user, p.id)) {
+      await this.prisma.sceneRecord.update({
+        where: {
+          id: p.id,
+        },
+        data: {
+          preview: p.preview,
+        },
+      });
+      return true;
+    }
+    throw new NotFoundException("resource not found");
   }
 
-  const convertedLayer = <NestedLayerRecord>{
-    nodeId: layer.nodeId,
-    index: layer.index,
-    name: layer.name,
-    sdkVersion: sdkVer,
-    data: layer.data,
-    type: layer.type,
-    layers: nestedChildLayers, // || dynamoose.UNDEFINED,
+  async updateSharingPolicy(
+    user,
+    id: string,
+    sharing: {
+      policy: string;
+    }
+  ) {
+    const req = this.canAccess(user, id);
+    if (req) {
+      await this.prisma.sceneRecord.update({
+        where: {
+          id,
+        },
+        data: {
+          sharing: sharing.policy,
+        },
+      });
+      return {
+        success: true,
+        message: "sharing policy updated successfully",
+        policy: sharing.policy,
+      };
+    }
+  }
 
-    // TODO linked component to layer is currently not supported.
-    // componentId: dynamoose.UNDEFINED as any,
-    width: layer.width,
-    height: layer.height,
-    x: layer.x,
-    y: layer.y,
-  };
+  private async canAccess(user, id): Promise<SceneRecord | false> {
+    const rec = await this.prisma.sceneRecord.findUnique({ where: { id } });
+    if (rec) {
+      if (rec.owner == user.id) {
+        return rec;
+      }
+      return false;
+    }
+    throw new NotFoundException("resource not found");
+  }
 
-  return convertedLayer;
+  private async canReadAsShared(
+    user: any | undefined,
+    id: string
+  ): Promise<SceneRecord | false> {
+    const removeSensitive = (r: SceneRecord): SceneRecord => {
+      return <SceneRecord>{
+        ...r,
+        // TODO: remove sensitive fields
+      };
+    };
+
+    const rec = await this.prisma.sceneRecord.findUnique({ where: { id } });
+    if (rec) {
+      if (user) {
+        if (rec.owner == user.id) {
+          return rec;
+        }
+      }
+      if (rec.sharing == "*") {
+        return removeSensitive(rec);
+      }
+      return false;
+    }
+    throw new NotFoundException("resource not found");
+  }
 }

@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
+}
+
+model SceneRecord {
+  // owner id (currently user id - will be altered later)
+  owner String
+
+  // sharing policy  (currently supports ["none", "*"])
+  sharing String @default("none")
+  
+  // the unique id on the database
+  id String @id @default(uuid())
+
+  // the id of project this scene is assosiated with.
+  // TODO: projectId String
+
+  // the id of this scene's origin design file
+  fileId String
+
+  // the id of this scene's origin design file's node of this content
+  nodeId String
+
+  @@unique([fileId, nodeId])
+
+  // TODO: hash String
+
+  // the sdk version of this scene used for conversion and uploading
+  sdkVersion String
+
+  // raw big json tree data (snapshot)
+  raw Json
+
+  // raw (original) name at the point of registration.
+  rawname String
+
+  // preview of this scene as png hosted url
+  preview String?
+
+  // name of this layer described by designer, defaults to the node's name, can be overriden through the console.
+  // which means, the name can be different with the design node's name.
+  newname String?
+
+  // the explicit description of this scene set by editor. for human communication purpose.
+  description String?
+
+  // the design platform used for design of this origin design file.
+  from DesignOrigin
+
+  // the type of this scene. rather it can be screen, component, or docs.
+  sceneType StorableSceneType @default(ANYNODE)
+
+  // the route of this scene, used for screen.
+  route String?
+
+  // the explicit tags set by editor. for human communication.
+  tags String[]
+
+  customdata_1p Json @default("{}")
+  customdata_3p Json @default("{}")
+
+
+  // region layer property
+  background String? @default("#FFFFFF")
+  width Float
+  height Float
+  // endregion layer property
+
+  // alias for containing many variants
+  // ```
+  // e.g. "main-page" is the alias for screens below
+  // - "main-page/(lg)"
+  // - "main-page/(md)"
+  // - "main-page/(xs)"
+  // ```
+  // TODO: alias String?
+
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // archived = removed
+  archived Boolean @default(false)
+  archivedAt DateTime?
+}
+
+enum DesignOrigin {
+  FIGMA_DESKTOP // figma desktop - figma plugin
+  FIGMA_WEB // figma web // via api / url
+  SKETCH_DESKTOP // sketch desktop - sketch file or sketch plugin
+  SKETCH_FILE  // via sketch file upload
+  // SKETCH_WEB // sketch web is currently not available since sketch does not have a web api.
+  XD_DESKTOP // xd desktop - xd plugin
+  IMAGE_UPLOAD // design from uploaded image (unknown source)
+  UNKNOWN // totally unknown source
+}
+
+enum StorableSceneType {
+  ANYNODE
+  SCREEN
+  COMPONENT
+  DOCS
+}
