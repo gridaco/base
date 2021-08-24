@@ -18,6 +18,7 @@ export class ScenesService {
         customdata_1p: request.customdata_1p,
         fileId: request.fileId,
         nodeId: request.nodeId,
+        preview: request.preview,
         sdkVersion: SDK_VER,
         description: request.description,
         tags: request.initialTags,
