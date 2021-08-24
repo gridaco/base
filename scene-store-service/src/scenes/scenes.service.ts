@@ -89,7 +89,7 @@ export class ScenesService {
       policy: string;
     }
   ) {
-    const req = this.canAccess(user, id);
+    const req = await this.canAccess(user, id);
     if (req) {
       await this.prisma.sceneRecord.update({
         where: {
