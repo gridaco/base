@@ -14,8 +14,8 @@ export class ScenesService {
   async registerScreen(user, request: SceneRegisterRequest) {
     const new_rec = await this.prisma.sceneRecord.create({
       data: {
-        ...request /** just in case that field is missing by developer's miss */,
         owner: user.id,
+        customdata_1p: request.customdata_1p,
         fileId: request.fileId,
         nodeId: request.nodeId,
         sdkVersion: SDK_VER,
