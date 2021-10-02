@@ -1,5 +1,5 @@
 service:
-  name: xyz-url
+  name: url-service
 
 plugins:
   - serverless-dotenv-plugin
