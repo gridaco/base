@@ -5,10 +5,18 @@ service: cors
 useDotenv: true
 custom:
   customDomain:
-    domainName: cors.bridged.cc
-    basePath: ""
-    stage: ${self:provider.stage}
-    createRoute53Record: true
+    - http:
+      # legacy. won't support
+      domainName: cors.bridged.cc
+      basePath: ""
+      stage: ${self:provider.stage}
+      createRoute53Record: true
+    - http:
+      domainName: cors.grida.cc
+      basePath: ""
+      stage: "production"
+      createRoute53Record: true
+
   serverless-offline:
     httpPort: 4012
 
