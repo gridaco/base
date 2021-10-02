@@ -2,6 +2,9 @@
     "name": "cors.bridged.cc",
     "description": "free cors service for everyone",
     "version": "0.1.0",
+    "scripts": {
+        "deploy:prod": "sls deploy --stage production"
+    },
     "dependencies": {
         "aws-serverless-express": "^3.4.0",
         "dynamoose": "^2.7.3",
