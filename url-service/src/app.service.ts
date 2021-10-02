@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import * as AWS from 'aws-sdk';
-import { DocumentClient } from 'aws-sdk/lib/dynamodb/document_client';
+import { Injectable } from "@nestjs/common";
+import * as AWS from "aws-sdk";
+import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client";
 
-import { UrlShortenResult } from '@bridged.xyz/client-sdk/dist/url/types';
-import { buildShortUrl, generateHash } from './utils';
+import { UrlShortenResult } from "@bridged.xyz/client-sdk/dist/url/types";
+import { buildShortUrl, generateHash } from "./utils";
 
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
@@ -16,7 +16,7 @@ interface TBL_URL_SPEC {
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Welcome to bridged hosting service. Learn more at https://github.com/bridgedxyz/services/';
+    return "Welcome to Grida hosting service. Learn more at https://github.com/gridaco/base/";
   }
 
   async getRedirect(id: string): Promise<string> {
