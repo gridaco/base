@@ -3,7 +3,7 @@
     "description": "free cors service for everyone",
     "version": "0.1.0",
     "scripts": {
-        "deploy:prod": "sls deploy --stage production",
+        "deploy:prod": "sls deploy",
         "dev": "sls offline start"
     },
     "dependencies": {
