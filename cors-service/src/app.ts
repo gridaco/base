@@ -5,6 +5,7 @@ import * as responsetime from "response-time";
 
 import { logRequest } from "./usage";
 import { blaklistoriginlimit, payloadlimit } from "./limit";
+import { unauthorizedAppBlocking } from "./auth";
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.get("/", function(req, res) {
 
 app.use(blaklistoriginlimit); // 1
 app.use(payloadlimit); // 2
+app.use(unauthorizedAppBlocking); // 3
 
 app.use(
   responsetime({
