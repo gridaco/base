@@ -18,6 +18,10 @@ export const unauthorizedAppBlocking = (
   res: express.Response,
   next
 ) => {
+  // skip api key check for preflight requests
+  if (req.method == "OPTIONS") {
+    next();
+  }
   const apikey: string = req.headers[
     STATIC_CORS_ACCOUNT_API_KEY_HEADER
   ] as string;
