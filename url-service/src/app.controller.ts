@@ -1,12 +1,20 @@
-import { Body, Controller, Get, Param, Post, Redirect, Res } from '@nestjs/common';
-import * as path from "path"
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Redirect,
+  Res,
+} from "@nestjs/common";
+import * as path from "path";
 
 import {
   UrlShortenRequest,
   UrlShortenResult,
-} from '@bridged.xyz/client-sdk/dist/url/types';
-import { AppService } from './app.service';
-import { checkIfValidUrl } from './utils';
+} from "@bridged.xyz/client-sdk/dist/url/types";
+import { AppService } from "./app.service";
+import { checkIfValidUrl } from "./utils";
 
 @Controller()
 export class AppController {
@@ -14,12 +22,18 @@ export class AppController {
 
   @Get()
   getHello(@Res() res) {
-    const file = path.resolve(process.env.LAMBDA_TASK_ROOT as string, '_optimize', process.env.AWS_LAMBDA_FUNCTION_NAME as string, 'web', 'index.html')
+    const file = path.resolve(
+      process.env.LAMBDA_TASK_ROOT as string,
+      "_optimize",
+      process.env.AWS_LAMBDA_FUNCTION_NAME as string,
+      "web",
+      "index.html"
+    );
     res.sendFile(file);
   }
 
-  @Get(':id')
-  @Redirect('https://bridged.xyz/', 302) // the default redirection
+  @Get(":id")
+  @Redirect("https://grida.co/", 302) // the default redirection
   async getRedirect(@Param() params) {
     const id = params.id;
     const redirect = await this.appService.getRedirect(id);
@@ -28,7 +42,7 @@ export class AppController {
     };
   }
 
-  @Post('/short')
+  @Post("/short")
   async postShort(@Body() req: UrlShortenRequest): Promise<UrlShortenResult> {
     const url = req.url;
     if (checkIfValidUrl(url)) {
