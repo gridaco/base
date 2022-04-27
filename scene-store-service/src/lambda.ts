@@ -1,13 +1,13 @@
 // lambda.ts
-import { Handler, Context } from 'aws-lambda';
-import { Server } from 'http';
-import { createServer, proxy } from 'aws-serverless-express';
-import { eventContext } from 'aws-serverless-express/middleware';
-import express from 'express';
-import { NestFactory } from '@nestjs/core';
-import { ExpressAdapter } from '@nestjs/platform-express';
+import { Handler, Context } from "aws-lambda";
+import { Server } from "http";
+import { createServer, proxy } from "aws-serverless-express";
+import { eventContext } from "aws-serverless-express/middleware";
+import express from "express";
+import { NestFactory } from "@nestjs/core";
+import { ExpressAdapter } from "@nestjs/platform-express";
 
-import { AppModule } from './app.module';
+import { AppModule } from "./app.module";
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this
 // is likely due to a compressed response (e.g. gzip) which has not
@@ -26,6 +26,7 @@ async function bootstrapServer(): Promise<Server> {
       new ExpressAdapter(expressApp)
     );
     nestApp.use(eventContext());
+    nestApp.use(express.json({ limit: "3mb" }));
     nestApp.enableCors({
       origin: true,
     });
@@ -38,5 +39,5 @@ async function bootstrapServer(): Promise<Server> {
 // Export the handler : the entry point of the Lambda function
 export const handler: Handler = async (event: any, context: Context) => {
   cachedServer = await bootstrapServer();
-  return proxy(cachedServer, event, context, 'PROMISE').promise;
+  return proxy(cachedServer, event, context, "PROMISE").promise;
 };
