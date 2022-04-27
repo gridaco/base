@@ -19,7 +19,7 @@ export const unauthorizedAppBlocking = (
   next
 ) => {
   // skip api key check for preflight requests
-  if (req.method == "OPTIONS") {
+  if (req.method == "OPTIONS" || req.method == "HEAD") {
     next();
   }
   const apikey: string = req.headers[
