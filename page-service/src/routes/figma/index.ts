@@ -1,5 +1,6 @@
-function putPage() {
-  //
-}
+import * as express from "express";
+const router = express.Router();
 
-("POST: figma/:filekey");
+router.put(`:filekey`, (req, res) => {});
+
+export default router;
