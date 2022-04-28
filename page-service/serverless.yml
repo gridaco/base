@@ -1,0 +1,51 @@
+service: page-hosting
+
+plugins:
+  - serverless-plugin-monorepo
+  - serverless-plugin-typescript
+  - serverless-plugin-optimize
+  - serverless-offline
+  - serverless-domain-manager
+
+custom:
+  customDomain:
+    domainName: pages.grida.cc
+    basePath: ""
+    stage: prod
+    createRoute53Record: true
+  serverless-offline:
+    httpPort: 4014
+    noPrependStageInUrl: true
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  region: us-west-1
+  apiGateway:
+    binaryMediaTypes:
+      - "multipart/form-data"
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:GetObject
+        - s3:PutObjectAcl
+      Resource: "arn:aws:s3:::page-hosting/*"
+
+resource:
+  s3bucket:
+    Type: S3::Bucket
+    Properties:
+      BucketName: page-hosting
+
+package:
+  individually: true
+
+functions:
+  main:
+    handler: src/index.handler
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+          cors: true
