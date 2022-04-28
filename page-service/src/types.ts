@@ -1,8 +1,9 @@
-interface Asset {}
-
-interface PageManifest {
+export interface PagePutRequest {
   id: string;
   title: string;
   document: string;
-  assets: { [key: string]: Asset };
+  /**
+   * this part will be from multer
+   */
+  assets?: { [key: string]: any };
 }
