@@ -29,7 +29,7 @@ export async function uploadAssets({
   file: { body: Buffer; mimetype?: string };
   key: string;
 }) {
-  const payload = Buffer.from(file.body as Buffer).toString("base64");
+  const payload = file.body.toString("base64");
 
   return await upload(
     path,

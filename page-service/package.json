@@ -3,7 +3,8 @@
   "description": "simple page hosting service",
   "version": "0.0.0",
   "scripts": {
-    "deploy:prod": "sls deploy",
+    "clean": "rimraf .build",
+    "deploy:prod": "sls deploy --stage production",
     "dev": "sls offline start"
   },
   "dependencies": {

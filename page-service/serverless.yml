@@ -10,9 +10,10 @@ plugins:
 custom:
   customDomain:
     domainName: pages.grida.cc
+    certificateName: pages.grida.cc
     basePath: ""
-    stage: prod
     createRoute53Record: true
+    stage: production
   serverless-offline:
     httpPort: 4014
     noPrependStageInUrl: true
@@ -22,8 +23,9 @@ provider:
   runtime: nodejs12.x
   region: us-west-1
   apiGateway:
+    # https://stackoverflow.com/questions/61003311/serverless-i-image-upload-to-s3-broken-after-deploy-local-worked-only/61003498#61003498
     binaryMediaTypes:
-      - "multipart/form-data"
+      - "*/*"
   iamRoleStatements:
     - Effect: Allow
       Action:
