@@ -29,13 +29,8 @@ export async function uploadAssets({
   file: { body: Buffer; mimetype?: string };
   key: string;
 }) {
-  const payload = file.body.toString("base64");
-
-  return await upload(
-    path,
-    { body: payload, mimetype: file.mimetype, encoding: "base64" },
-    key
-  );
+  // this won't work locally. with sls offline. it's a serverless' issue
+  return await upload(path, { body: file.body, mimetype: file.mimetype }, key);
 }
 
 export async function uploadDocument({
