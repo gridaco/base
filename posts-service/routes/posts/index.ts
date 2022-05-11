@@ -97,10 +97,10 @@ router.post("/:id/publish", async (req, res) => {
       id: id,
     },
     data: {
-      // TODO:
       isDraft: false,
       postedAt: new Date(),
       visibility: visibility ?? "public",
+      scheduledAt: null, // clear schedule
     },
   });
 
@@ -117,14 +117,13 @@ router.post("/:id/unlist", async (req, res) => {
       id: id,
     },
     data: {
-      // published: false,
       // TODO: remove published at?
+      postedAt: null, // clear
+      // published: false,
     },
   });
 
-  res.status(200).json({
-    // TODO:
-  });
+  res.status(200).json(post);
 });
 
 router.post("/:id/visibility", async (req, res) => {
@@ -161,10 +160,35 @@ router.post("/:id/title", async (req, res) => {
       title: title,
     },
   });
+
+  res.status(200).json(post);
+});
+
+router.post("/:id/summary", async (req, res) => {
+  const { id } = req.params;
+  const { title, summary } = req.body;
+  // 0. auth guard - post permission
+  // 1. update the post title
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      title: title && title, // can also update title by summary update, but optional.
+      summary: summary,
+    },
+  });
+
+  res.status(200).json({
+    id: post.id,
+    title: post.title,
+    summary: post.summary,
+  });
 });
 
 router.put("/:id/body", async (req, res) => {
   const { id } = req.params;
+  const { r } = req.query;
   const { blocks } = req.body; // as ??
 
   // 0. auth guard - post permission
@@ -181,10 +205,24 @@ router.put("/:id/body", async (req, res) => {
       },
     },
   });
+
+  switch (r) {
+    case "*":
+      res.status(200).json(post);
+    case undefined:
+    default:
+      res.status(200).json({
+        id,
+        updated: {
+          length: post.body["blocks"]?.length ?? 0,
+        },
+      });
+  }
 });
 
 router.put("/:id/custom-body", async (req, res) => {
   const { id } = req.params;
+  const { r } = req.query;
   const body = req.body; // as ??
 
   // 0. auth guard - post permission
@@ -197,6 +235,19 @@ router.put("/:id/custom-body", async (req, res) => {
       body: body,
     },
   });
+
+  switch (r) {
+    case "*":
+      res.status(200).json(post);
+    case undefined:
+    default:
+      res.status(200).json({
+        id,
+        updated: {
+          length: post.body["blocks"]?.length ?? 0,
+        },
+      });
+  }
 });
 
 router.put("/:id/tags", async (req, res) => {
