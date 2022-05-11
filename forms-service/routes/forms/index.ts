@@ -9,6 +9,21 @@ const m = multer({
   storage: multer.memoryStorage(),
 });
 
+router.post("/", async (req, res) => {
+  const { title, description } = req.body;
+  // 0. auth guard - workspace permission
+  // 1. create new form
+  const form = await prisma.form.create({
+    data: {
+      config: {},
+      title,
+      description,
+    },
+  });
+
+  res.status(202).json(form);
+});
+
 // *PUBLIC
 router.get("/", async (req, res) => {
   // 0. auth guard - workspace permission
