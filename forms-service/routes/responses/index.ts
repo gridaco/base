@@ -35,12 +35,9 @@ router.post("/submit", async (req, res) => {
       },
     });
 
-    res.status(202).json({
-      id: response.id,
-      submittedAt: response.submittedAt,
-      // redirectUrl: // response.redirectUrl, - from forms config
-    });
+    res.status(202).json(response);
   } catch (e) {
+    console.error(e)
     res.status(400).json({
       error: "cannot create new response (metadata may be invalid)",
     });
