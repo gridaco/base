@@ -25,8 +25,12 @@ MongoDB
   - get post details
 - `GET` /:id/summary
   - get post summary
-- `POST` /drafts/new
+- `POST` /drafts
   - create new draft
+- `DELETE` /drafts/:id
+  - remove draft
+- `GET` /drafts
+  - list drafts
 - `POST` /:id/publish
   - publish draft
 - `POST` /:id/schedule
@@ -35,10 +39,6 @@ MongoDB
   - remove schedule
 - `POST` /:id/unlist
   - unlist (remove post)
-- `POST` /drafts/:id/remove
-  - remove draft
-- `GET` /drafts
-  - list drafts
 - `GET` /unlisted
 - `GET` /scheduled
 - `PUT` /:id
@@ -65,7 +65,8 @@ MongoDB
   - `POST` /publications
   - `DELETE` /publications/:publication
     - archive publication
-
+- search
+  - wip
 
 ## Models
 
@@ -134,3 +135,9 @@ interface PostSummary {
   author?: AuthorLike
 }
 ```
+
+
+
+## Trouble shooting
+
+- hit payload size for assets uploading? - https://theburningmonk.com/2020/04/hit-the-6mb-lambda-payload-limit-heres-what-you-can-do/
