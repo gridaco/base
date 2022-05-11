@@ -1,7 +1,7 @@
-import * as express from "express";
-import * as useragent from "express-useragent";
-import * as cors from "cors";
-import * as bodyParser from "body-parser";
+import express from "express";
+import useragent from "express-useragent";
+import cors from "cors";
+import bodyParser from "body-parser";
 import router from "./routes";
 
 const app = express();

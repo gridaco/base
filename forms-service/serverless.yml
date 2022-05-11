@@ -1,8 +1,9 @@
 service: cms-forms
+useDotenv: true
 
 plugins:
-  - serverless-plugin-typescript
-  - serverless-plugin-optimize
+  - serverless-webpack
+  - serverless-webpack-prisma
   - serverless-offline
   - serverless-domain-manager
 
@@ -16,11 +17,13 @@ custom:
   serverless-offline:
     httpPort: 4016
     noPrependStageInUrl: true
-  optimize:
-    external: ["@prisma/client", ".prisma/client"]
+  webpack:
+    includeModules: true
 
 provider:
   name: aws
+  environment:
+    DATABASE_URL: ${env:DATABASE_URL}
   runtime: nodejs12.x
   region: us-west-1
   apiGateway:
@@ -53,9 +56,3 @@ functions:
 
 package:
   individually: true
-  # only include the Prisma binary required on AWS Lambda while packaging
-  patterns:
-    - "!node_modules/.prisma/client/libquery_engine-*"
-    - "node_modules/.prisma/client/libquery_engine-rhel-*"
-    - "!node_modules/prisma/libquery_engine-*"
-    - "!node_modules/@prisma/engines/**"

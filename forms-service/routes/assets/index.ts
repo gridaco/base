@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as multer from "multer";
+import multer from "multer";
 
 const m = multer({
   storage: multer.memoryStorage(),

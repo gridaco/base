@@ -1,5 +1,5 @@
 import * as express from "express";
-import * as multer from "multer";
+import multer from "multer";
 import { prisma, selectors } from "../../prisma-client";
 import { uploadAssets, buildPath } from "../../lib";
 
@@ -172,9 +172,7 @@ router.get("/:id/responses", async (req, res) => {
   const { id } = req.params;
   const responses = await prisma.response.findMany({
     where: {
-      form: {
-        id: id,
-      },
+      formId: id,
     },
   });
 
