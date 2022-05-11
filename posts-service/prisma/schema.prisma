@@ -10,6 +10,20 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Publication{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  workspace String
+  name String
+  logo String?
+  cover String?
+  slug String @unique @default(cuid())
+  createdAt DateTime @default(now())
+  posts Post[]
+
+  // publication slug must be unique per workspace
+  @@unique([slug, workspace])
+}
+
 model Post {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   title  String
@@ -20,13 +34,18 @@ model Post {
   tags String[]
   isDraft Boolean
   category String?
-  slug String
-  visibility Visibility
+  slug String?
+  visibility Visibility @default(private)
   scheduledAt DateTime?
-  createdAt DateTime
+  createdAt DateTime @default(now())
   postedAt DateTime?
-  language String
-  author String @db.ObjectId
+  language String?
+  author String? @db.ObjectId
+  publication  Publication  @relation(fields: [publicationId], references: [id])
+  publicationId String @db.ObjectId
+
+  // slugs are unique in publication
+  @@unique([slug, publicationId])
 }
 
 enum Visibility{

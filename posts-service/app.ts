@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as useragent from "express-useragent";
 import * as cors from "cors";
+import * as bodyParser from "body-parser";
 import router from "./routes";
 
 const app = express();
@@ -9,9 +10,7 @@ app.use(cors());
 
 app.use(useragent.express());
 
-app.get("/", (req, res) => {
-  res.redirect("https://grida.co");
-});
+app.use(bodyParser.json());
 
 app.use(router);
 

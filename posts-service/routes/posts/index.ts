@@ -1,5 +1,7 @@
 import * as express from "express";
 import * as multer from "multer";
+import { PrismaClient } from "@prisma/client";
+import { prisma, selectors } from "../../prisma-client";
 import { uploadAssets, buildPath } from "../../lib";
 import type { CreateDraftPostRequest } from "../../types";
 
@@ -9,48 +11,225 @@ const m = multer({
   storage: multer.memoryStorage(),
 });
 
-router.get("/", (req, res) => {
+// *PUBLIC
+router.get("/", async (req, res) => {
+  // 0. auth guard - publication permission
   // 1. list posts as summary
+  // 2. paginate
+  const posts = await prisma.post.findMany({
+    where: {
+      // published: true,
+      isDraft: false,
+      visibility: "public", // if authenticated, show all >> ? undefined
+    },
+    select: selectors.post_summary_select,
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 100,
+  });
+
+  res.status(200).json(posts);
 });
 
-router.post("/unlisted", (req, res) => {
+router.post("/unlisted", async (req, res) => {
+  // 0. auth guard - post permission
   // 1. get all unlisted posts (non draft)
+  const posts = await prisma.post.findMany({
+    where: {
+      // published: true,
+      isDraft: false,
+    },
+    select: selectors.post_summary_select,
+  });
+
+  res.status(200).json({
+    // TODO:
+  });
 });
 
-router.post("/scheduled", (req, res) => {
+router.post("/scheduled", async (req, res) => {
   // 1. get all scheduled posts (non draft)
+
+  const posts = await prisma.post.findMany({
+    where: {
+      isDraft: false,
+      // published: false,
+      // postedAt is null
+      scheduledAt: {
+        gte: new Date(),
+      },
+    },
+    select: selectors.post_summary_select,
+  });
+
+  res.status(200).json({
+    // TODO:
+  });
 });
 
-router.get("/:id", (req, res) => {
+// *PUBLIC
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
   // 1. fetch post detail (for render & edit)
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: id,
+    },
+  });
+
+  res.status(200).json({
+    // TODO:
+  });
 });
 
-router.post("/:id/publish", (req, res) => {
+router.post("/:id/publish", async (req, res) => {
+  const { id } = req.params;
+  const { visibility } = req.body;
+  // 0. auth guard - post permission
+  // 1. validate current data
+  // 2. emmit event
+
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      // TODO:
+      isDraft: false,
+      postedAt: new Date(),
+      visibility: visibility ?? "public",
+    },
+  });
+
+  res.status(200).json(post);
+});
+
+router.post("/:id/unlist", async (req, res) => {
+  const { id } = req.params;
+
+  // 0. auth guard - post permission
   // 1. unlist a published post (only works for published posts)
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      // published: false,
+      // TODO: remove published at?
+    },
+  });
+
+  res.status(200).json({
+    // TODO:
+  });
 });
 
-router.post("/:id/unlist", (req, res) => {
+router.post("/:id/visibility", async (req, res) => {
+  const { id } = req.params;
+  const { visibility } = req.body; // as ??
+
+  // 0. auth guard - post permission
   // 1. unlist a published post (only works for published posts)
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      visibility: visibility,
+    },
+  });
+
+  res.status(200).json({
+    // TODO:
+  });
 });
 
-router.post("/:id/visibility", (req, res) => {
-  // 1. unlist a published post (only works for published posts)
-});
+router.post("/:id/title", async (req, res) => {
+  const { id } = req.params;
+  const { title } = req.body; // as ??
 
-router.post("/:id/title", (req, res) => {
+  // 0. auth guard - post permission
   // 1. update the post title
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      title: title,
+    },
+  });
 });
 
-router.put("/:id/body", (req, res) => {
-  // 1. update the post body
+router.put("/:id/body", async (req, res) => {
+  const { id } = req.params;
+  const { blocks } = req.body; // as ??
+
+  // 0. auth guard - post permission
+  // 1. update the post body (with standard format)
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      body: {
+        $scheme: "boring",
+        blocks,
+        // TODO:
+      },
+    },
+  });
 });
 
-router.put("/:id/tags", (req, res) => {
+router.put("/:id/custom-body", async (req, res) => {
+  const { id } = req.params;
+  const body = req.body; // as ??
+
+  // 0. auth guard - post permission
+  // 1. update the post body (with custom scheme)
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      body: body,
+    },
+  });
+});
+
+router.put("/:id/tags", async (req, res) => {
+  const { id } = req.params;
+  const { tags } = req.body;
+
+  // 0. auth guard - post permission
   // 1. update the post tags
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      // TODO: filter the tag type (is it refernce or string?)
+      tags: tags,
+    },
+  });
 });
 
-router.post("/:id/schedule", (req, res) => {
+router.post("/:id/schedule", async (req, res) => {
+  const { id } = req.params;
+  const { at } = req.body; // as ??
+
+  // 0. auth guard - post permission
   // 1. update the post schedule
+  const post = await prisma.post.update({
+    where: {
+      id: id,
+    },
+    data: {
+      scheduledAt: at,
+    },
+  });
 });
 
 router.put(`/:id`, m.array("assets"), async (req, res) => {
