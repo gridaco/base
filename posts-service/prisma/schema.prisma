@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Post {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  title  String
+  summary String
+  thumbnail String?
+  body Json
+  cover String?
+  tags String[]
+  isDraft Boolean
+  category String?
+  slug String
+  visibility Visibility
+  scheduledAt DateTime?
+  createdAt DateTime
+  postedAt DateTime?
+  language String
+  author String @db.ObjectId
+}
+
+enum Visibility{
+  public
+  private
+  password_protected
+}
