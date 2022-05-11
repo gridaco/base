@@ -153,4 +153,28 @@ router.put("/:id/body", async (req, res) => {
   }
 });
 
+router.get("/:id/responses", async (req, res) => {
+  const { id } = req.params;
+  const responses = await prisma.response.findMany({
+    where: {
+      form: {
+        id: id,
+      },
+    },
+  });
+
+  res.json(responses);
+});
+
+router.get("/:id/responses/:rid", async (req, res) => {
+  const { rid } = req.params;
+  const responses = await prisma.response.findUnique({
+    where: {
+      id: rid,
+    },
+  });
+
+  res.json(responses);
+});
+
 export default router;

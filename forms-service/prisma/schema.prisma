@@ -13,10 +13,10 @@ generator client {
 model Form {
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
-  description String
+  description String?
   cover String?
   thumbnail String?
-  body Json
+  body Json?
   slug String @unique @default(cuid())
   scheduledAt DateTime?
   createdAt DateTime @default(now())
@@ -25,7 +25,7 @@ model Form {
   archived Boolean @default(false)
   author String? @db.ObjectId
   config FormConfig
-  responses Response[] 
+  responses Response[]
 }
 
 type FormConfig{
@@ -38,7 +38,7 @@ model Field{
 
 model Response{
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  landedAt DateTime @default(now())
+  landedAt DateTime? @default(now())
   submittedAt DateTime?
   metadata ResponseMeta
   form Form @relation(references: [id], fields: [formId])
@@ -47,14 +47,19 @@ model Response{
 }
 
 type Answer {
-  fieldId String
+  field String // can be both name or id
   data Json
 }
 
 type ResponseMeta{
   ip String?
   browser String?
-  platform String?
+  platform Platform @default(web)
   referer String?
   ua String?
+}
+
+enum Platform{
+  web
+  api
 }
