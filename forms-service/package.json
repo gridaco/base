@@ -1,17 +1,18 @@
 {
-  "name": "posts-services",
+  "name": "forms-services",
   "version": "0.0.0",
-  "homepage": "https://pages.grida.cc",
+  "homepage": "https://forms.grida.cc",
   "scripts": {
     "prisma:studio": "npx prisma studio",
     "prisma:generate": "npx prisma generate",
     "prisma:generate:watch": "npx prisma generate --watch",
     "postinstall": "npm run prisma:generate",
     "db:push": "npx prisma db push",
+    "setup:prod": "echo 'passing'",
     "clean": "rimraf .build",
     "dev": "sls offline start",
-    "deploy:staging": "yarn setup:prod && sls deploy --stage staging",
-    "deploy:prod": "yarn migrate:deploy && sls deploy --stage production"
+    "deploy:staging": "yarn clean && yarn setup:staging && yarn db:push && sls deploy --stage staging",
+    "deploy:prod": "yarn clean && yarn setup:prod && yarn db:push && sls deploy --stage production"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.79.0",
