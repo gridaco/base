@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
     },
   });
 
-  res.status(202).json(form);
+  res.json(form);
 });
 
 // *PUBLIC
