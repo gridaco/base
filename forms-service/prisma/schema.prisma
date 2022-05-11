@@ -38,13 +38,23 @@ model Field{
 
 model Response{
   id String @id @default(auto()) @map("_id") @db.ObjectId
-  ip String?
+  landedAt DateTime @default(now())
+  submittedAt DateTime?
+  metadata ResponseMeta
   form Form @relation(references: [id], fields: [formId])
   formId String
-  fields FieldResponse[]
+  answers Answer[]
 }
 
-type FieldResponse {
+type Answer {
   fieldId String
   data Json
+}
+
+type ResponseMeta{
+  ip String?
+  browser String?
+  platform String?
+  referer String?
+  ua String?
 }
