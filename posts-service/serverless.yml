@@ -16,8 +16,8 @@ custom:
   serverless-offline:
     httpPort: 4015
     noPrependStageInUrl: true
-  optimize:
-    external: ["@prisma/client", ".prisma/client"]
+  webpack:
+    includeModules: true
 
 provider:
   name: aws
