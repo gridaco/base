@@ -1,6 +1,5 @@
 import * as express from "express";
-import * as multer from "multer";
-import { PrismaClient } from "@prisma/client";
+import multer from "multer";
 import { prisma, selectors } from "../../prisma-client";
 import { uploadAssets, buildPath } from "../../lib";
 import type { CreateDraftPostRequest } from "../../types";
