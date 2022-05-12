@@ -35,7 +35,7 @@ model Post {
   tags String[]
   isDraft Boolean
   category String?
-  slug String?
+  slug String? @default(cuid())
   visibility Visibility @default(private)
   scheduledAt DateTime?
   createdAt DateTime @default(now())
