@@ -28,7 +28,7 @@ router.get("/", async (req, res) => {
     take: 100,
   });
 
-  res.status(200).json(posts);
+  res.json(posts);
 });
 
 router.post("/unlisted", async (req, res) => {
@@ -72,16 +72,13 @@ router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
   // 1. fetch post detail (for render & edit)
-
   const post = await prisma.post.findUnique({
     where: {
       id: id,
     },
   });
 
-  res.status(200).json({
-    // TODO:
-  });
+  res.json(post);
 });
 
 router.post("/:id/publish", async (req, res) => {
@@ -188,7 +185,7 @@ router.post("/:id/summary", async (req, res) => {
 router.put("/:id/body", async (req, res) => {
   const { id } = req.params;
   const { r } = req.query;
-  const { blocks } = req.body; // as ??
+  const { html } = req.body;
 
   // 0. auth guard - post permission
   // 1. update the post body (with standard format)
@@ -198,9 +195,9 @@ router.put("/:id/body", async (req, res) => {
     },
     data: {
       body: {
-        $scheme: "boring",
-        blocks,
         // TODO:
+        $scheme: "html",
+        html,
       },
     },
   });
@@ -213,7 +210,7 @@ router.put("/:id/body", async (req, res) => {
       res.status(200).json({
         id,
         updated: {
-          length: post.body["blocks"]?.length ?? 0,
+          length: post.body["html"]?.length ?? 0,
         },
       });
   }

@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 
 // create new draft
 router.post("/", async (req, res) => {
-  const { title, publication } = req.body; // as ??
+  const { title, publication, visibility } = req.body; // as ??
   // 1. create new draft
   // 2. return draft id
 
@@ -37,7 +37,7 @@ router.post("/", async (req, res) => {
       summary: "",
       body: {},
       isDraft: true,
-      visibility: "private",
+      visibility: visibility ?? "private",
       author: undefined, // TODO:
     },
   });

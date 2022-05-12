@@ -52,6 +52,11 @@ functions:
           path: /{proxy+}
           cors:
             origin: "*"
+      - http:
+          method: get
+          path: /
+          cors:
+            origin: "*"
 
 package:
   individually: true
