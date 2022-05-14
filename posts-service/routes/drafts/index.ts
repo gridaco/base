@@ -34,7 +34,7 @@ router.post("/", async (req, res) => {
       },
       // we can create new draft document optionally with title.
       title: title ?? "",
-      summary: "",
+      displayTitle: title,
       body: {},
       isDraft: true,
       visibility: visibility ?? "private",
@@ -69,4 +69,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.post("/discard", (req, res) => {
+  // discard draft
+});
 export default router;

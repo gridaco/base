@@ -20,6 +20,7 @@ model Publication{
   slug String @unique @default(cuid())
   createdAt DateTime @default(now())
   posts Post[]
+  // featuredPosts Post[] @relation(fields: [featuredPostIds], references: [id], name: "a")
 
   // publication slug must be unique per workspace
   @@unique([slug, workspace])
@@ -28,25 +29,53 @@ model Publication{
 model Post {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   title  String
-  summary String
+  displayTitle String?
+  summary String?
   thumbnail String?
-  body Json
+  body PostBody
   cover String?
   tags String[]
-  isDraft Boolean
   category String?
   slug String? @default(cuid())
   visibility Visibility @default(private)
   scheduledAt DateTime?
-  createdAt DateTime @default(now())
-  postedAt DateTime?
   language String?
   author String? @db.ObjectId
+  isDraft Boolean
+  draft EditingPost?
+
+  // reading time estimated on serverside based on https://github.com/ngryman/reading-time
+  readingTime Int?
+  createdAt DateTime @default(now())
+  lastEditAt DateTime? @default(now())
+  postedAt DateTime?
   publication  Publication  @relation(fields: [publicationId], references: [id])
   publicationId String @db.ObjectId
 
   // slugs are unique in publication
   @@unique([slug, publicationId])
+}
+
+// Editing post is used when post is being updated after it has been published
+// once posted / updated, this object will be removed from parent.
+type EditingPost{
+  title  String
+  displayTitle String
+  summary String
+  body PostBody
+  cover String?
+  // thumbnail - editing thumbnail will be affected to production immediately
+  // tags - editing tags will be affected to production immediately
+}
+
+type PostBody{
+  html String?
+}
+
+// private comments for editors
+type PrivateNote{
+  body String
+  replies String
 }
 
 enum Visibility{
