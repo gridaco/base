@@ -21,7 +21,7 @@ router.get("/", async (req, res) => {
 
 // create new draft
 router.post("/", async (req, res) => {
-  const { title, publication } = req.body; // as ??
+  const { title, publication, visibility } = req.body; // as ??
   // 1. create new draft
   // 2. return draft id
 
@@ -34,10 +34,10 @@ router.post("/", async (req, res) => {
       },
       // we can create new draft document optionally with title.
       title: title ?? "",
-      summary: "",
+      displayTitle: title,
       body: {},
       isDraft: true,
-      visibility: "private",
+      visibility: visibility ?? "private",
       author: undefined, // TODO:
     },
   });
@@ -69,4 +69,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+router.post("/discard", (req, res) => {
+  // discard draft
+});
 export default router;

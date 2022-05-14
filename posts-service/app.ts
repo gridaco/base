@@ -1,16 +1,29 @@
-import * as express from "express";
-import * as useragent from "express-useragent";
-import * as cors from "cors";
-import * as bodyParser from "body-parser";
+import express from "express";
+import useragent from "express-useragent";
+import cors from "cors";
+import bodyParser from "body-parser";
 import router from "./routes";
+
+function logErrors(err, req, res, next) {
+  console.error(err.stack);
+  next(err);
+}
 
 const app = express();
 
 app.use(cors());
 
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
+
 app.use(useragent.express());
 
 app.use(bodyParser.json());
+
+app.use(logErrors);
 
 app.use(router);
 
