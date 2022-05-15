@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.79.0",
+    "@aws-sdk/s3-request-presigner": "^3.88.0",
     "@prisma/client": "3.14.0",
     "@vendia/serverless-express": "^4.8.0",
     "body-parser": "^1.20.0",
