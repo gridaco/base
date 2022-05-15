@@ -43,6 +43,7 @@ model Post {
   author String? @db.ObjectId
   isDraft Boolean
   draft EditingPost?
+  assets PostAsset[]
 
   // reading time estimated on serverside based on https://github.com/ngryman/reading-time
   readingTime Int?
@@ -76,6 +77,21 @@ type PostBody{
 type PrivateNote{
   body String
   replies String
+}
+
+model PostAsset{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  post Post @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+  // rather if the asset is removable permanently. - true if the asset is on drafting post.
+  removalble Boolean @default(true)
+  createdAt DateTime @default(now())
+  // absolute path of the asset
+  path String @unique
+  // full url to the asset (s3)
+  url String @unique
+  // name of the asset e.g. image-001.png
+  key String
 }
 
 enum Visibility{
