@@ -48,6 +48,7 @@ const router = express.Router();
 
 router.post("/upload", m.array("files", 25), (req, res) => {
   // TODO:
+  //
 });
 
 // request the asset uploader client
@@ -58,7 +59,7 @@ router.get("/client", async (req, res) => {
   const postid = post ?? _post;
   assert(postid, '"post" is required');
 
-  const path = "CHANGEME!!!!!"; // TODO:
+  const path = buildPath(postid);
   const abskey = path + "/" + key;
   // Create a command to put the object in the S3 bucket.
   const command = new PutObjectCommand({
@@ -84,3 +85,7 @@ router.get("/client", async (req, res) => {
 });
 
 export default router;
+
+function buildPath(postid: string) {
+  return `posts/${postid}`;
+}

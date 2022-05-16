@@ -263,6 +263,54 @@ router.post("/:id/summary", async (req, res) => {
   });
 });
 
+/**
+ * set the thumbnail (put)
+ *
+ * methods:
+ * - 1: use the existing asset (w/id)
+ * - 2: use the existing asset (w/url or key)
+ * - 3: upload new asset for thumbnail
+ */
+router.put("/:id/thumbnail", async (req, res) => {
+  //
+  // TODO:
+  // 1. remove the previous thumbnail if not referenced in the body.
+});
+
+/**
+ * get the available thumbnails for this post (uploaded assets)
+ *
+ * 1. get the post's body and cover
+ * 2. get the available assets inside the body
+ *  - this is required because on the client side, we have to make user select asset that is present on the current post (or draft).
+ * 3. return the available thumbnail data
+ */
+router.get("/:id/thumbnails", async (req, res) => {
+  const { id } = req.query;
+
+  const post = await prisma.post.findUnique({
+    where: {
+      id: id as string,
+    },
+    select: {
+      body: true,
+      thumbnail: true,
+      draft: true,
+      cover: true,
+      assets: true,
+    },
+  });
+
+  const { body, draft, assets, thumbnail, cover } = post;
+  // parse the html, find the asset
+  const acceptable = [];
+
+  // find asset used in the html body. (parse, find in img tag)
+
+  body.html;
+  draft.body.html;
+});
+
 router.put("/:id/draft", async (req, res) => {
   const { id } = req.params;
   const { title, body, displayTitle, summary, cover } = req.body;
@@ -315,8 +363,6 @@ router.put("/:id/body", async (req, res) => {
     data: {
       lastEditAt: new Date(),
       body: {
-        // TODO:
-        $scheme: "html",
         html,
       },
     },

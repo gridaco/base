@@ -3,7 +3,7 @@ import { prisma } from "../../prisma-client";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  // get publications
+  // get publications from my workspace
   const workspace = ""; // TODO: get my workspace
   const publications = await prisma.publication.findMany({
     where: {

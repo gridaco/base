@@ -15,6 +15,7 @@ model Publication{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   workspace String
   name String
+  hosts PublicationHost[]
   logo String?
   cover String?
   slug String @unique @default(cuid())
@@ -24,6 +25,13 @@ model Publication{
 
   // publication slug must be unique per workspace
   @@unique([slug, workspace])
+}
+
+type PublicationHost{
+  // e.g https://blog.grida.co/posts
+  homepage String
+  // e.g /[id] - https://blog.grida.co/posts/[id]
+  pattern String @default("/[id]")
 }
 
 model Post {
