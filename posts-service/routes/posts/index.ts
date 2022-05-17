@@ -488,24 +488,24 @@ router.put(`/:id`, m.array("assets"), async (req, res) => {
   const assets = req.files;
 
   try {
-    const path = buildPath("??", {
-      post: id,
-    });
+    // const path = buildPath("??", {
+    //   post: id,
+    // });
 
-    if (assets && Array.isArray(assets)) {
-      const uploads: Array<Promise<any>> = [];
-      assets.forEach((asset) => {
-        const { buffer, originalname, mimetype } = asset;
-        uploads.push(
-          uploadAssets({
-            path,
-            file: { body: buffer, mimetype: mimetype ?? "image/png" },
-            key: originalname,
-          })
-        );
-      });
-      const uploadedAssets = await Promise.all(uploads);
-    }
+    // if (assets && Array.isArray(assets)) {
+    //   const uploads: Array<Promise<any>> = [];
+    //   assets.forEach((asset) => {
+    //     const { buffer, originalname, mimetype } = asset;
+    //     uploads.push(
+    //       uploadAssets({
+    //         path,
+    //         file: { body: buffer, mimetype: mimetype ?? "image/png" },
+    //         key: originalname,
+    //       })
+    //     );
+    //   });
+    //   const uploadedAssets = await Promise.all(uploads);
+    // }
 
     res.json({
       status: "ok",
