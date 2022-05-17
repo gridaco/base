@@ -1,5 +1,5 @@
 import * as express from "express";
-import { prisma } from "../../prisma-client";
+import { prisma, selectors } from "../../prisma-client";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -24,6 +24,20 @@ router.get("/:id", async (req, res) => {
   });
 
   res.json(publication);
+});
+
+router.get("/:id/posts", async (req, res) => {
+  // get publication
+  const { id } = req.params;
+
+  const posts = await prisma.post.findMany({
+    where: {
+      publicationId: id,
+    },
+    select: selectors.post_summary_select,
+  });
+
+  res.json(posts);
 });
 
 router.post("/", async (req, res) => {

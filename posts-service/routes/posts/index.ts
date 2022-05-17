@@ -56,11 +56,16 @@ interface PostsListQuery<OrderBy> extends ListQuery<OrderBy> {
    * when all undefined, include with authorization
    */
   scheduled: UrlQueryBooleanLike;
+
+  /**
+   * target publication
+   */
+  publication?: string;
 }
 
 // *PUBLIC
 router.get("/", async (req, res) => {
-  const { t, p, s, draft, posted, scheduled } =
+  const { t, p, s, draft, posted, scheduled, publication } =
     req.query as any as PostsListQuery<
       | "createdAt-asc"
       | "createdAt-desc"
@@ -76,10 +81,15 @@ router.get("/", async (req, res) => {
   const posts = await prisma.post.findMany({
     where: {
       // published: true,
-      isDraft: false,
+      isDraft: publication ? undefined : false, // if publication specified, include drafts. else, exclude drafts.
       visibility: "public", // if authenticated, show all >> ? undefined
+      publicationId: publication,
     },
-    select: selectors.post_summary_select,
+    select: {
+      ...selectors.post_summary_select,
+      isDraft: publication ? true : undefined,
+      scheduledAt: publication ? true : undefined,
+    },
     orderBy: {
       createdAt: "desc",
     },
