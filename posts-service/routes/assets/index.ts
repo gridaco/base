@@ -1,54 +1,46 @@
 import * as express from "express";
 import multer from "multer";
-import * as AWS from "@aws-sdk/client-s3";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import assert from "assert";
+import { makeClient, upload, buildPath } from "../../lib";
 
-const POSTS_CMS_BUKET = "cms-posts";
-const client = new AWS.S3({});
-
-export async function upload(
-  path: string,
-  file: { body: string | Buffer; mimetype?: string; encoding?: string },
-  key: string
-) {
-  const command = new PutObjectCommand({
-    Bucket: POSTS_CMS_BUKET,
-    Key: path + "/" + key,
-    Body: file.body,
-    ContentEncoding: file.encoding,
-    ContentType: file.mimetype,
-    ACL: "public-read",
-  });
-  return await client.send(command);
-}
-
-/**
- * use this for exporting the post as html file for faster access and downloading.
- * @returns
- */
-export async function uploadDocument({
-  path,
-  id,
-  document,
-}: {
-  path: string;
-  id: string;
-  document: string;
-}) {
-  return await upload(path, { body: document, mimetype: "text/html" }, id);
-}
+const router = express.Router();
 
 const m = multer({
   storage: multer.memoryStorage(),
 });
 
-const router = express.Router();
+router.post("/:id/upload", m.array("files", 25), async (req, res) => {
+  const { id } = req.query as { id: string };
+  const assets = req.files;
 
-router.post("/upload", m.array("files", 25), (req, res) => {
-  // TODO:
-  //
+  const uploads: Array<Promise<any>> = [];
+
+  if (assets && Array.isArray(assets)) {
+    assets.forEach((asset) => {
+      const { buffer, originalname, mimetype } = asset;
+      uploads.push(
+        upload(
+          id,
+          { body: buffer, mimetype: mimetype ?? "image/png" },
+          originalname
+        )
+      );
+    });
+  }
+
+  try {
+    await Promise.all(uploads);
+    res.json({
+      status: "ok",
+      post_id: id,
+      asset_path: id + "/",
+    });
+  } catch (e) {
+    res.status(500).json({
+      status: "error",
+      message: e.message,
+    });
+  }
 });
 
 // request the asset uploader client
@@ -61,20 +53,11 @@ router.get("/client", async (req, res) => {
 
   const path = buildPath(postid);
   const abskey = path + "/" + key;
-  // Create a command to put the object in the S3 bucket.
-  const command = new PutObjectCommand({
-    Bucket: POSTS_CMS_BUKET,
-    Key: abskey,
-    Body: "BODY",
-    ContentEncoding: encoding,
-    ContentType: mimetype,
-    ACL: "public-read", // TODO: follow the post visibility -> but for to be visible on editor, it needs to be public...hmm
-  });
 
-  // Create the presigned URL.
   const expiresIn = 3600;
-  const signedUrl = await getSignedUrl(client, command, {
-    expiresIn: 3600,
+  const signedUrl = await makeClient(abskey, {
+    encoding,
+    mimetype,
   });
 
   res.json({
@@ -85,7 +68,3 @@ router.get("/client", async (req, res) => {
 });
 
 export default router;
-
-function buildPath(postid: string) {
-  return `posts/${postid}`;
-}

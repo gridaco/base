@@ -16,7 +16,9 @@ model Publication{
   workspace String
   name String
   hosts PublicationHost[]
+  // public image
   logo String?
+  // public image
   cover String?
   slug String @unique @default(cuid())
   createdAt DateTime @default(now())
@@ -28,10 +30,14 @@ model Publication{
 }
 
 type PublicationHost{
+  // optional display name (e.g. blog)
+  name String?
   // e.g https://blog.grida.co/posts
   homepage String
-  // e.g /[id] - https://blog.grida.co/posts/[id]
-  pattern String @default("/[id]")
+  // e.g blog.grida.co
+  // host String
+  // e.g /posts/:id - https://blog.grida.co/posts/:id
+  pattern String @default("/:id")
 }
 
 model Post {

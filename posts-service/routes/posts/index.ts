@@ -1,7 +1,7 @@
 import * as express from "express";
 import multer from "multer";
 import { prisma, selectors } from "../../prisma-client";
-import { uploadAssets, buildPath } from "../../lib";
+import { upload, buildPath } from "../../lib";
 import type { CreateDraftPostRequest } from "../../types";
 import readingTime from "reading-time";
 
@@ -128,6 +128,12 @@ router.post("/scheduled", async (req, res) => {
 // *PUBLIC
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
+  const { preview } = req.query;
+
+  const _q_show_preview =
+    preview === "true" || preview === "1" || preview === "y";
+
+  // if preview, show drafting content if already published. if not, show the post itself (a draft)
 
   // 1. fetch post detail (for render & edit)
   const post = await prisma.post.findUnique({
@@ -271,7 +277,39 @@ router.post("/:id/summary", async (req, res) => {
  * - 2: use the existing asset (w/url or key)
  * - 3: upload new asset for thumbnail
  */
-router.put("/:id/thumbnail", async (req, res) => {
+router.put("/:id/thumbnail", m.single("thumbnail"), async (req, res) => {
+  const { id } = req.query as { id: string };
+  if (req.files) {
+    const thumbnail = req.file;
+    const { buffer, originalname, mimetype } = thumbnail;
+
+    const path = "posts/" + id + "/" + originalname;
+    const s3path = "https://cms-posts.s3.us-west-1.amazonaws.com/" + path;
+    await upload(
+      "posts/" + id,
+      { body: buffer, mimetype: mimetype ?? "image/png" },
+      originalname
+    );
+
+    await prisma.post.update({
+      where: { id },
+      data: {
+        thumbnail: s3path,
+      },
+    });
+
+    res.json({
+      thumbnail: s3path,
+    });
+
+    return;
+  }
+
+  if (req.body) {
+    // 1. use existing asset (already hosted)
+    // TODO:
+    return;
+  }
   //
   // TODO:
   // 1. remove the previous thumbnail if not referenced in the body.
