@@ -280,27 +280,31 @@ router.post("/:id/summary", async (req, res) => {
 router.put("/:id/thumbnail", m.single("thumbnail"), async (req, res) => {
   const { id } = req.query as { id: string };
   if (req.files) {
-    const thumbnail = req.file;
-    const { buffer, originalname, mimetype } = thumbnail;
+    try {
+      const thumbnail = req.file;
+      const { buffer, originalname, mimetype } = thumbnail;
 
-    const path = "posts/" + id + "/" + originalname;
-    const s3path = "https://cms-posts.s3.us-west-1.amazonaws.com/" + path;
-    await upload(
-      "posts/" + id,
-      { body: buffer, mimetype: mimetype ?? "image/png" },
-      originalname
-    );
+      const path = "posts/" + id + "/" + originalname;
+      const s3path = "https://cms-posts.s3.us-west-1.amazonaws.com/" + path;
+      await upload(
+        "posts/" + id,
+        { body: buffer, mimetype: mimetype ?? "image/png" },
+        originalname
+      );
 
-    await prisma.post.update({
-      where: { id },
-      data: {
+      await prisma.post.update({
+        where: { id },
+        data: {
+          thumbnail: s3path,
+        },
+      });
+
+      res.json({
         thumbnail: s3path,
-      },
-    });
-
-    res.json({
-      thumbnail: s3path,
-    });
+      });
+    } catch (e) {
+      console.error("error while putting thumbnail with multipart upload", e);
+    }
 
     return;
   }
