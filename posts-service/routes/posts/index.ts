@@ -5,6 +5,8 @@ import { upload, buildPath } from "../../lib";
 import type { CreateDraftPostRequest } from "../../types";
 import readingTime from "reading-time";
 
+const S3_URL = process.env.S3_URL;
+
 const router = express.Router();
 
 const m = multer({
@@ -296,7 +298,7 @@ router.put("/:id/thumbnail", m.single("thumbnail"), async (req, res) => {
       const ext = originalname.split(".").pop();
       const name = ext ? "thumbnail." + ext : "thumbnail";
       const path = "posts/" + id + "/" + name;
-      const s3path = "https://cms-posts.s3.us-west-1.amazonaws.com/" + path;
+      const s3path = S3_URL + "/" + path;
       await upload(
         "posts/" + id,
         { body: buffer, mimetype: mimetype ?? "image/*" },
