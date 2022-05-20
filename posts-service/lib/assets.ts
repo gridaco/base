@@ -7,11 +7,11 @@ const client = new AWS.S3({});
 export async function upload(
   path: string,
   file: { body: string | Buffer; mimetype?: string; encoding?: string },
-  key: string
+  key?: string
 ) {
   const command = new PutObjectCommand({
     Bucket: POSTS_CMS_BUKET,
-    Key: path + "/" + key,
+    Key: key ? path + "/" + key : path,
     Body: file.body,
     ContentEncoding: file.encoding,
     ContentType: file.mimetype,
