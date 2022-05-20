@@ -23,6 +23,7 @@ provider:
   name: aws
   environment:
     DATABASE_URL: ${env:DATABASE_URL}
+    S3_URL: ${env:S3_URL}
   runtime: nodejs12.x
   region: us-west-1
   apiGateway:

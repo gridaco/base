@@ -12,7 +12,7 @@ const m = multer({
 });
 
 router.post("/:id/upload", m.array("files", 25), async (req, res) => {
-  const { id: postid } = req.query as { id: string };
+  const { id: postid } = req.params as { id: string };
   const assets = req.files ?? (req.file && [req.file]);
 
   const uploads: Array<Promise<any>> = [];
