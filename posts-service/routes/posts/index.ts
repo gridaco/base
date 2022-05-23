@@ -206,7 +206,7 @@ router.get("/:id", async (req, res) => {
   }
 
   res.json({
-    post,
+    ...post,
   });
 });
 
