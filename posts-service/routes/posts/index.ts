@@ -93,6 +93,7 @@ router.get("/", async (req, res) => {
       scheduledAt: publication ? true : undefined,
     },
     orderBy: {
+      postedAt: "desc",
       createdAt: "desc",
     },
     take: t ?? 100,
@@ -186,7 +187,7 @@ router.get("/:id", async (req, res) => {
       },
     },
     orderBy: {
-      postedAt: "desc",
+      postedAt: "asc",
     },
     select: selectors.post_summary_select,
   });
