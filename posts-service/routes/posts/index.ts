@@ -94,7 +94,6 @@ router.get("/", async (req, res) => {
     },
     orderBy: {
       postedAt: "desc",
-      createdAt: "desc",
     },
     take: t ?? 100,
   });
