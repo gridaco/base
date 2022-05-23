@@ -154,47 +154,59 @@ router.get("/:id", async (req, res) => {
     },
   });
 
-  const q = {
-    id: {
-      not: id,
-    },
-    publication: {
-      id: post.publicationId,
-    },
-    isDraft: false,
-    scheduledAt: null,
-  };
+  const isPosted =
+    // next/prev query requires postedAt to be set
+    post.postedAt !== null &&
+    // extra explicit safety guard
+    !post.isDraft;
 
-  const prev = await prisma.post.findFirst({
-    where: {
-      ...q,
-      postedAt: {
-        lte: post.postedAt,
+  if (isPosted) {
+    const q = {
+      id: {
+        not: id,
       },
-    },
-    orderBy: {
-      postedAt: "desc",
-    },
-    select: selectors.post_summary_select,
-  });
+      publication: {
+        id: post.publicationId,
+      },
+      isDraft: false,
+      scheduledAt: null,
+    };
 
-  const next = await prisma.post.findFirst({
-    where: {
-      ...q,
-      postedAt: {
-        gte: post.postedAt,
+    const prev = await prisma.post.findFirst({
+      where: {
+        ...q,
+        postedAt: {
+          lte: post.postedAt,
+        },
       },
-    },
-    orderBy: {
-      postedAt: "asc",
-    },
-    select: selectors.post_summary_select,
-  });
+      orderBy: {
+        postedAt: "desc",
+      },
+      select: selectors.post_summary_select,
+    });
+
+    const next = await prisma.post.findFirst({
+      where: {
+        ...q,
+        postedAt: {
+          gte: post.postedAt,
+        },
+      },
+      orderBy: {
+        postedAt: "asc",
+      },
+      select: selectors.post_summary_select,
+    });
+
+    res.json({
+      ...post,
+      previous: prev,
+      next: next,
+    });
+  }
 
   res.json({
-    ...post,
-    previous: prev,
-    next: next,
+    post,
   });
 });
 
