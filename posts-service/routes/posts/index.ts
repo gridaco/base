@@ -154,7 +154,48 @@ router.get("/:id", async (req, res) => {
     },
   });
 
-  res.json(post);
+  const q = {
+    id: {
+      not: id,
+    },
+    publication: {
+      id: post.publicationId,
+    },
+    isDraft: false,
+    scheduledAt: null,
+  };
+
+  const prev = await prisma.post.findFirst({
+    where: {
+      ...q,
+      postedAt: {
+        lte: post.postedAt,
+      },
+    },
+    orderBy: {
+      postedAt: "desc",
+    },
+    select: selectors.post_summary_select,
+  });
+
+  const next = await prisma.post.findFirst({
+    where: {
+      ...q,
+      postedAt: {
+        gte: post.postedAt,
+      },
+    },
+    orderBy: {
+      postedAt: "desc",
+    },
+    select: selectors.post_summary_select,
+  });
+
+  res.json({
+    ...post,
+    previous: prev,
+    next: next,
+  });
 });
 
 router.post("/:id/publish", async (req, res) => {
