@@ -26,9 +26,7 @@ router.post("/:id/upload", m.array("files", 25), async (req, res) => {
       const name = ext ? cuid + "." + ext : cuid;
       const path = "posts/" + postid + "/" + name;
       const s3path = S3_URL + "/" + path;
-      uploads.push(
-        upload(path, { body: buffer, mimetype: mimetype ?? "image/png" })
-      );
+      uploads.push(upload(path, { body: buffer, mimetype: mimetype }));
       results[originalname] = s3path;
     });
   }

@@ -8,15 +8,22 @@ router.get("/", async (req, res) => {
   // 0. auth guard - publication check
   // 1. list all drafts (as summary)
 
+  const { publication } = req.query;
+
   const posts = await prisma.post.findMany({
     where: {
-      // TODO: publication:
+      publication: publication
+        ? {
+            id: publication as string,
+          }
+        : undefined,
       isDraft: true,
+      visibility: publication ? undefined : "public",
     },
     select: selectors.post_summary_select,
   });
 
-  res.status(200).json(posts);
+  res.json(posts);
 });
 
 // create new draft
