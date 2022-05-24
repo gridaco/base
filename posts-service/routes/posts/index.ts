@@ -537,6 +537,8 @@ router.put("/:id/tags", async (req, res) => {
       tags: tags,
     },
   });
+
+  res.json({ tags: post.tags });
 });
 
 router.post("/:id/schedule", async (req, res) => {
