@@ -225,6 +225,7 @@ router.post("/:id/publish", async (req, res) => {
       body: true,
       title: true,
       draft: true,
+      postedAt: true,
     },
   });
 
@@ -245,7 +246,8 @@ router.post("/:id/publish", async (req, res) => {
       body: _post.draft?.body ?? undefined, // update body if draft exists
       cover: _post.draft?.cover ?? undefined, // update body if draft exists
       // endregion update production data
-      postedAt: new Date(),
+      postedAt: _post.postedAt ? undefined : new Date(), // if already posted (with date info), don't update the date.
+      lastEditAt: new Date(),
       visibility: visibility ?? "public",
       readingTime: rts,
       scheduledAt: null, // clear schedule
