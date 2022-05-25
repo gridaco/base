@@ -86,12 +86,12 @@ router.get("/", async (req, res) => {
       isDraft: publication ? undefined : false, // if publication specified, include drafts. else, exclude drafts.
       visibility: "public", // if authenticated, show all >> ? undefined
       publicationId: publication,
+      isListed: publication ? undefined : true, // only listed posts if publication is not specified
     },
     select: {
       ...selectors.post_summary_select,
       isDraft: publication ? true : undefined,
       scheduledAt: publication ? true : undefined,
-      isListed: publication ? undefined : true, // only listed posts if publication is not specified
     },
     orderBy: {
       postedAt: "desc",
