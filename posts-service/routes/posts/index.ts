@@ -192,6 +192,7 @@ router.get("/:id", async (req, res) => {
         id: post.publicationId,
       },
       isDraft: false,
+      isListed: true,
       scheduledAt: null,
     };
 
@@ -223,6 +224,7 @@ router.get("/:id", async (req, res) => {
 
     res.json({
       ...post,
+      // prev & next listed post
       previous: prev,
       next: next,
     });
