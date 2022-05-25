@@ -13,5 +13,6 @@ export const post_summary_select: Prisma.PostSelect = {
   readingTime: true,
   createdAt: true,
   postedAt: true,
+  isListed: true,
   publicationId: true,
 };

@@ -91,6 +91,7 @@ router.get("/", async (req, res) => {
       ...selectors.post_summary_select,
       isDraft: publication ? true : undefined,
       scheduledAt: publication ? true : undefined,
+      isListed: publication ? undefined : true, // only listed posts if publication is not specified
     },
     orderBy: {
       postedAt: "desc",
@@ -268,7 +269,8 @@ router.post("/:id/publish", async (req, res) => {
       body: _post.draft?.body ?? undefined, // update body if draft exists
       cover: _post.draft?.cover ?? undefined, // update body if draft exists
       // endregion update production data
-      postedAt: _post.postedAt ? undefined : new Date(), // if already posted (with date info), don't update the date.
+      postedAt: _post.postedAt ? undefined : new Date(), // if already posted (with date info), don't update the date. // also do not update the postedAt as well, if previously unlisted.
+      isListed: true,
       lastEditAt: new Date(),
       visibility: visibility ?? "public",
       readingTime: rts,
@@ -289,13 +291,11 @@ router.post("/:id/unlist", async (req, res) => {
       id: id,
     },
     data: {
-      // TODO: remove published at?
-      postedAt: null, // clear
-      // published: false,
+      isListed: false,
     },
   });
 
-  res.status(200).json(post);
+  res.json(post);
 });
 
 router.post("/:id/visibility", async (req, res) => {

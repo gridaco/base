@@ -44,6 +44,7 @@ router.post("/", async (req, res) => {
       displayTitle: title,
       body: {},
       isDraft: true,
+      isListed: false,
       visibility: visibility ?? "private",
       author: undefined, // TODO:
     },
