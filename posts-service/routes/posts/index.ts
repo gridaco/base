@@ -101,6 +101,28 @@ router.get("/", async (req, res) => {
   res.json(posts);
 });
 
+router.delete("/:id", async (req, res) => {
+  // TODO: add auth guard
+  const { id } = req.params;
+  const candelete = prisma.post.findFirst({
+    where: {
+      id,
+      // TODO: allow delete on only unlisted or draft post.
+    },
+  });
+
+  if (candelete) {
+    await prisma.post.delete({
+      where: {
+        id,
+      },
+    });
+    res.json({ id: id });
+  } else {
+    res.status(400).json({ message: "cannot delete" });
+  }
+});
+
 router.post("/unlisted", async (req, res) => {
   // 0. auth guard - post permission
   // 1. get all unlisted posts (non draft)
