@@ -71,8 +71,11 @@ export function buildPath(postid: string, key?: string) {
   return `posts/${postid}${key ? "/" + key : ""}`;
 }
 
-export function filename(originalname?: string): string {
-  const ext = originalname.split(".").pop();
+export function filename(originalname?: string, force?: string): string {
+  const ext = originalname?.split(".").pop();
   const cuid = nanoid();
-  return ext ? cuid + "." + ext : cuid;
+  if (force) {
+    return ext ? force + "." + ext : force; // e.g. thumbnail.png
+  }
+  return ext ? cuid + "." + ext : cuid; // e.g. SGewihs24A4g2.png
 }

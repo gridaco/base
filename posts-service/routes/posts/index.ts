@@ -1,7 +1,7 @@
 import * as express from "express";
 import multer from "multer";
 import { prisma, selectors } from "../../prisma-client";
-import { upload, buildPath } from "../../lib";
+import { upload, buildPath, filename } from "../../lib";
 import type { CreateDraftPostRequest } from "../../types";
 import readingTime from "reading-time";
 
@@ -374,9 +374,8 @@ router.put("/:id/thumbnail", m.single("thumbnail"), async (req, res) => {
     try {
       const thumbnail = req.file;
       const { buffer, originalname, mimetype } = thumbnail;
-      const ext = originalname.split(".").pop();
-      const name = ext ? "thumbnail." + ext : "thumbnail";
-      const path = "posts/" + id + "/" + name;
+      const name = filename(originalname, "thumbnail");
+      const path = buildPath(id, name);
       const s3path = S3_URL + "/" + path;
       await upload(
         "posts/" + id,
