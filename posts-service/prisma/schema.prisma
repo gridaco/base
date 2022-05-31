@@ -7,66 +7,101 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
-model Publication{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
+model Editor {
+  id           String                @id @default(auto()) @map("_id") @db.ObjectId
+  // the unique user id from auth privider, which is an Grida Account ID
+  uid          String                @unique
+  // the unique user username from auth privider, which is an Grida username
+  username     String                @unique
+  // name to be shown to the readers (and collaborators on posts)
+  name         String
+  bio          String?
+  avatar       String?
+  publications EditorOnPublication[]
+  posts        Post[]                @relation("author-posts")
+}
+
+model EditorOnPublication {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  editorID      String      @db.ObjectId
+  publicationID String      @db.ObjectId
+  editor        Editor      @relation(fields: [editorID], references: [id])
+  publication   Publication @relation(fields: [publicationID], references: [id])
+  role          EditorRole  @default(value: editor)
+}
+
+enum EditorRole {
+  owner
+  editor
+  writer
+}
+
+model Publication {
+  id        String                @id @default(auto()) @map("_id") @db.ObjectId
   workspace String
-  name String
-  hosts PublicationHost[]
+  name      String
+  hosts     PublicationHost[]
   // public image
-  logo String?
+  logo      String?
   // public image
-  cover String?
-  slug String @unique @default(cuid())
-  createdAt DateTime @default(now())
-  posts Post[]
+  cover     String?
+  slug      String                @unique @default(cuid())
+  createdAt DateTime              @default(now())
+  posts     Post[]
+  editors   EditorOnPublication[]
   // featuredPosts Post[] @relation(fields: [featuredPostIds], references: [id], name: "a")
 
   // publication slug must be unique per workspace
   @@unique([slug, workspace])
 }
 
-type PublicationHost{
+type PublicationHost {
   // optional display name (e.g. blog)
-  name String?
+  name     String?
   // e.g https://blog.grida.co/posts
   homepage String
   // e.g blog.grida.co
   // host String
   // e.g /posts/:id - https://blog.grida.co/posts/:id
-  pattern String @default("/:id")
+  pattern  String  @default("/:id")
 }
 
 model Post {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  title  String
+  id           String       @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
   displayTitle String?
-  summary String?
-  thumbnail String?
-  body PostBody
-  cover String?
-  tags String[]
-  category String?
-  slug String? @default(cuid())
-  visibility Visibility @default(private)
-  scheduledAt DateTime?
-  language String?
-  author String? @db.ObjectId
-  isDraft Boolean
-  isListed Boolean @default(false)
-  draft EditingPost?
-  assets PostAsset[]
+  summary      String?
+  thumbnail    String?
+  body         PostBody
+  cover        String?
+  tags         String[]
+  category     String?
+  slug         String?      @default(cuid())
+  visibility   Visibility   @default(private)
+  scheduledAt  DateTime?
+  language     String?
+  author       Editor?      @relation("author-posts", fields: [authorID], references: [id])
+  authorID     String?
+
+  // TODO: add co authors
+  // coAuthors      Editor[]     @relation("co-author-posts", fields: [coAuthorsIDs], references: [id])
+  // coAuthorsIDs    String[]
+  isDraft      Boolean
+  isListed     Boolean      @default(false)
+  draft        EditingPost?
+  assets       PostAsset[]
 
   // reading time estimated on serverside based on https://github.com/ngryman/reading-time
-  readingTime Int?
-  createdAt DateTime @default(now())
-  lastEditAt DateTime? @default(now())
-  postedAt DateTime?
-  publication  Publication  @relation(fields: [publicationId], references: [id])
-  publicationId String @db.ObjectId
+  readingTime   Int?
+  createdAt     DateTime    @default(now())
+  lastEditAt    DateTime?   @default(now())
+  postedAt      DateTime?
+  publication   Publication @relation(fields: [publicationId], references: [id])
+  publicationId String      @db.ObjectId
 
   // slugs are unique in publication
   @@unique([slug, publicationId])
@@ -74,42 +109,42 @@ model Post {
 
 // Editing post is used when post is being updated after it has been published
 // once posted / updated, this object will be removed from parent.
-type EditingPost{
-  title  String
+type EditingPost {
+  title        String
   displayTitle String
-  summary String
-  body PostBody
-  cover String?
+  summary      String
+  body         PostBody
+  cover        String?
   // thumbnail - editing thumbnail will be affected to production immediately
   // tags - editing tags will be affected to production immediately
 }
 
-type PostBody{
+type PostBody {
   html String?
 }
 
 // private comments for editors
-type PrivateNote{
-  body String
+type PrivateNote {
+  body    String
   replies String
 }
 
-model PostAsset{
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  post Post @relation(fields: [postId], references: [id])
-  postId String @db.ObjectId
+model PostAsset {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     String   @db.ObjectId
   // rather if the asset is removable permanently. - true if the asset is on drafting post.
-  removalble Boolean @default(true)
-  createdAt DateTime @default(now())
+  removalble Boolean  @default(true)
+  createdAt  DateTime @default(now())
   // absolute path of the asset
-  path String @unique
+  path       String   @unique
   // full url to the asset (s3)
-  url String @unique
+  url        String   @unique
   // name of the asset e.g. image-001.png
-  key String
+  key        String
 }
 
-enum Visibility{
+enum Visibility {
   public
   private
   password_protected

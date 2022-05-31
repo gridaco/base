@@ -2,6 +2,9 @@ import * as express from "express";
 import { prisma, selectors } from "../../prisma-client";
 const router = express.Router();
 
+/**
+ * can be public
+ */
 router.get("/", async (req, res) => {
   // get publications from my workspace
   const workspace = ""; // TODO: get my workspace
@@ -67,6 +70,34 @@ router.post("/", async (req, res) => {
       error: "cannot create new publication",
     });
   }
+});
+
+router.get("/:id/editors", async (req, res) => {
+  const { id: publicationid } = req.params;
+  // list all editors under :id publication.
+  const editors = await prisma.editor.findMany({
+    where: {
+      publications: {
+        some: {
+          id: publicationid,
+        },
+      },
+    },
+    select: {
+      uid: true,
+      username: true,
+      name: true,
+      bio: true,
+      avatar: true,
+    },
+  });
+
+  res.json(editors);
+});
+
+router.post("/:id/editors", async (req, res) => {
+  const { id: publicationid } = req.params;
+  //
 });
 
 export default router;
