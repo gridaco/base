@@ -56,10 +56,14 @@ router.post("/:id/client/one-time", async (req, res) => {
   const path = buildPath(postid, name);
 
   const expiresIn = 3600;
-  const signedUrl = await makeClient(path, {
-    encoding,
-    mimetype,
-  });
+  const signedUrl = await makeClient(
+    path,
+    {
+      encoding,
+      mimetype,
+    },
+    { expiresIn }
+  );
   const s3path = S3_URL + "/" + path;
 
   const payload = {

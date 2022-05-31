@@ -3,7 +3,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { nanoid } from "nanoid";
 const POSTS_CMS_BUKET = "cms-posts";
-const client = new AWS.S3({});
+const client = new AWS.S3({
+  // signatureVersion: "v4",
+});
 
 export async function upload(
   path: string,
@@ -39,19 +41,18 @@ export async function uploadDocument({
 
 export async function makeClient(
   abskey: string,
-  { encoding, mimetype }: { encoding; mimetype }
+  { encoding, mimetype }: { encoding; mimetype },
+  { expiresIn }: { expiresIn: number }
 ) {
   const command = new PutObjectCommand({
     Bucket: POSTS_CMS_BUKET,
     Key: abskey,
-    Body: "BODY",
-    ContentEncoding: encoding,
+    // ContentEncoding: encoding,
     ContentType: mimetype,
     ACL: "public-read", // TODO: follow the post visibility -> but for to be visible on editor, it needs to be public...hmm
   });
 
   // Create the presigned URL.
-  const expiresIn = 3600;
   const signedUrl = await getSignedUrl(client, command, {
     expiresIn: expiresIn,
   });
