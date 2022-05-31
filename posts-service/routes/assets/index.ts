@@ -1,7 +1,7 @@
 import * as express from "express";
 import multer from "multer";
 import assert from "assert";
-import { makeClient, upload, buildPath } from "../../lib";
+import { makeClient, upload, buildPath, filename } from "../../lib";
 import { nanoid } from "nanoid";
 
 const S3_URL = process.env.S3_URL;
@@ -21,10 +21,9 @@ router.post("/:id/upload", m.array("files", 25), async (req, res) => {
   if (assets && Array.isArray(assets)) {
     assets.forEach((asset) => {
       const { buffer, originalname, mimetype } = asset;
-      const ext = originalname.split(".").pop();
-      const cuid = nanoid();
-      const name = ext ? cuid + "." + ext : cuid;
-      const path = "posts/" + postid + "/" + name;
+      const name = filename(originalname);
+      const path = buildPath(postid, name);
+      // const path = "posts/" + postid + "/" + name;
       const s3path = S3_URL + "/" + path;
       uploads.push(upload(path, { body: buffer, mimetype: mimetype }));
       results[originalname] = s3path;
@@ -46,19 +45,19 @@ router.post("/:id/upload", m.array("files", 25), async (req, res) => {
   }
 });
 
-// request the asset uploader client
-router.get("/client", async (req, res) => {
-  const { post } = req.query; // post id to link the asset to.
-  const { post: _post, mimetype, key, encoding } = req.body;
+// request the asset uploader client (can be used once)
+router.get("/:id/client/one-time", async (req, res) => {
+  const { id: postid } = req.params; // post id to link the asset to.
 
-  const postid = post ?? _post;
+  const { mimetype, originalname, encoding } = req.body;
+
   assert(postid, '"post" is required');
 
-  const path = buildPath(postid);
-  const abskey = path + "/" + key;
+  const name = filename(originalname);
+  const path = buildPath(postid, name);
 
   const expiresIn = 3600;
-  const signedUrl = await makeClient(abskey, {
+  const signedUrl = await makeClient(path, {
     encoding,
     mimetype,
   });

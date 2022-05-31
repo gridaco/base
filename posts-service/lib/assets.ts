@@ -1,6 +1,7 @@
 import * as AWS from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { nanoid } from "nanoid";
 const POSTS_CMS_BUKET = "cms-posts";
 const client = new AWS.S3({});
 
@@ -60,6 +61,18 @@ export async function makeClient(
 
 export async function removeAssets() {}
 
-export function buildPath(postid: string) {
-  return `posts/${postid}`;
+/**
+ * returns path for the post assets.
+ * "posts/:id"
+ * @param postid
+ * @returns
+ */
+export function buildPath(postid: string, key?: string) {
+  return `posts/${postid}${key ? "/" + key : ""}`;
+}
+
+export function filename(originalname?: string): string {
+  const ext = originalname.split(".").pop();
+  const cuid = nanoid();
+  return ext ? cuid + "." + ext : cuid;
 }
