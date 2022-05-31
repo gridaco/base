@@ -61,12 +61,22 @@ router.get("/:id/client/one-time", async (req, res) => {
     encoding,
     mimetype,
   });
+  const s3path = S3_URL + "/" + path;
 
-  res.json({
-    url: signedUrl,
-    expires_in: expiresIn,
-    expires_at: new Date(Date.now() + expiresIn * 1000),
-  });
+  const payload = {
+    client: {
+      url: signedUrl,
+      expires_in: expiresIn,
+      expires_at: new Date(Date.now() + expiresIn * 1000),
+      mimetype,
+      originalname,
+      path,
+      encoding,
+    },
+    url: s3path,
+  };
+
+  res.json(payload);
 });
 
 export default router;
