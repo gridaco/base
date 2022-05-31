@@ -46,13 +46,12 @@ router.post("/:id/upload", m.array("files", 25), async (req, res) => {
 });
 
 // request the asset uploader client (can be used once)
-router.get("/:id/client/one-time", async (req, res) => {
+router.post("/:id/client/one-time", async (req, res) => {
   const { id: postid } = req.params; // post id to link the asset to.
 
   const { mimetype, originalname, encoding } = req.body;
 
   assert(postid, '"post" is required');
-
   const name = filename(originalname);
   const path = buildPath(postid, name);
 
