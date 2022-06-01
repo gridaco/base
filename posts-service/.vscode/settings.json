@@ -1,8 +1,13 @@
 {
   "files.exclude": {
+    "**/package-lock.json": true,
     "**/.git": true,
     "**/.svn": true,
     "**/.hg": true,
+    "**/.webpack": true,
+    "**/.build": true,
+    "**/.serverless": true,
+    "**/dist": true,
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/Thumbs.db": true,
