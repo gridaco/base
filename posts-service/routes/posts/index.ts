@@ -90,8 +90,8 @@ router.get("/", async (req, res) => {
     },
     select: {
       ...selectors.post_summary_select,
-      isDraft: publication ? true : undefined,
-      scheduledAt: publication ? true : undefined,
+      isDraft: publication ? true : false,
+      scheduledAt: publication ? true : false,
     },
     orderBy: {
       postedAt: "desc",
