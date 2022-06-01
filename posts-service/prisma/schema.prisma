@@ -103,6 +103,8 @@ model Post {
   publication   Publication @relation(fields: [publicationId], references: [id])
   publicationId String      @db.ObjectId
 
+  trackings ReaderTracking[]
+
   // slugs are unique in publication
   @@unique([slug, publicationId])
 }
@@ -148,4 +150,26 @@ enum Visibility {
   public
   private
   password_protected
+}
+
+/// TODO: migrate this to different database
+///
+/// tracking & analytics
+///
+model ReaderTracking{
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  post       Post     @relation(fields: [postId], references: [id])
+  postId     String   @db.ObjectId
+  initialView  DateTime @default(now())
+
+  // tracking data
+  readingTime Int @default(0)
+  progress    Int @default(0)
+
+  referrer   String?
+
+  // ip address of the user
+  ip         String
+  // user agent of the user
+  ua  String
 }

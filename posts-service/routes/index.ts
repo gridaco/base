@@ -5,6 +5,8 @@ import router_assets from "./assets";
 import router_tags from "./tags";
 import router_categories from "./categories";
 import router_publications from "./publications";
+import router_track from "./track";
+import router_analytics from "./analytics";
 import router_utils from "./utils";
 
 const router = express.Router();
@@ -14,6 +16,8 @@ router.use("/assets", router_assets);
 router.use("/tags", router_tags);
 router.use("/categories", router_categories);
 router.use("/publications", router_publications);
+router.use("/track", router_track);
+router.use("/analytics", router_analytics);
 router.use("/", router_posts); // place this last
 
 // utils

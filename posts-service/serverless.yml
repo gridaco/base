@@ -21,6 +21,7 @@ custom:
 
 provider:
   name: aws
+  memorySize: 512
   environment:
     DATABASE_URL: ${env:DATABASE_URL}
     S3_URL: ${env:S3_URL}
