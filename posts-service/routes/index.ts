@@ -9,12 +9,12 @@ import router_utils from "./utils";
 
 const router = express.Router();
 
-router.use("/", router_posts);
 router.use("/drafts", router_drafts);
 router.use("/assets", router_assets);
 router.use("/tags", router_tags);
 router.use("/categories", router_categories);
 router.use("/publications", router_publications);
+router.use("/", router_posts); // place this last
 
 // utils
 router.use("/utils", router_utils);
