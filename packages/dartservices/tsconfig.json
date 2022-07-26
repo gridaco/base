@@ -7,7 +7,7 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    "sourceMap": false,
     "experimentalDecorators": true,
     "noUnusedLocals": false
   },

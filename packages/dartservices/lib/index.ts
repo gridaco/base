@@ -1,10 +1,13 @@
-import Axios, { AxiosInstance } from 'axios';
-import { CompileDDCResponse, CompileRequest, CompileResponse } from './types';
-import { decorateJavascript } from './utils/deocrate-js';
+import Axios, { AxiosInstance } from "axios";
+import { CompileDDCResponse, CompileRequest, CompileResponse } from "./types";
+import { decorateJavascript } from "./utils/deocrate-js";
 
-const DEFAULT_BASE_URL = 'https://dart-services.appspot.com/';
-const BASE_URLS = ['https://dart-services.appspot.com/'];
-const API_PATH = 'api/dartservices/v2';
+const BASE_URLS = {
+  stable: "https://stable.api.dartpad.dev/",
+  beta: "https://beta.api.dartpad.dev/",
+} as const;
+
+const API_PATH = "api/dartservices/v2";
 
 /**
  * this is an error thrown by dart-services server, which is not a client problem, if you get this message, retry api call.
@@ -15,11 +18,36 @@ const COMMON_DDC_ERRORS = [
 /**
  * maximun retry number for handling common serverside errors.
  */
-const MAX_RETRY = 5;
+const DEFAULT_MAX_RETRY = 5;
 
-export class DartServices {
+type CreateOptions =
+  | {
+      baseUrl?: string;
+      channel?: "stable" | "beta";
+    }
+  | {
+      channel?: "stable" | "beta";
+    };
+
+class DartServices {
   readonly axios: AxiosInstance;
-  constructor(private baseUrl: string) {
+
+  static create(
+    options: CreateOptions = {
+      channel: "stable",
+    }
+  ): DartServices {
+    if ("baseUrl" in options) {
+      return new DartServices(options.baseUrl);
+    } else {
+      return new DartServices(BASE_URLS[options.channel ?? "stable"]);
+    }
+  }
+
+  constructor(
+    private readonly baseUrl: string,
+    private readonly maxRetry: number = DEFAULT_MAX_RETRY
+  ) {
     this.axios = Axios.create({
       baseURL: baseUrl + API_PATH,
     });
@@ -38,14 +66,14 @@ export class DartServices {
     cursor?: number
   ): Promise<CompileDDCResponse> {
     try {
-      const res = await this.axios.post('/compileDDC', <CompileRequest>{
+      const res = await this.axios.post("/compileDDC", <CompileRequest>{
         source: source,
       });
       return res.data;
     } catch (e) {
       if (
         COMMON_DDC_ERRORS.some((errmsg) => {
-          return (e.response.data.error?.message ?? ('' as string)).includes(
+          return (e.response.data.error?.message ?? ("" as string)).includes(
             errmsg
           );
         })
@@ -58,20 +86,20 @@ export class DartServices {
         } else {
           // console.log(`retrying with cursor ${cursor}`)
           this.retryCursors[cursor] = this.retryCursors[cursor] + 1;
-          if (this.retryCursors[cursor] > MAX_RETRY) {
+          if (this.retryCursors[cursor] > this.maxRetry) {
             // delete the cursor.
             this.retryCursors.delete(cursor);
-            console.warn('retried, but failed. closing.');
             return {
+              message: "retried, but failed. closing.",
               error: e.response.data.error,
               sucess: false,
             };
           }
         }
-        console.warn(
-          'dart-services failed with serverside issues. retrying.. re entry of',
-          this.retryCursors[cursor]
-        );
+        // console.warn(
+        //   'dart-services failed with serverside issues. retrying.. re entry of',
+        //   this.retryCursors[cursor]
+        // );
         return await this.compileDDC(source, cursor);
       }
       return {
@@ -86,7 +114,7 @@ export class DartServices {
    * @param source
    */
   async compile(source: string): Promise<CompileResponse> {
-    const res = await this.axios.post<CompileResponse>('/compile', <
+    const res = await this.axios.post<CompileResponse>("/compile", <
       CompileRequest
     >{
       source: source,
@@ -119,10 +147,14 @@ export class DartServices {
   }
 }
 
-export const defaultClient = new DartServices(DEFAULT_BASE_URL);
+export const stable = new DartServices(BASE_URLS.stable);
+
+export const beta = new DartServices(BASE_URLS.beta);
 
 export async function compileComplete(
   source: string
 ): Promise<CompileResponse> {
-  return await defaultClient.compileComplete(source);
+  return await stable.compileComplete(source);
 }
+
+export default DartServices;

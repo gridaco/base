@@ -1,20 +1,24 @@
 {
   "name": "dart-services",
-  "version": "0.2.3",
+  "version": "0.2.5",
   "private": false,
   "license": "MIT",
-  "author": "bridged.xyz softmarshmallow",
+  "author": "Grida",
   "main": "dist/index.js",
+  "homepage": "https://github.com/gridaco/base/tree/main/packages/dartservices",
   "repository": {
-    "url": "https://github.com/bridgedxyz/services"
+    "url": "https://github.com/gridaco/base/tree/main/packages/dartservices"
   },
   "scripts": {
-    "prepublish": "tsc"
+    "clean": "rimraf dist",
+    "build": "tsc",
+    "prepack": "yarn clean && yarn build"
   },
-  "dependencies": {
-    "axios": "^0.21.0"
+  "peerDependencies": {
+    "axios": "^0.27.2"
   },
   "devDependencies": {
+    "axios": "^0.27.2",
     "@types/node": "^14.14.5",
     "typescript": "^4.1.2"
   },

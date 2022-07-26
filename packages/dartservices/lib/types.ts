@@ -8,6 +8,7 @@ interface BaseCompileResponse {
   result?: string;
   error?: ErrorMessage;
   took?: number;
+  message?: string;
 }
 
 interface CompileResponse extends BaseCompileResponse {
