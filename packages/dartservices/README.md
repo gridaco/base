@@ -41,6 +41,12 @@ import { compileComplete } from "dart-services";
 compileComplete(maindartsrc);
 ```
 
+## Difference between compileDDC and compileComplete
+
+see - https://github.com/dart-lang/dart-pad/blob/master/lib/services/execution_iframe.dart
+
+The iframe source, https://dartpad.dev/scripts/frame_dark.html requires compiled js with compiledDDC and it needs to be transformed statically following the `execution_iframe.dart`'s logic.
+
 ## References
 
 - [dart-pad](https://github.com/dart-lang/dart-pad)
