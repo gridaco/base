@@ -5,7 +5,7 @@ import { SceneRecord } from "@prisma/client";
 import { PrismaService } from "../_prisma/prisma.service";
 
 const SDK_VER = versions.SdkVersion.v2020_0;
-const PUBLIC_DEMO_PROVIDER = "public-demo";
+const PUBLIC_DEMO_PROVIDER = "examples@grida.co";
 
 // how to handle nested component? -> we should also upload the components linked. how to handle this case.
 @Injectable()
