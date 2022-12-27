@@ -43,6 +43,20 @@ export class ScenesService {
     throw new NotFoundException("resource not found");
   }
 
+  async fetchPublicDemoScene(id: string): Promise<SceneRecord> {
+    // demo guard
+    const isdemo = id.startsWith("demo") || id.startsWith("test");
+    if (isdemo) {
+      const rec = await this.find(id);
+      if (rec) {
+        return rec;
+      }
+    }
+
+    // return 404 instead 403
+    throw new NotFoundException("resource not found");
+  }
+
   async fetchSharedScene(id: string) {
     const rec = this.canReadAsShared(undefined, id);
     if (!rec) {
@@ -106,6 +120,10 @@ export class ScenesService {
         policy: sharing.policy,
       };
     }
+  }
+
+  private async find(id: string): Promise<SceneRecord | undefined> {
+    return await this.prisma.sceneRecord.findUnique({ where: { id } });
   }
 
   private async canAccess(user, id): Promise<SceneRecord | false> {

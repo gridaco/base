@@ -37,6 +37,17 @@ export class ScenesController {
     return await this.scenesService.fetchScene(req.user, id);
   }
 
+  @Get("/demo/:id")
+  async getPublicDemoScene(
+    @Param()
+    params: {
+      id: string;
+    }
+  ) {
+    const id = params.id;
+    return await this.scenesService.fetchPublicDemoScene(id);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post("/:id/sharing")
   async postUpdateSharingPolicy(
