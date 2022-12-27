@@ -45,7 +45,7 @@ export class ScenesService {
   }
 
   async fetchPublicDemoScenes(): Promise<Partial<SceneRecord>[]> {
-    return await this.prisma.sceneRecord.findMany({
+    const demos = await this.prisma.sceneRecord.findMany({
       where: {
         owner: PUBLIC_DEMO_PROVIDER,
         archived: false,
@@ -69,6 +69,12 @@ export class ScenesService {
         updatedAt: true,
       },
     });
+
+    return demos.map(d => ({
+      ...d,
+      // override
+      sharing: "*",
+    }));
   }
 
   async fetchPublicDemoScene(id: string): Promise<SceneRecord> {
@@ -77,7 +83,11 @@ export class ScenesService {
     if (rec) {
       const isdemo = rec.owner === PUBLIC_DEMO_PROVIDER;
       if (isdemo) {
-        return rec;
+        return {
+          ...rec,
+          // override
+          sharing: "*",
+        };
       }
     }
 
