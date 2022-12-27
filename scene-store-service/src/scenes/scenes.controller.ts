@@ -42,7 +42,7 @@ export class ScenesController {
     return await this.scenesService.fetchPublicDemoScenes();
   }
 
-  @Get("/demo/:id")
+  @Get("/demos/:id")
   async getPublicDemoScene(
     @Param()
     params: {
