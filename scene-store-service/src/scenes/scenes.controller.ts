@@ -37,6 +37,11 @@ export class ScenesController {
     return await this.scenesService.fetchScene(req.user, id);
   }
 
+  @Get("/demos")
+  async getPublicDemoScenes() {
+    return await this.scenesService.fetchPublicDemoScenes();
+  }
+
   @Get("/demo/:id")
   async getPublicDemoScene(
     @Param()

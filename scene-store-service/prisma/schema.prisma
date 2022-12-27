@@ -13,6 +13,7 @@ generator client {
 
 model SceneRecord {
   // owner id (currently user id - will be altered later)
+  // also used for public demo display. - if owner is examples@grida.co, then it's a public demo.
   owner String
 
   // sharing policy  (currently supports ["none", "*"])

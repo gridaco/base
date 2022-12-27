@@ -5,6 +5,7 @@ import { SceneRecord } from "@prisma/client";
 import { PrismaService } from "../_prisma/prisma.service";
 
 const SDK_VER = versions.SdkVersion.v2020_0;
+const PUBLIC_DEMO_PROVIDER = "public-demo";
 
 // how to handle nested component? -> we should also upload the components linked. how to handle this case.
 @Injectable()
@@ -43,12 +44,39 @@ export class ScenesService {
     throw new NotFoundException("resource not found");
   }
 
+  async fetchPublicDemoScenes(): Promise<Partial<SceneRecord>[]> {
+    return await this.prisma.sceneRecord.findMany({
+      where: {
+        owner: PUBLIC_DEMO_PROVIDER,
+        archived: false,
+      },
+      select: {
+        owner: true,
+        id: true,
+        nodeId: true,
+        sdkVersion: true,
+        rawname: true,
+        newname: true,
+        preview: true,
+        description: true,
+        from: true,
+        sceneType: true,
+        tags: true,
+        background: true,
+        width: true,
+        height: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
+
   async fetchPublicDemoScene(id: string): Promise<SceneRecord> {
     // demo guard
-    const isdemo = id.startsWith("demo") || id.startsWith("test");
-    if (isdemo) {
-      const rec = await this.find(id);
-      if (rec) {
+    const rec = await this.find(id);
+    if (rec) {
+      const isdemo = rec.owner === PUBLIC_DEMO_PROVIDER;
+      if (isdemo) {
         return rec;
       }
     }
