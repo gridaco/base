@@ -1,4 +1,4 @@
-import { compileComplete, DartServices, defaultClient } from '../lib';
+import { compileComplete } from "../lib";
 
 // from dart-pad
 const EX_DART_SOURCE = `
@@ -147,7 +147,7 @@ class _SunflowerState extends State<Sunflower> {
 `;
 
 async function test(index?) {
-  console.log('start testing');
+  console.log("start testing");
 
   try {
     const id = Date.now();
@@ -157,8 +157,8 @@ async function test(index?) {
     const end = Date.now();
     // console.log(js)
     console.log(index, id, end - start);
-    if (!js.sucess) {
-      console.warn('this one failed ^');
+    if (!js.success) {
+      console.warn("this one failed ^");
     }
   } catch (e) {
     console.error(e);

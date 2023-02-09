@@ -98,7 +98,7 @@ class DartServices {
             return {
               message: "retried, but failed. closing.",
               error: e.response.data.error,
-              sucess: false,
+              success: false,
             };
           }
         }
@@ -110,7 +110,7 @@ class DartServices {
       }
       return {
         error: e.response.data.error,
-        sucess: false,
+        success: false,
       };
     }
   }
@@ -150,7 +150,7 @@ class DartServices {
     if (compiled.error) {
       return {
         error: compiled.error,
-        sucess: false,
+        success: false,
       };
     } else {
       const complete = decorateJavascript(compiled?.result, {
@@ -160,7 +160,7 @@ class DartServices {
         result: complete,
         sourceMap: null,
         error: null,
-        sucess: true,
+        success: true,
       };
     }
   }
