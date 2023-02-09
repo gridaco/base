@@ -4,7 +4,7 @@
  */
 
 interface BaseCompileResponse {
-  sucess: boolean;
+  success: boolean;
   result?: string;
   error?: ErrorMessage;
   took?: number;
