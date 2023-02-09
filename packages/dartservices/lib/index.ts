@@ -1,5 +1,11 @@
 import Axios, { AxiosInstance } from "axios";
-import { CompileDDCResponse, CompileRequest, CompileResponse } from "./types";
+import {
+  AnalysisResults,
+  CompileDDCResponse,
+  CompileRequest,
+  CompileResponse,
+  SourceRequest,
+} from "./types";
 import { decorateJavascript } from "./utils/deocrate-js";
 
 const BASE_URLS = {
@@ -116,6 +122,19 @@ class DartServices {
   async compile(source: string): Promise<CompileResponse> {
     const res = await this.axios.post<CompileResponse>("/compile", <
       CompileRequest
+    >{
+      source: source,
+    });
+    return res.data;
+  }
+
+  /**
+   * performs the static analysis
+   * @param source
+   */
+  async analyze(source: string): Promise<AnalysisResults> {
+    const res = await this.axios.post<AnalysisResults>("/analyze", <
+      SourceRequest
     >{
       source: source,
     });

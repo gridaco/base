@@ -35,6 +35,8 @@ service.compileDDC(maindartsrc);
 service.compile(maindartsrc);
 // compile complete
 service.compileComplete(maindartsrc);
+// analyze
+service.analyze(maindartsrc);
 
 // or simply use this simple function.
 import { compileComplete } from "dart-services";
