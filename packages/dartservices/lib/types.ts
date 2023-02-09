@@ -26,6 +26,13 @@ interface CompileRequest {
   returnSourceMap?: boolean;
 }
 
+interface SourceRequest {
+  // The Dart source.
+  source: string;
+  // The offset within source to operate at.
+  offset?: number;
+}
+
 interface AnalysisResults {
   issues: AnalysisIssue;
   // The package imports parsed from the source.
@@ -49,4 +56,10 @@ interface AnalysisIssue {
   charLength: number;
 }
 
-export { CompileRequest, CompileDDCResponse, CompileResponse };
+export {
+  AnalysisResults,
+  CompileRequest,
+  CompileDDCResponse,
+  CompileResponse,
+  SourceRequest,
+};
