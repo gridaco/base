@@ -1,6 +1,6 @@
 ![](./branding/cover.png)
 
-# BASE: Bridged App SErvices - [bridged.cc](https://bridged.cc)
+# BASE: Plug & Play Open Cloud Functions (Bridged App Services) - [bridged.cc](https://bridged.cc)
 
 > public services (all services except auth and billing) msa repository
 
@@ -80,3 +80,12 @@ goto https://github.com/bridgedxyz/client-sdk-ts
 - [reddit downloader](https://github.com/RedditDownloader/redditdownloader.github.io)
 - [GALLAUDET University](https://www.gallaudet.edu/)
 - [F1-Web-Viewer](https://github.com/bootsie123/F1-Web-Viewer)
+
+
+## Service Providers
+
+- [Base](https://base.grida.co)
+- [Vercel](https://vercel.com)
+- [Supabase](https://firebase.google.com)
+- [AWS](https://aws.amazon.com)
+- [Azure](https://azure.microsoft.com)
