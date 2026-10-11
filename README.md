@@ -1,5 +1,5 @@
 > [!NOTE]
-> **Archived.** This is the original BASE project, moved here from [`gridaco/base`](https://github.com/gridaco/base) in October 2026 along with its issues. It is no longer maintained, and the `gridaco/base` name is now used for a new project.
+> **Archived.** This is the original BASE project. It is no longer maintained.
 
 ![](./branding/cover.png)
 
